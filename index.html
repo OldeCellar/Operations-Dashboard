@@ -789,7 +789,7 @@
           const headers = new Headers({
             'Authorization': 'Basic ' + btoa(`${state.config.bfUser}:${state.config.bfKey}`)
           });
-          const res = await fetch('https://api.brewfather.app/v1/batches?status=Fermenting&include=recipe', { headers });
+          const res = await fetch('https://api.brewfather.app/v2/batches?status=Fermenting&include=recipe', { headers });
           if (!res.ok) throw new Error(`HTTP error ${res.status}`);
           const data = await res.json();
           console.log('Brewfather sync complete:', data);
