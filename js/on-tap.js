@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.3.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.4.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -130,7 +130,6 @@
     el.kickedFieldInput.value = s.kickedField;
     el.volUnitInput.value = s.volUnit;
     el.conditioningFieldInput.value = s.conditioningField;
-    el.volOnHandDateFieldInput.value = s.volOnHandDateField;
     el.settingsOverlay.style.display = 'flex';
   }
   function closeSettings(){ el.settingsOverlay.style.display = 'none'; }
@@ -146,7 +145,6 @@
     localStorage.setItem(LS_KEYS.kickedField, el.kickedFieldInput.value.trim() || 'Date Kicked');
     localStorage.setItem(LS_KEYS.volUnit, el.volUnitInput.value.trim() || 'Liters');
     localStorage.setItem(LS_KEYS.conditioningField, el.conditioningFieldInput.value.trim() || 'Conditioning Time');
-    localStorage.setItem(LS_KEYS.volOnHandDateField, el.volOnHandDateFieldInput.value.trim() || 'Vol On Hand Date');
     closeSettings();
     loadAndRender();
   });
@@ -381,6 +379,16 @@
     return { byBeer, breweryAvg };
   }
 
+  const KEGERATOR_FIELD = 'Vol To Kegerator'; // Brewfather custom batch field, liters moved into a kegerator
+  function kegeratorVolOf(b){
+    const raw = findMeasuredField(b, KEGERATOR_FIELD);
+    const n = (typeof raw === 'number') ? raw : (raw ? Number(raw) : 0);
+    return (isNaN(n) || n < 0) ? 0 : n;
+  }
+  function batchKeyOf(b, name, tappedDate){
+    return b._id || (b.batchNo != null ? ('batchno-' + b.batchNo) : (name + '-' + tappedDate.getTime()));
+  }
+
   function computeOnTap(batches, tappedFieldName, kickedFieldName, historyByBeer, breweryAvg){
     const currentlyTapped = []; // { name, tappedDate, batchNumber }
 
@@ -392,14 +400,14 @@
       if(tappedDate && !kickedDate){
         // Completed status + tapped + not yet kicked = currently pouring
         const volKegged = (typeof b.measuredBottlingSize === 'number') ? b.measuredBottlingSize : null;
-        const volOnHandNode = findMeasuredField(b, 'Vol On Hand');
-        const volOnHand = (typeof volOnHandNode === 'number') ? volOnHandNode : (volOnHandNode ? Number(volOnHandNode) : null);
         currentlyTapped.push({
           name,
           tappedDate,
+          batchId: batchKeyOf(b, name, tappedDate),
           batchNumber: b.batchNo || b.batchNumber || null,
           volKegged,
-          volOnHand: (volOnHand !== null && !isNaN(volOnHand)) ? volOnHand : null
+          kegeratorVol: kegeratorVolOf(b),
+          volOnHand: null // filled in from computeVolOnHand once the Request Log is loaded
         });
       }
     }
@@ -414,9 +422,11 @@
 
       return {
         name: k.name,
+        batchId: k.batchId,
         batchNumber: k.batchNumber,
         tappedDate: k.tappedDate,
         volKegged: k.volKegged,
+        kegeratorVol: k.kegeratorVol,
         volOnHand: k.volOnHand,
         avgDays,
         usedFallback,
@@ -436,70 +446,42 @@
     return kegs;
   }
 
-  // Projects a running Vol On Hand per currently/recently-tapped batch, keyed by
-  // Brewfather batch ID (not beer name) so overlapping batches of the same beer
-  // never bleed into each other. Anchor is either:
-  //   - manual: "Vol On Hand" + "Vol On Hand Date" custom fields, when both are set
-  //     (set these together after a physical recount to correct drift), or
-  //   - auto: Vol Kegged at Date Tapped, as a fallback
-  // Drawn down = sum of Request Log volume for that beer, dated after the anchor
-  // date through (Date Kicked or today).
-  function computeVolOnHand(batches, tappedFieldName, kickedFieldName, volOnHandDateFieldName, requestRows){
+  // Vol On Hand per tapped batch, keyed by Brewfather batch ID:
+  //   Vol Kegged  -  Vol To Kegerator  -  Request Log volume for that beer dated after Date Tapped
+  // (through Date Kicked or today). No manual recount fields are involved.
+  function computeVolOnHand(batches, tappedFieldName, kickedFieldName, requestRows){
     const results = [];
     for(const b of batches){
       if(b.status !== 'Completed') continue;
       const tappedDate = parseBFValue(findMeasuredField(b, tappedFieldName));
-      if(!tappedDate) continue; // never tapped — nothing to project
+      if(!tappedDate) continue; // never tapped, nothing to project
       const kickedDate = parseBFValue(findMeasuredField(b, kickedFieldName));
       const name = normalizeBeerName(getRecipeName(b));
       const volKegged = (typeof b.measuredBottlingSize === 'number') ? b.measuredBottlingSize : null;
-      const batchId = b._id || (b.batchNo != null ? ('batchno-' + b.batchNo) : (name + '-' + tappedDate.getTime()));
+      const kegeratorVol = kegeratorVolOf(b);
+      const batchId = batchKeyOf(b, name, tappedDate);
+      const base = { batchId, name, batchNumber: b.batchNo || b.batchNumber || null, tappedDate, volKegged, kegeratorVol };
 
       if(kickedDate){
-        results.push({
-          batchId, name, batchNumber: b.batchNo || b.batchNumber || null,
-          tappedDate, kickedDate, volKegged,
-          anchorDate: tappedDate, anchorVolume: volKegged, anchorIsManual: false,
-          drawnDown: null, remaining: 0, requestCount: 0, kicked: true
-        });
+        results.push(Object.assign(base, { kickedDate, anchorVolume: null, drawnDown: null, remaining: 0, requestCount: 0, kicked: true }));
         continue;
       }
 
-      // Manual recount anchor, if both fields are set on this batch
-      const manualVolRaw = findMeasuredField(b, 'Vol On Hand');
-      const manualVol = (typeof manualVolRaw === 'number') ? manualVolRaw : (manualVolRaw ? Number(manualVolRaw) : null);
-      const manualDate = parseBFValue(findMeasuredField(b, volOnHandDateFieldName));
-
-      let anchorDate = tappedDate;
-      let anchorVolume = volKegged;
-      let anchorIsManual = false;
-      if(manualDate && manualVol !== null && !isNaN(manualVol) && manualDate >= tappedDate){
-        anchorDate = manualDate;
-        anchorVolume = manualVol;
-        anchorIsManual = true;
-      }
-
+      const anchorVolume = (volKegged !== null) ? (volKegged - kegeratorVol) : null;
       const windowEnd = new Date();
       const matches = requestRows.filter(r =>
         r.beer.trim().toLowerCase() === name.trim().toLowerCase() &&
-        r.date > anchorDate && r.date <= windowEnd
+        r.date > tappedDate && r.date <= windowEnd
       );
       const drawnDown = matches.reduce((sum, r) => sum + r.volume, 0);
       const remaining = (anchorVolume !== null) ? (anchorVolume - drawnDown) : null;
-
-      results.push({
-        batchId, name, batchNumber: b.batchNo || b.batchNumber || null,
-        tappedDate, kickedDate: null, volKegged,
-        anchorDate, anchorVolume, anchorIsManual,
-        drawnDown, remaining, requestCount: matches.length, kicked: false
-      });
+      results.push(Object.assign(base, { kickedDate: null, anchorVolume, drawnDown, remaining, requestCount: matches.length, kicked: false }));
     }
 
     results.sort((a,b) => {
       if(a.kicked !== b.kicked) return a.kicked ? 1 : -1;
       return b.tappedDate.getTime() - a.tappedDate.getTime();
     });
-
     return results;
   }
 
@@ -678,6 +660,66 @@
         : (k.usedFallback
             ? 'No history for this beer yet — using brewery average (' + Math.round(k.avgDays) + ' day est.)'
             : 'Based on ' + k.historyCount + ' prior keg' + (k.historyCount === 1 ? '' : 's') + ' of this beer, avg ' + Math.round(k.avgDays) + ' days on tap.');
+
+      return (
+        '<div class="keg" style="--tap-color:' + color + '">' +
+          badge +
+          '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
+          '<div class="gauge-wrap">' +
+            '<div class="gauge-fill" style="width:' + Math.min(100, pct) + '%"></div>' +
+            '<div class="gauge-label"><span>' + fmtDate(k.tappedDate) + '</span><span>' + remainingLabel + '</span></div>' +
+          '</div>' +
+          '<div class="keg-meta">' +
+            '<span>Tapped <b>' + fmtDate(k.tappedDate) + '</b></span>' +
+            '<span>Est. kicks <b>' + (k.estKickDate ? fmtDate(k.estKickDate) : '—') + '</b></span>' +
+          '</div>' +
+          '<div class="keg-meta">' +
+            '<span>Kegged <b>' + (k.volKegged !== null ? (Math.round(k.volKegged * 100) / 100) + ' ' + volUnit : '—') + '</b></span>' +
+            (k.kegeratorVol > 0 ? '<span>Kegerator <b>' + (Math.round(k.kegeratorVol * 100) / 100) + ' ' + volUnit + '</b></span>' : '') +
+            '<span>On Hand <b>' + (k.volOnHand !== null ? (Math.round(k.volOnHand * 100) / 100) + ' ' + volUnit : '—') + '</b></span>' +
+          '</div>' +
+          '<div class="keg-history">' + historyNote + '</div>' +
+        '</div>'
+      );
+    }).join('');
+
+    el.content.innerHTML = '<div class="grid">' + cards + '</div>';
+  }
+
+  function renderVolOnHand(list, requestLogError){
+    if(requestLogError){
+      el.content.innerHTML =
+        '<div class="empty-state"><strong>Couldn\'t load the Request Log</strong>' +
+        escapeHtml(requestLogError) + '<br>Vol On Hand needs both Brewfather batch data and the Request Log sheet to compute.</div>';
+      return;
+    }
+    if(list.length === 0){
+      el.content.innerHTML =
+        '<div class="empty-state"><strong>Nothing to project yet</strong>' +
+        'No Completed batches have a ' + '"' + getSettings().tappedField + '"' + ' date.</div>';
+      return;
+    }
+
+    const cards = list.map(k => {
+      const color = colorForBeer(k.name);
+      let badge = k.kicked
+        ? '<span class="keg-badge kicked">Kicked ' + fmtDate(k.kickedDate) + '</span>'
+        : '';
+      const over = (k.remaining !== null && k.remaining < 0);
+
+      let mathHtml;
+      const row = (label, val, cls) => '<div class="voh-row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + val + '</b></div>';
+      
+      if(k.kicked){
+        mathHtml = row('Vol Kegged', k.volKegged !== null ? k.volKegged.toFixed(2) + ' L' : '—') + row('Vol On Hand', '0.00 L', 'total');
+      } else if(k.volKegged === null){
+        mathHtml = row('No Vol Kegged on this batch, so it can\'t be projected.', '', 'warn');
+      } else {
+        mathHtml = row('Vol Kegged (tapped ' + fmtDate(k.tappedDate) + ')', k.volKegged.toFixed(2) + ' L') +
+          (k.kegeratorVol > 0 ? row('To kegerator', '−' + k.kegeratorVol.toFixed(2) + ' L') : '') +
+          row('Drawn down (' + k.requestCount + ' request' + (k.requestCount === 1 ? '' : 's') + ')', '−' + k.drawnDown.toFixed(2) + ' L') +
+          row('Vol On Hand' + (over ? ' (over-drawn?)' : ''), k.remaining.toFixed(2) + ' L', 'total' + (over ? ' warn' : ''));
+      }
 
       return (
         '<div class="keg" style="--tap-color:' + color + '">' +
@@ -1205,7 +1247,9 @@
       let volOnHand = [];
       try{
         const requestRows = await fetchRequestRows();
-        volOnHand = computeVolOnHand(batches, s.tappedField, s.kickedField, s.volOnHandDateField, requestRows);
+        volOnHand = computeVolOnHand(batches, s.tappedField, s.kickedField, requestRows);
+        const byId = new Map(volOnHand.map(v => [v.batchId, v]));
+        kegs.forEach(k => { const v = byId.get(k.batchId); if(v && v.remaining !== null) k.volOnHand = Math.max(0, v.remaining); });
       } catch(reqErr){
         console.error(reqErr);
         requestLogError = reqErr.message;
