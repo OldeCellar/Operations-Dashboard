@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.4.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.4.1';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -719,68 +719,6 @@
           (k.kegeratorVol > 0 ? row('To kegerator', '−' + k.kegeratorVol.toFixed(2) + ' L') : '') +
           row('Drawn down (' + k.requestCount + ' request' + (k.requestCount === 1 ? '' : 's') + ')', '−' + k.drawnDown.toFixed(2) + ' L') +
           row('Vol On Hand' + (over ? ' (over-drawn?)' : ''), k.remaining.toFixed(2) + ' L', 'total' + (over ? ' warn' : ''));
-      }
-
-      return (
-        '<div class="keg" style="--tap-color:' + color + '">' +
-          badge +
-          '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
-          '<div class="gauge-wrap">' +
-            '<div class="gauge-fill" style="width:' + Math.min(100, pct) + '%"></div>' +
-            '<div class="gauge-label"><span>' + fmtDate(k.tappedDate) + '</span><span>' + remainingLabel + '</span></div>' +
-          '</div>' +
-          '<div class="keg-meta">' +
-            '<span>Tapped <b>' + fmtDate(k.tappedDate) + '</b></span>' +
-            '<span>Est. kicks <b>' + (k.estKickDate ? fmtDate(k.estKickDate) : '—') + '</b></span>' +
-          '</div>' +
-          '<div class="keg-meta">' +
-            '<span>Kegged <b>' + (k.volKegged !== null ? (Math.round(k.volKegged * 100) / 100) + ' ' + volUnit : '—') + '</b></span>' +
-            '<span>On Hand <b>' + (k.volOnHand !== null ? (Math.round(k.volOnHand * 100) / 100) + ' ' + volUnit : '—') + '</b></span>' +
-          '</div>' +
-          '<div class="keg-history">' + historyNote + '</div>' +
-        '</div>'
-      );
-    }).join('');
-
-    el.content.innerHTML = '<div class="grid">' + cards + '</div>';
-  }
-
-  function renderVolOnHand(list, requestLogError){
-    if(requestLogError){
-      el.content.innerHTML =
-        '<div class="empty-state"><strong>Couldn\'t load the Request Log</strong>' +
-        escapeHtml(requestLogError) + '<br>Vol On Hand needs both Brewfather batch data and the Request Log sheet to compute.</div>';
-      return;
-    }
-    if(list.length === 0){
-      el.content.innerHTML =
-        '<div class="empty-state"><strong>Nothing to project yet</strong>' +
-        'No Completed batches have a ' + '"' + getSettings().tappedField + '"' + ' date.</div>';
-      return;
-    }
-
-    const cards = list.map(k => {
-      const color = colorForBeer(k.name);
-      let badge = k.kicked
-        ? '<span class="keg-badge kicked">Kicked ' + fmtDate(k.kickedDate) + '</span>'
-        : '';
-      const over = (k.remaining !== null && k.remaining < 0);
-
-      let mathHtml;
-      if(k.kicked){
-        mathHtml =
-          '<div class="voh-row"><span>Anchor (Vol Kegged)</span><b>' + (k.volKegged !== null ? k.volKegged.toFixed(2) + ' L' : '—') + '</b></div>' +
-          '<div class="voh-row total"><span>Vol On Hand</span><b>0.00 L</b></div>';
-      } else if(k.anchorVolume === null){
-        mathHtml = '<div class="voh-row warn"><span>No Vol Kegged (or manual recount) on this batch — can\'t project.</span></div>';
-      } else {
-        const anchorLabel = k.anchorIsManual
-          ? 'Anchor (manual recount, ' + fmtDate(k.anchorDate) + ')'
-          : 'Anchor (Vol Kegged, tapped ' + fmtDate(k.anchorDate) + ')';
-        mathHtml =
-          '<div class="voh-row"><span>' + anchorLabel + '</span><b>' + k.anchorVolume.toFixed(2) + ' L</b></div>' +
-          '<div class="voh-row"><span>Drawn down (' + k.requestCount + ' request' + (k.requestCount === 1 ? '' : 's') + ')</span><b>−' + k.drawnDown.toFixed(2) + ' L</b></div>' +
-          '<div class="voh-row total' + (over ? ' warn' : '') + '"><span>Vol On Hand' + (over ? ' (over-drawn?)' : '') + '</span><b>' + k.remaining.toFixed(2) + ' L</b></div>';
       }
 
       return (
