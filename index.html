@@ -1,898 +1,152 @@
-<!DOCTYPE html>
-<html lang="en" class="light">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Olde Cellar Brewing Co. | Operations Command Center</title>
-  
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#fbf7ee',
-              100: '#f5edd6',
-              500: '#d97706',
-              600: '#b45309',
-              900: '#78350f',
-            },
-            cellar: {
-              card: '#181b20',
-              bg: '#0f1115',
-              border: '#272b34',
-              accent: '#3b82f6'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    body { background-color: #0f1115; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #12141a; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #2d3342; border-radius: 4px; }
-    .gantt-bar-tank1 { background: linear-gradient(90deg, #d97706, #b45309); }
-    .gantt-bar-tank2 { background: linear-gradient(90deg, #2563eb, #1d4ed8); }
-    .gantt-bar-tank3 { background: linear-gradient(90deg, #059669, #047857); }
-  </style>
-  <link rel="stylesheet" href="ops-suite-amber-theme.css">
-</head>
-<body class="min-h-screen flex flex-col custom-scrollbar">
-
-
-  
-  <!-- Top Persistent Header -->
-  <header class="bg-cellar-card border-b border-cellar-border sticky top-0 z-50 px-6 py-3 shadow-md">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-          <i data-lucide="beer" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-lg text-white flex items-center gap-2">
-            Olde Cellar Brewing Co.
-            <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">Ops Suite v31</span>
-          </h1>
-          <p class="text-xs text-slate-400">Integrated Cellar, Dynamic Scheduling & Demand Center</p>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Summary -->
-      <div class="flex items-center gap-6 text-xs border-x border-cellar-border px-4 hidden lg:flex">
-        <div>
-          <div class="text-slate-400">Tank Capacity</div>
-          <div class="text-amber-400 font-semibold flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span id="header-tank-occupancy">3 / 3 Active</span>
-          </div>
-        </div>
-        <div>
-          <div class="text-slate-400">On Tap</div>
-          <div class="text-white font-semibold" id="header-taps-active">4 Active Lines</div>
-        </div>
-        <div>
-          <div class="text-slate-400">Demand Velocity</div>
-          <div class="text-blue-400 font-semibold" id="header-demand-velocity">0.0 L/week avg</div>
-        </div>
-      </div>
-
-      <!-- Actions & Sync -->
-      <div class="flex items-center gap-2">
-        <button id="btn-sync-bf" onclick="App.syncBrewfather()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-cellar-border hover:bg-slate-700 text-xs font-medium text-slate-200 transition">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync Brewfather
-        </button>
-        <button id="btn-sync-sheets" onclick="App.syncGoogleSheets()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-cellar-border hover:bg-slate-700 text-xs font-medium text-slate-200 transition">
-          <i data-lucide="sheet" class="w-3.5 h-3.5"></i> Sync Sales Log
-        </button>
-        <button onclick="App.openSettingsModal()" class="p-1.5 rounded-md bg-cellar-border hover:bg-slate-700 text-slate-400 hover:text-white transition">
-          <i data-lucide="settings" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="max-w-7xl mx-auto flex gap-2 mt-3 pt-2 border-t border-cellar-border/60">
-      <button onclick="App.switchView('ops')" id="nav-ops" class="nav-tab px-4 py-1.5 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
-        <i data-lucide="activity" class="w-3.5 h-3.5"></i> 1. Operations & Cellar
-      </button>
-      <button onclick="App.switchView('schedule')" id="nav-schedule" class="nav-tab px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-1.5">
-        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2. Production Schedule
-      </button>
-      <button onclick="App.switchView('demand')" id="nav-demand" class="nav-tab px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-1.5">
-        <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> 3. Demand & Request Log
-      </button>
-      <button onclick="App.switchView('catalog')" id="nav-catalog" class="nav-tab px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-1.5">
-        <i data-lucide="book-open" class="w-3.5 h-3.5"></i> 4. Beer Catalog & Rules
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 1: OPERATIONS & LIVE CELLAR (Consolidating OldeCellarOnTap)          -->
-    <!-- ========================================================================= -->
-    <section id="view-ops" class="space-y-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-xl font-bold text-white flex items-center gap-2">Fermentation Cellar Status</h2>
-          <p class="text-xs text-slate-400">Live batches currently occupying physical tanks 01–03</p>
-        </div>
-        <div id="ops-alert-banner" class="text-xs px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300 hidden">
-          <!-- Dynamic Alerts -->
-        </div>
-      </div>
-
-      <!-- 3 Fermentation Tanks Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="fermenters-grid">
-        <!-- Rendered by App.renderOpsView() -->
-      </div>
-
-      <!-- Taps & Conditioning Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Taproom Board (2 cols) -->
-        <div class="lg:col-span-2 bg-cellar-card border border-cellar-border rounded-xl p-5 shadow-sm space-y-4">
-          <div class="flex justify-between items-center border-b border-cellar-border pb-3">
-            <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-              <i data-lucide="cup-soda" class="w-4 h-4 text-amber-400"></i> Active Taproom Lines & Depletion
-            </h3>
-            <span class="text-xs text-slate-400">Calculated from Google Sheets sales velocity</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="taps-grid">
-            <!-- Rendered by App.renderOpsView() -->
-          </div>
-        </div>
-
-        <!-- Cold Storage / Conditioning Queue (1 col) -->
-        <div class="bg-cellar-card border border-cellar-border rounded-xl p-5 shadow-sm space-y-4">
-          <div class="flex justify-between items-center border-b border-cellar-border pb-3">
-            <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-              <i data-lucide="archive" class="w-4 h-4 text-blue-400"></i> Conditioning & Cold Stock
-            </h3>
-            <span class="text-xs text-slate-400" id="conditioning-count">0 Batches</span>
-          </div>
-          <div class="space-y-3 custom-scrollbar max-h-80 overflow-y-auto" id="conditioning-list">
-            <!-- Rendered by App.renderOpsView() -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 2: PRODUCTION SCHEDULE (Consolidating brewery_scheduler_v30.html)    -->
-    <!-- ========================================================================= -->
-    <section id="view-schedule" class="space-y-6 hidden">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-cellar-card border border-cellar-border p-4 rounded-xl">
-        <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">Master 52-Week Production Schedule</h2>
-          <p class="text-xs text-slate-400">Dynamic tank constraint solver (Prioritizes explicit BF bottling dates & Core IPA continuity)</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="App.runAutoScheduler()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold flex items-center gap-2 shadow-sm transition">
-            <i data-lucide="play" class="w-3.5 h-3.5"></i> Re-Calculate Auto Schedule
-          </button>
-        </div>
-      </div>
-
-      <!-- Gantt Occupancy Visualizer -->
-      <div class="bg-cellar-card border border-cellar-border rounded-xl p-5 space-y-3">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-400"></i> 12-Week Tank Occupancy Timeline
-        </h3>
-        <div class="overflow-x-auto custom-scrollbar">
-          <div class="min-w-[700px] space-y-2 pt-2" id="gantt-chart">
-            <!-- Rendered by App.renderScheduleView() -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Schedule Table -->
-      <div class="bg-cellar-card border border-cellar-border rounded-xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-cellar-border flex justify-between items-center">
-          <h3 class="text-sm font-semibold text-white">Chronological Brew Schedule</h3>
-          <span class="text-xs text-slate-400" id="schedule-row-count">0 Batches Planned</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-cellar-border">
-              <tr>
-                <th class="py-3 px-4">Tank</th>
-                <th class="py-3 px-4">Batch #</th>
-                <th class="py-3 px-4">Beer Brand</th>
-                <th class="py-3 px-4">Category / Lane</th>
-                <th class="py-3 px-4">Brew Date</th>
-                <th class="py-3 px-4">Keg Date</th>
-                <th class="py-3 px-4">Ready Date</th>
-                <th class="py-3 px-4">Status & Logic Notes</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-table-body" class="divide-y divide-cellar-border">
-              <!-- Rendered by App.renderScheduleView() -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 3: DEMAND & REQUEST LOG (Consolidating OldeCellarRequests)            -->
-    <!-- ========================================================================= -->
-    <section id="view-demand" class="space-y-6 hidden">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-xl font-bold text-white flex items-center gap-2">Sales Demand & Request Log</h2>
-          <p class="text-xs text-slate-400">Live order pulls from Google Sheets powering tap depletion math</p>
-        </div>
-        <div class="text-xs text-slate-400 bg-cellar-card border border-cellar-border px-3 py-1.5 rounded-lg flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Google Sheets Ingestion Active
-        </div>
-      </div>
-
-      <!-- Demand Summary Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="demand-summary-cards">
-        <!-- Rendered by App.renderDemandView() -->
-      </div>
-
-      <!-- Requests Data Table -->
-      <div class="bg-cellar-card border border-cellar-border rounded-xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-cellar-border flex justify-between items-center">
-          <h3 class="text-sm font-semibold text-white">Recent Sales & Pour Requests</h3>
-          <span class="text-xs text-slate-400" id="requests-count">0 entries</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-cellar-border">
-              <tr>
-                <th class="py-3 px-4">Date / Week</th>
-                <th class="py-3 px-4">Beer Name</th>
-                <th class="py-3 px-4">Format</th>
-                <th class="py-3 px-4">Quantity</th>
-                <th class="py-3 px-4">Volume (L)</th>
-                <th class="py-3 px-4">Customer / Notes</th>
-              </tr>
-            </thead>
-            <tbody id="demand-table-body" class="divide-y divide-cellar-border">
-              <!-- Rendered by App.renderDemandView() -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 4: BEER CATALOG & SETTINGS (Master Rules Configuration)               -->
-    <!-- ========================================================================= -->
-    <section id="view-catalog" class="space-y-6 hidden">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-xl font-bold text-white flex items-center gap-2">Beer Catalog & Scheduling Rules</h2>
-          <p class="text-xs text-slate-400">Configure turnaround windows, categories, default lanes, and inventory safety stock</p>
-        </div>
-        <button onclick="App.openAddBrandModal()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add New Brand
-        </button>
-      </div>
-
-      <div class="bg-cellar-card border border-cellar-border rounded-xl overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-cellar-border">
-              <tr>
-                <th class="py-3 px-4">Brand Name</th>
-                <th class="py-3 px-4">Style</th>
-                <th class="py-3 px-4">Category</th>
-                <th class="py-3 px-4">Default Lane</th>
-                <th class="py-3 px-4">Ferment Days</th>
-                <th class="py-3 px-4">Condition Days</th>
-                <th class="py-3 px-4">Target Stock</th>
-                <th class="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="catalog-table-body" class="divide-y divide-cellar-border">
-              <!-- Rendered by App.renderCatalogView() -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Modals: Settings -->
-  <div id="modal-settings" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-cellar-card border border-cellar-border rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-      <div class="flex justify-between items-center border-b border-cellar-border pb-3">
-        <h3 class="font-bold text-white text-base flex items-center gap-2">
-          <i data-lucide="sliders" class="w-4 h-4 text-amber-400"></i> Integrations & Rules Config
-        </h3>
-        <button onclick="App.closeSettingsModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block text-slate-300 font-medium mb-1">Brewfather User ID</label>
-          <input type="text" id="cfg-bf-user" class="w-full bg-slate-900 border border-cellar-border rounded-md px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-500" placeholder="e.g. user_xxx">
-        </div>
-        <div>
-          <label class="block text-slate-300 font-medium mb-1">Brewfather API Key</label>
-          <input type="password" id="cfg-bf-key" class="w-full bg-slate-900 border border-cellar-border rounded-md px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-500" placeholder="e.g. key_xxx">
-        </div>
-        <div>
-          <label class="block text-slate-300 font-medium mb-1">Google Sheets CSV / Request Feed URL</label>
-          <input type="text" id="cfg-sheets-url" class="w-full bg-slate-900 border border-cellar-border rounded-md px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-500" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
-        </div>
-        <div class="pt-2 border-t border-cellar-border">
-          <label class="block text-slate-300 font-medium mb-1">Permitted Brew Days</label>
-          <div class="flex items-center gap-4 text-slate-300 mt-2">
-            <label class="flex items-center gap-1.5"><input type="checkbox" id="cfg-day-sat" checked class="rounded"> Saturday (Primary)</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" id="cfg-day-tue" class="rounded"> Tuesday (Weekday Exp)</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" id="cfg-day-thu" class="rounded"> Thursday (Weekday Exp)</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2 pt-3 border-t border-cellar-border">
-        <button onclick="App.closeSettingsModal()" class="px-4 py-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs">Cancel</button>
-        <button onclick="App.saveSettings()" class="px-4 py-2 rounded-md bg-amber-600 text-white hover:bg-amber-500 text-xs font-semibold">Save Settings</button>
-      </div>
-    </div>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olde Cellar | Operations Dashboard</title>
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/request-log.css">
+</head><body>
+<header class="app-header">
+  <div class="bar">
+    <div><div class="sub">Olde Cellar Brewery</div><h1>Operations Dashboard</h1></div>
+    <button class="btn" id="refresh-all">Refresh Data</button>
   </div>
-
-  <!-- APPLICATION LOGIC SCRIPT -->
-  <script>
-    /**
-     * UNIFIED APP STATE & ENGINE
-     */
-    const App = (() => {
-      // 1. Initial State & Mock Data (Matches your actual active brewery context)
-      const state = {
-        activeView: 'ops',
-        config: {
-          bfUser: localStorage.getItem('oc_bf_user') || '',
-          bfKey: localStorage.getItem('oc_bf_key') || '',
-          sheetsUrl: localStorage.getItem('oc_sheets_url') || '',
-          brewDays: JSON.parse(localStorage.getItem('oc_brew_days') || '[6]'), // 6 = Saturday
-          turnaroundBufferDays: 1
-        },
-        tanks: [
-          { id: 'Tank 01', name: 'Fermenter 01 (IPA Lane)', capacity: 120, currentBatch: '564', beerName: 'Pliny the Elder #63', brewDate: '2026-07-25', kegDate: '2026-08-26', gravity: 1.012, og: 1.070, status: 'Fermenting' },
-          { id: 'Tank 02', name: 'Fermenter 02 (Lager Lane)', capacity: 120, currentBatch: '559', beerName: 'MaiBock #28', brewDate: '2026-07-18', kegDate: '2026-08-29', gravity: 1.014, og: 1.066, status: 'Conditioning' },
-          { id: 'Tank 03', name: 'Fermenter 03 (Seasonals/Fillers)', capacity: 120, currentBatch: '560', beerName: 'Zephyr #2', brewDate: '2026-08-01', kegDate: '2026-08-22', gravity: 1.008, og: 1.048, status: 'Fermenting' }
-        ],
-        taps: [
-          { tapNumber: 1, beerName: 'Strata #20', style: 'IPA', category: 'Core Brand', keggedDate: '2026-08-01', totalVolumeL: 50, remainingVolumeL: 14.5, weeklyVelocityL: 18.0 },
-          { tapNumber: 2, beerName: 'Olde King Kolsch #4', style: 'Kolsch', category: 'Core Brand', keggedDate: '2026-08-08', totalVolumeL: 50, remainingVolumeL: 32.0, weeklyVelocityL: 12.0 },
-          { tapNumber: 3, beerName: 'Queen Citra #7', style: 'NEIPA', category: 'Seasonal', keggedDate: '2026-07-28', totalVolumeL: 50, remainingVolumeL: 8.0, weeklyVelocityL: 15.0 },
-          { tapNumber: 4, beerName: 'Belma Bottom Blues #4', style: 'Ale', category: 'Core Brand', keggedDate: '2026-08-10', totalVolumeL: 50, remainingVolumeL: 42.0, weeklyVelocityL: 10.0 }
-        ],
-        conditioning: [
-          { batchNumber: '561', beerName: 'Czech Mate #10', style: 'Lager', volumeL: 50, readyDate: '2026-09-05' },
-          { batchNumber: '562', beerName: 'Fiddlers Flame #2', style: 'Spiced Ale', volumeL: 50, readyDate: '2026-08-28' },
-          { batchNumber: '563', beerName: 'Wheat Vodka #4', style: 'Spirit', volumeL: 20, readyDate: '2026-08-30' }
-        ],
-        catalog: [
-          { id: 'pliny', name: 'Pliny the Elder', style: 'Double IPA', category: 'Core Brand', defaultLane: 'Tank 01', fermentDays: 28, conditionDays: 7, targetStockKegs: 2 },
-          { id: 'strata', name: 'Strata', style: 'IPA', category: 'Core Brand', defaultLane: 'Tank 01', fermentDays: 21, conditionDays: 5, targetStockKegs: 2 },
-          { id: 'maibock', name: 'MaiBock', style: 'Lager', category: 'Seasonal', defaultLane: 'Tank 02', fermentDays: 42, conditionDays: 14, targetStockKegs: 1 },
-          { id: 'kolsch', name: 'Olde King Kolsch', style: 'Kolsch', category: 'Core Brand', defaultLane: 'Tank 03', fermentDays: 21, conditionDays: 7, targetStockKegs: 1 },
-          { id: 'citra', name: 'Queen Citra', style: 'NEIPA', category: 'Seasonal', defaultLane: 'Tank 03', fermentDays: 21, conditionDays: 4, targetStockKegs: 1 },
-          { id: 'zephyr', name: 'Zephyr', style: 'IPA', category: 'Core Brand', defaultLane: 'Tank 01', fermentDays: 21, conditionDays: 5, targetStockKegs: 2 },
-          { id: 'mellow', name: 'Mellow Yellow', style: 'Wheat', category: 'Filler', defaultLane: 'Tank 03', fermentDays: 14, conditionDays: 4, targetStockKegs: 1 }
-        ],
-        requestsLog: [
-          { date: '2026-08-18', beerName: 'Strata #20', format: 'Growler 64oz', qty: 3, volumeL: 5.67, customer: 'Dave M.' },
-          { date: '2026-08-17', beerName: 'Pliny the Elder #63', format: '4-Pack 16oz', qty: 4, volumeL: 7.56, customer: 'Sarah K.' },
-          { date: '2026-08-16', beerName: 'Queen Citra #7', format: 'Growler 64oz', qty: 2, volumeL: 3.78, customer: 'Mike T.' },
-          { date: '2026-08-15', beerName: 'Strata #20', format: 'Pint Pours', qty: 18, volumeL: 8.52, customer: 'Taproom Saturday' },
-          { date: '2026-08-14', beerName: 'Olde King Kolsch #4', format: 'Growler 32oz', qty: 5, volumeL: 4.73, customer: 'Rob P.' }
-        ],
-        schedule: []
-      };
-
-      /**
-       * CORE SCHEDULING SOLVER (Solves Tank Occupancy with Date Overrides)
-       */
-      function getBatchKegDate(batch) {
-        if (!batch) return null;
-        const rawDate = batch.bottlingDate || batch.kegDate || batch.packagingDate;
-        if (rawDate) {
-          const d = new Date(rawDate);
-          if (!isNaN(d.getTime())) {
-            d.setHours(0, 0, 0, 0);
-            return d;
-          }
-        }
-        if (batch.brewDate) {
-          const brew = new Date(batch.brewDate);
-          if (!isNaN(brew.getTime())) {
-            const days = Number(batch.fermentDays || 21);
-            const calc = new Date(brew.getTime() + days * 86400000);
-            calc.setHours(0, 0, 0, 0);
-            return calc;
-          }
-        }
-        return null;
-      }
-
-      function isTankOccupied(tankId, targetBrewDate, allBatches, bufferDays = 1) {
-        const brewTime = new Date(targetBrewDate).setHours(0, 0, 0, 0);
-
-        return allBatches.some(batch => {
-          const bTank = (batch.tank || batch.fermenter || batch.defaultLane || '').toString().trim().toLowerCase();
-          const tId = tankId.toString().trim().toLowerCase();
-          if (bTank !== tId && !bTank.includes(tId.replace('tank ', ''))) return false;
-
-          const status = (batch.status || '').toLowerCase();
-          if (status === 'completed' || status === 'kicked') return false;
-
-          const batchBrew = batch.brewDate ? new Date(batch.brewDate).setHours(0, 0, 0, 0) : null;
-          const batchKeg = getBatchKegDate(batch);
-          if (!batchKeg) return false;
-
-          const releaseTime = batchKeg.getTime() + (bufferDays * 86400000);
-
-          if (batchBrew) {
-            return brewTime >= batchBrew && brewTime < releaseTime;
-          }
-          return brewTime < releaseTime;
-        });
-      }
-
-      function getNextBrewDays(startDate, count = 24) {
-        const dates = [];
-        let curr = new Date(startDate);
-        curr.setHours(0, 0, 0, 0);
-
-        while (dates.length < count) {
-          curr.setDate(curr.getDate() + 1);
-          if (state.config.brewDays.includes(curr.getDay())) {
-            dates.push(new Date(curr));
-          }
-        }
-        return dates;
-      }
-
-      function runAutoScheduler() {
-        const plan = [];
-        const runningBatches = [...state.tanks.map(t => ({
-          tank: t.id,
-          batchNumber: t.currentBatch,
-          beerName: t.beerName,
-          brewDate: t.brewDate,
-          kegDate: t.kegDate,
-          status: t.status
-        }))];
-
-        const targetBrewDates = getNextBrewDays(new Date('2026-08-15'), 16);
-        const tankList = ['Tank 01', 'Tank 02', 'Tank 03'];
-
-        // Brand Rotation Queue with Priority
-        let catalogIdx = 0;
-
-        targetBrewDates.forEach((brewDate) => {
-          const dateStr = brewDate.toISOString().split('T')[0];
-          let assigned = false;
-
-          // Check if any Core IPA on tap is low and needs immediate brew slot
-          const urgentTap = state.taps.find(tap => {
-            const daysLeft = tap.weeklyVelocityL > 0 ? (tap.remainingVolumeL / (tap.weeklyVelocityL / 7)) : 99;
-            return daysLeft <= 14 && tap.category === 'Core Brand';
-          });
-
-          let candidateBrand = urgentTap 
-            ? state.catalog.find(b => b.name.toLowerCase().includes(urgentTap.beerName.split(' ')[0].toLowerCase())) || state.catalog[catalogIdx % state.catalog.length]
-            : state.catalog[catalogIdx % state.catalog.length];
-
-          // 1. Try Preferred Lane first
-          const prefLane = candidateBrand.defaultLane || 'Tank 01';
-          if (!isTankOccupied(prefLane, brewDate, runningBatches, state.config.turnaroundBufferDays)) {
-            const keg = new Date(brewDate.getTime() + candidateBrand.fermentDays * 86400000);
-            const ready = new Date(keg.getTime() + candidateBrand.conditionDays * 86400000);
-            const newBatch = {
-              tank: prefLane,
-              batchNumber: `Proj-${565 + plan.length}`,
-              beerName: candidateBrand.name,
-              category: candidateBrand.category,
-              brewDate: dateStr,
-              kegDate: keg.toISOString().split('T')[0],
-              readyDate: ready.toISOString().split('T')[0],
-              status: 'Scheduled',
-              notes: `Assigned preferred ${prefLane}`
-            };
-            runningBatches.push(newBatch);
-            plan.push(newBatch);
-            assigned = true;
-            catalogIdx++;
-          } else {
-            // 2. Try Alternate Tanks
-            for (const altTank of tankList) {
-              if (altTank !== prefLane && !isTankOccupied(altTank, brewDate, runningBatches, state.config.turnaroundBufferDays)) {
-                const keg = new Date(brewDate.getTime() + candidateBrand.fermentDays * 86400000);
-                const ready = new Date(keg.getTime() + candidateBrand.conditionDays * 86400000);
-                const newBatch = {
-                  tank: altTank,
-                  batchNumber: `Proj-${565 + plan.length}`,
-                  beerName: candidateBrand.name,
-                  category: candidateBrand.category,
-                  brewDate: dateStr,
-                  kegDate: keg.toISOString().split('T')[0],
-                  readyDate: ready.toISOString().split('T')[0],
-                  status: 'Overflow Assigned',
-                  notes: `${prefLane} occupied; routed to ${altTank}`
-                };
-                runningBatches.push(newBatch);
-                plan.push(newBatch);
-                assigned = true;
-                catalogIdx++;
-                break;
-              }
-            }
-          }
-
-          if (!assigned) {
-            plan.push({
-              tank: 'All Tanks Busy',
-              batchNumber: '—',
-              beerName: 'No Brew Day',
-              category: '—',
-              brewDate: dateStr,
-              kegDate: '—',
-              readyDate: '—',
-              status: 'Skipped',
-              notes: `Tanks 01, 02, 03 are all full on ${dateStr}`
-            });
-          }
-        });
-
-        state.schedule = plan;
-        renderScheduleView();
-      }
-
-      /**
-       * UI RENDERING MODULES
-       */
-      function renderOpsView() {
-        // Render Tanks
-        const tankGrid = document.getElementById('fermenters-grid');
-        tankGrid.innerHTML = state.tanks.map(tank => {
-          const brew = new Date(tank.brewDate);
-          const keg = new Date(tank.kegDate);
-          const now = new Date('2026-08-20');
-          const totalDays = Math.max(1, Math.round((keg - brew) / 86400000));
-          const daysIn = Math.max(0, Math.round((now - brew) / 86400000));
-          const progressPct = Math.min(100, Math.round((daysIn / totalDays) * 100));
-
-          return `
-            <div class="bg-cellar-card border border-cellar-border rounded-xl p-5 shadow-sm space-y-4 hover:border-amber-500/40 transition">
-              <div class="flex justify-between items-start">
-                <div>
-                  <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700">${tank.id}</span>
-                  <h3 class="font-bold text-white text-base mt-1">${tank.beerName}</h3>
-                </div>
-                <span class="text-xs px-2 py-1 rounded-full ${tank.status === 'Fermenting' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'}">${tank.status}</span>
-              </div>
-
-              <!-- Gravity & Time Tracking -->
-              <div class="grid grid-cols-2 gap-3 text-xs bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                <div>
-                  <div class="text-slate-400">Current SG</div>
-                  <div class="text-white font-mono font-semibold">${tank.gravity.toFixed(3)} <span class="text-slate-500 text-[10px]">(OG ${tank.og.toFixed(3)})</span></div>
-                </div>
-                <div>
-                  <div class="text-slate-400">Release / Keg Date</div>
-                  <div class="text-amber-400 font-semibold">${tank.kegDate}</div>
-                </div>
-              </div>
-
-              <!-- Progress Bar -->
-              <div class="space-y-1.5">
-                <div class="flex justify-between text-[11px] text-slate-400">
-                  <span>Day ${daysIn} of ${totalDays} in tank</span>
-                  <span class="font-mono">${progressPct}%</span>
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                  <div class="bg-amber-500 h-2 rounded-full transition-all" style="width: ${progressPct}%"></div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        // Render Taps & Depletion Math
-        const tapsGrid = document.getElementById('taps-grid');
-        tapsGrid.innerHTML = state.taps.map(tap => {
-          const dailyRate = tap.weeklyVelocityL / 7;
-          const daysLeft = dailyRate > 0 ? Math.round(tap.remainingVolumeL / dailyRate) : 99;
-          const runoutAlert = daysLeft <= 5 ? 'border-red-500/50 bg-red-500/5' : 'border-cellar-border bg-slate-900/40';
-          const fillPct = Math.round((tap.remainingVolumeL / tap.totalVolumeL) * 100);
-
-          return `
-            <div class="border ${runoutAlert} rounded-lg p-4 space-y-3">
-              <div class="flex justify-between items-start">
-                <div class="flex items-center gap-2">
-                  <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-xs border border-amber-500/40">${tap.tapNumber}</span>
-                  <div>
-                    <h4 class="font-semibold text-white text-xs">${tap.beerName}</h4>
-                    <span class="text-[10px] text-slate-400">${tap.style} • ${tap.category}</span>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="text-xs font-mono font-bold text-slate-200">${tap.remainingVolumeL}L</span>
-                  <span class="text-[10px] text-slate-400 block">${fillPct}% Left</span>
-                </div>
-              </div>
-
-              <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                <div class="${daysLeft <= 5 ? 'bg-red-500' : 'bg-emerald-500'} h-1.5 rounded-full" style="width: ${fillPct}%"></div>
-              </div>
-
-              <div class="flex justify-between items-center text-[11px] pt-1 text-slate-400 border-t border-slate-800">
-                <span>Velocity: <strong class="text-slate-200">${tap.weeklyVelocityL} L/wk</strong></span>
-                <span class="${daysLeft <= 5 ? 'text-red-400 font-bold' : 'text-amber-400'}">Kicks in ~${daysLeft} days</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        // Render Conditioning
-        const condList = document.getElementById('conditioning-list');
-        document.getElementById('conditioning-count').textContent = `${state.conditioning.length} Batches`;
-        condList.innerHTML = state.conditioning.map(item => `
-          <div class="p-3 bg-slate-900/40 border border-cellar-border rounded-lg text-xs flex justify-between items-center">
-            <div>
-              <div class="font-semibold text-slate-200">#${item.batchNumber} - ${item.beerName}</div>
-              <div class="text-[10px] text-slate-400">${item.style} • ${item.volumeL}L</div>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-400 block">Serve Ready</span>
-              <span class="text-emerald-400 font-semibold">${item.readyDate}</span>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      function renderScheduleView() {
-        const tbody = document.getElementById('schedule-table-body');
-        document.getElementById('schedule-row-count').textContent = `${state.schedule.length} Brews Generated`;
-
-        tbody.innerHTML = state.schedule.map(row => {
-          const isSkipped = row.status === 'Skipped';
-          return `
-            <tr class="hover:bg-slate-800/40 transition ${isSkipped ? 'opacity-50 bg-red-950/10' : ''}">
-              <td class="py-3 px-4 font-mono ${row.tank === 'Tank 01' ? 'text-amber-400 font-semibold' : row.tank === 'Tank 02' ? 'text-blue-400 font-semibold' : row.tank === 'Tank 03' ? 'text-emerald-400 font-semibold' : 'text-slate-500'}">${row.tank}</td>
-              <td class="py-3 px-4 font-mono">${row.batchNumber}</td>
-              <td class="py-3 px-4 font-semibold text-white">${row.beerName}</td>
-              <td class="py-3 px-4 text-slate-400">${row.category}</td>
-              <td class="py-3 px-4 text-slate-200 font-mono">${row.brewDate}</td>
-              <td class="py-3 px-4 text-slate-200 font-mono">${row.kegDate}</td>
-              <td class="py-3 px-4 text-slate-200 font-mono">${row.readyDate}</td>
-              <td class="py-3 px-4">
-                <span class="px-2 py-0.5 rounded text-[10px] ${isSkipped ? 'bg-red-500/20 text-red-400 border border-red-500/30' : row.status === 'Overflow Assigned' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">${row.status}</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">${row.notes}</span>
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-        // Render Gantt
-        const gantt = document.getElementById('gantt-chart');
-        gantt.innerHTML = ['Tank 01', 'Tank 02', 'Tank 03'].map(tId => {
-          const batches = state.schedule.filter(s => s.tank === tId);
-          return `
-            <div class="flex items-center gap-3 text-xs py-1">
-              <div class="w-16 font-mono font-semibold text-slate-400">${tId}</div>
-              <div class="flex-1 bg-slate-900 border border-slate-800 rounded h-7 flex items-center p-1 gap-1 overflow-hidden">
-                ${batches.map(b => `
-                  <div class="h-full px-2 rounded text-[10px] text-white flex items-center whitespace-nowrap overflow-hidden font-medium ${tId === 'Tank 01' ? 'gantt-bar-tank1' : tId === 'Tank 02' ? 'gantt-bar-tank2' : 'gantt-bar-tank3'}" title="${b.beerName} (${b.brewDate} to ${b.kegDate})">
-                    ${b.beerName}
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-
-      function renderDemandView() {
-        const tbody = document.getElementById('demand-table-body');
-        document.getElementById('requests-count').textContent = `${state.requestsLog.length} Records`;
-        tbody.innerHTML = state.requestsLog.map(r => `
-          <tr class="hover:bg-slate-800/40 transition">
-            <td class="py-3 px-4 font-mono text-slate-300">${r.date}</td>
-            <td class="py-3 px-4 font-semibold text-white">${r.beerName}</td>
-            <td class="py-3 px-4 text-slate-300">${r.format}</td>
-            <td class="py-3 px-4 font-mono">${r.qty}</td>
-            <td class="py-3 px-4 font-mono text-amber-400 font-semibold">${r.volumeL.toFixed(2)} L</td>
-            <td class="py-3 px-4 text-slate-400">${r.customer}</td>
-          </tr>
-        `).join('');
-
-        // Summary Cards
-        const totalLiters = state.requestsLog.reduce((acc, c) => acc + c.volumeL, 0);
-        document.getElementById('demand-summary-cards').innerHTML = `
-          <div class="bg-cellar-card border border-cellar-border p-4 rounded-xl">
-            <span class="text-xs text-slate-400">Total Logged Volume</span>
-            <div class="text-xl font-bold text-white font-mono mt-1">${totalLiters.toFixed(1)} Liters</div>
-          </div>
-          <div class="bg-cellar-card border border-cellar-border p-4 rounded-xl">
-            <span class="text-xs text-slate-400">Top In-Demand Brand</span>
-            <div class="text-xl font-bold text-amber-400 mt-1">Strata #20</div>
-          </div>
-          <div class="bg-cellar-card border border-cellar-border p-4 rounded-xl">
-            <span class="text-xs text-slate-400">Average Weekly Taproom Pull</span>
-            <div class="text-xl font-bold text-blue-400 font-mono mt-1">55.0 L/wk</div>
-          </div>
-        `;
-      }
-
-      function renderCatalogView() {
-        const tbody = document.getElementById('catalog-table-body');
-        tbody.innerHTML = state.catalog.map((c, i) => `
-          <tr class="hover:bg-slate-800/40 transition">
-            <td class="py-3 px-4 font-semibold text-white">${c.name}</td>
-            <td class="py-3 px-4 text-slate-300">${c.style}</td>
-            <td class="py-3 px-4">
-              <span class="px-2 py-0.5 rounded text-[10px] ${c.category === 'Core Brand' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-300'}">${c.category}</span>
-            </td>
-            <td class="py-3 px-4 font-mono text-slate-300">${c.defaultLane}</td>
-            <td class="py-3 px-4 font-mono text-slate-300">${c.fermentDays} days</td>
-            <td class="py-3 px-4 font-mono text-slate-300">${c.conditionDays} days</td>
-            <td class="py-3 px-4 font-mono text-slate-300">${c.targetStockKegs} Kegs</td>
-            <td class="py-3 px-4 text-right">
-              <button onclick="App.deleteBrand(${i})" class="text-slate-400 hover:text-red-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-            </td>
-          </tr>
-        `).join('');
-        lucide.createIcons();
-      }
-
-      function switchView(viewName) {
-        state.activeView = viewName;
-        ['ops', 'schedule', 'demand', 'catalog'].forEach(v => {
-          const sec = document.getElementById(`view-${v}`);
-          const tab = document.getElementById(`nav-${v}`);
-          if (v === viewName) {
-            sec.classList.remove('hidden');
-            tab.className = 'nav-tab px-4 py-1.5 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5';
-          } else {
-            sec.classList.add('hidden');
-            tab.className = 'nav-tab px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-1.5';
-          }
-        });
-        if (viewName === 'schedule' && state.schedule.length === 0) {
-          runAutoScheduler();
-        }
-        lucide.createIcons();
-      }
-
-      /**
-       * EXTERNAL DATA SYNC HOOKS
-       */
-      async function syncBrewfather() {
-        const btn = document.getElementById('btn-sync-bf');
-        btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Syncing...`;
-        lucide.createIcons();
-
-        try {
-          if (!state.config.bfUser || !state.config.bfKey) {
-            alert('Please configure your Brewfather API credentials in Settings first.');
-            openSettingsModal();
-            return;
-          }
-          // Real fetch implementation (Uses Base64 Basic Auth)
-          const headers = new Headers({
-            'Authorization': 'Basic ' + btoa(`${state.config.bfUser}:${state.config.bfKey}`)
-          });
-          const res = await fetch('https://api.brewfather.app/v2/batches?status=Fermenting&include=recipe', { headers });
-          if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-          const data = await res.json();
-          console.log('Brewfather sync complete:', data);
-          alert('Brewfather sync complete! Active fermentation data refreshed.');
-        } catch (err) {
-          console.warn('Brewfather Direct API Sync notice (CORS/Network):', err);
-          alert('Sync simulated: Live cellar data is currently up to date.');
-        } finally {
-          btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync Brewfather`;
-          lucide.createIcons();
-        }
-      }
-
-      async function syncGoogleSheets() {
-        const btn = document.getElementById('btn-sync-sheets');
-        btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Fetching...`;
-        lucide.createIcons();
-
-        try {
-          if (!state.config.sheetsUrl) {
-            alert('Please enter your Google Sheets CSV Export URL in Settings.');
-            openSettingsModal();
-            return;
-          }
-          const res = await fetch(state.config.sheetsUrl);
-          const csvText = await res.text();
-          console.log('Google Sheets CSV received:', csvText.slice(0, 100));
-          alert('Google Sheets sales demand refreshed successfully.');
-        } catch (err) {
-          console.warn('Google Sheets fetch notice:', err);
-          alert('Sales log is up to date.');
-        } finally {
-          btn.innerHTML = `<i data-lucide="sheet" class="w-3.5 h-3.5"></i> Sync Sales Log`;
-          lucide.createIcons();
-        }
-      }
-
-      // Settings Modal Handlers
-      function openSettingsModal() {
-        document.getElementById('cfg-bf-user').value = state.config.bfUser;
-        document.getElementById('cfg-bf-key').value = state.config.bfKey;
-        document.getElementById('cfg-sheets-url').value = state.config.sheetsUrl;
-        document.getElementById('modal-settings').classList.remove('hidden');
-      }
-
-      function closeSettingsModal() {
-        document.getElementById('modal-settings').classList.add('hidden');
-      }
-
-      function saveSettings() {
-        state.config.bfUser = document.getElementById('cfg-bf-user').value.trim();
-        state.config.bfKey = document.getElementById('cfg-bf-key').value.trim();
-        state.config.sheetsUrl = document.getElementById('cfg-sheets-url').value.trim();
-        
-        const brewDays = [];
-        if (document.getElementById('cfg-day-sat').checked) brewDays.push(6);
-        if (document.getElementById('cfg-day-tue').checked) brewDays.push(2);
-        if (document.getElementById('cfg-day-thu').checked) brewDays.push(4);
-        state.config.brewDays = brewDays;
-
-        localStorage.setItem('oc_bf_user', state.config.bfUser);
-        localStorage.setItem('oc_bf_key', state.config.bfKey);
-        localStorage.setItem('oc_sheets_url', state.config.sheetsUrl);
-        localStorage.setItem('oc_brew_days', JSON.stringify(brewDays));
-
-        closeSettingsModal();
-        runAutoScheduler();
-      }
-
-      function deleteBrand(index) {
-        if (confirm(`Remove ${state.catalog[index].name} from catalog?`)) {
-          state.catalog.splice(index, 1);
-          renderCatalogView();
-          runAutoScheduler();
-        }
-      }
-
-      function init() {
-        renderOpsView();
-        renderDemandView();
-        renderCatalogView();
-        runAutoScheduler();
-        lucide.createIcons();
-      }
-
-      return {
-        init,
-        switchView,
-        runAutoScheduler,
-        syncBrewfather,
-        syncGoogleSheets,
-        openSettingsModal,
-        closeSettingsModal,
-        saveSettings,
-        deleteBrand
-      };
-    })();
-
-    // Boot App on DOM Load
-    document.addEventListener('DOMContentLoaded', App.init);
-  </script>
-</body>
-</html>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+<main class="app">
+<section id="view-ops" hidden><div class="panel soon">Operations &amp; Cellar (On Tap, Conditioning, Fermenting, Timeline): not yet ported from the standalone app.</div></section>
+<section id="view-schedule" hidden><div class="panel soon">Production Schedule: not yet ported from the standalone app.</div></section>
+<section id="view-requests" hidden><div id="rl">
+    <div class="toolbar">
+        <button id="refresh">↻ Refresh data</button>
+        <span class="context">Beer</span>
+        <select id="beer">
+        <option value="">All beers</option>
+        </select>
+        <span id="weeksData" class="context">— weeks of data</span>
+    </div>
+    <nav>
+        <button class="tab active" data-v="weekly">Weekly Summary</button>
+        <button class="tab" data-v="all">By Beer (All-Time)</button>
+        <button class="tab" data-v="core">Core Brands</button>
+        <button class="tab" data-v="fillers">Fillers</button>
+        <button class="tab" data-v="seasonal">Seasonal View</button>
+        <button class="tab" data-v="raw">Raw Requests</button>
+    </nav>
+    <section id="v-weekly" class="view active">
+        <div class="toolbar">
+            <span class="context">ISO Year-Week</span>
+            <select id="week">
+            </select>
+            <span id="weekDates" class="context">—</span>
+        </div>
+        <div id="stats" class="stats">
+        </div>
+        <div class="wrap">
+            <table id="weeklyT">
+                <thead>
+                    <tr>
+                        <th>Beer</th>
+                        <th class="num">Requests</th>
+                        <th class="num">Growlers</th>
+                        <th class="num">6-Packs</th>
+                        <th class="num">Total Volume (L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
+        <div id="weeklyEmpty" class="empty" hidden>No requests logged for this week.</div>
+    </section>
+    <section id="v-all" class="view">
+        <div class="wrap">
+            <table id="allT">
+                <thead>
+                    <tr>
+                        <th data-k="beer">Beer</th>
+                        <th data-k="avgVolWeek" class="num">Avg Vol/Week (L)</th>
+                        <th data-k="avgWeeklyShare" class="num">Avg Weekly Share</th>
+                        <th data-k="popularityScore" class="num sorted">Popularity Score</th>
+                        <th data-k="dataStatus">Data Status</th>
+                        <th data-k="weeks" class="num">Weeks Offered</th>
+                        <th data-k="requests" class="num">Requests</th>
+                        <th data-k="volume" class="num">Total Volume (L)</th>
+                        <th data-k="sixpacks" class="num">6-Packs</th>
+                        <th data-k="growlers" class="num">Growlers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
+        <p class="note">
+        <b>Popularity Score</b> combines a beer’s average share of weekly requested volume while offered with a mild adjustment for the number of weeks it was offered.</p>
+    </section>
+    <section id="v-core" class="view">
+        <div class="wrap">
+            <table id="coreT">
+            </table>
+        </div>
+        <div id="coreEmpty" class="empty" hidden>No beers with request-log data are categorized as Core Brands.</div>
+        <p class="note">
+        <b>Core Brands</b> are regular-production beers. Use Popularity Score, Avg Vol/Week, and Avg Weekly Share together to identify brands that are reliably carrying the ongoing brewing portfolio.</p>
+        <div id="corePending" class="pending" hidden>
+        </div>
+    </section>
+    <section id="v-fillers" class="view">
+        <div class="wrap">
+            <table id="fillersT">
+            </table>
+        </div>
+        <div id="fillersEmpty" class="empty" hidden>No beers with request-log data are categorized as Fillers.</div>
+        <p class="note">
+        <b>Fillers</b> are supporting or rotating beers. A lower score alone does not require removal; compare it with the beer’s purpose, production burden, variety value, and alternatives for the same slot.</p>
+        <div id="fillersPending" class="pending" hidden>
+        </div>
+    </section>
+    <section id="v-seasonal" class="view">
+        <div id="uncat" class="notice" hidden>
+        </div>
+        <div class="wrap">
+            <table id="seasonalT">
+            </table>
+        </div>
+        <div id="seasonalEmpty" class="empty" hidden>No beers with request-log data are categorized as Seasonal.</div>
+        <p class="note">
+        <b>Seasonal View</b> shows only beers assigned to Seasonal. Compare average weekly share and litres per week within actual seasonal runs.</p>
+        <div id="seasonalPending" class="pending" hidden>
+        </div>
+    </section>
+    <section id="v-raw" class="view">
+        <div class="toolbar">
+            <span class="context">Search beer</span>
+            <input id="search" placeholder="type to filter…">
+        </div>
+        <div class="wrap">
+            <table id="rawT">
+                <thead>
+                    <tr>
+                        <th data-k="date" class="sorted">Date</th>
+                        <th data-k="isoYearWk">ISO Wk</th>
+                        <th data-k="beer">Beer</th>
+                        <th data-k="growlers" class="num">Growlers</th>
+                        <th data-k="sixpacks" class="num">6-Packs</th>
+                        <th data-k="volume" class="num">Volume (L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="rawEmpty" class="empty" hidden>No rows match.</div>
+    </section>
+</div></section>
+<section id="view-catalog" hidden><div class="panel soon">Beer Catalog: not yet ported from the standalone app.</div></section>
+</main>
+<script src="js/request-log.js"></script>
+<script src="js/app.js"></script>
+</body></html>
