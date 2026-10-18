@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.4.1';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.5.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -869,6 +869,75 @@
     el.content.innerHTML = '<div class="grid">' + cards + '</div>';
   }
 
+  // ---- Kegerator (4 taps). Brewfather is the source of truth; four custom batch fields. ----
+  const KEG_FIELDS = { vol: 'Vol To Kegerator', into: 'Date Into Kegerator', kicked: 'Date Kicked From Kegerator', tap: 'Kegerator Tap Number' };
+  const KEGERATOR_TAPS = 4;
+
+  function computeKegerator(batches){
+    const items = [];
+    for(const b of batches){
+      const vol = kegeratorVolOf(b);
+      const dateInto = parseBFValue(findMeasuredField(b, KEG_FIELDS.into));
+      const dateKicked = parseBFValue(findMeasuredField(b, KEG_FIELDS.kicked));
+      const tapRaw = findMeasuredField(b, KEG_FIELDS.tap);
+      const tapNum = (tapRaw !== null && tapRaw !== '' && !isNaN(Number(tapRaw))) ? Number(tapRaw) : null;
+      if(!(vol > 0) && !dateInto && !dateKicked) continue;
+      items.push({
+        name: normalizeBeerName(getRecipeName(b)),
+        batchNumber: b.batchNo || b.batchNumber || null,
+        vol, dateInto, dateKicked, tap: tapNum
+      });
+    }
+    const inKegerator = items.filter(i => i.dateInto && !i.dateKicked);
+    const slots = [];
+    for(let n = 1; n <= KEGERATOR_TAPS; n++) slots.push({ tap: n, items: inKegerator.filter(i => i.tap === n) });
+    return {
+      slots,
+      noTap: inKegerator.filter(i => !(i.tap >= 1 && i.tap <= KEGERATOR_TAPS)),
+      waiting: items.filter(i => !i.dateInto && !i.dateKicked && i.vol > 0),
+      kicked: items.filter(i => i.dateKicked).sort((a,b) => b.dateKicked - a.dateKicked).slice(0, 8)
+    };
+  }
+
+  function renderKegerator(kz){
+    const volText = v => (v > 0 ? (Math.round(v * 100) / 100) + ' L' : '—');
+    const daysIn = d => Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000));
+    const heading = t => '<div style="font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin:26px 0 10px">' + t + '</div>';
+    const card = (i, badge) => {
+      const color = colorForBeer(i.name);
+      return '<div class="keg" style="--tap-color:' + color + '">' + (badge || '') +
+        '<div class="keg-name">' + escapeHtml(i.name) + '</div>' +
+        '<div class="keg-meta"><span>Batch <b>' + (i.batchNumber ? '#' + escapeHtml(String(i.batchNumber)) : '—') + '</b></span>' +
+        '<span>Volume <b>' + volText(i.vol) + '</b></span></div>' +
+        '<div class="keg-meta"><span>Into kegerator <b>' + (i.dateInto ? fmtDate(i.dateInto) : '—') + '</b></span>' +
+        '<span>' + (i.dateKicked ? 'Kicked <b>' + fmtDate(i.dateKicked) + '</b>' : 'In for <b>' + (i.dateInto ? daysIn(i.dateInto) + ' d' : '—') + '</b>') + '</span></div>' +
+        '</div>';
+    };
+    const slotCards = kz.slots.map(s => {
+      if(s.items.length === 0){
+        return '<div class="keg" style="opacity:.55"><span class="keg-badge">Tap ' + s.tap + '</span><div class="keg-name">Open</div>' +
+          '<div class="keg-meta"><span>Nothing assigned to this tap</span></div></div>';
+      }
+      const dup = s.items.length > 1;
+      return s.items.map(i => card(i, '<span class="keg-badge' + (dup ? ' kicked' : '') + '">Tap ' + s.tap + (dup ? ' · double-booked' : '') + '</span>')).join('');
+    }).join('');
+
+    let html = heading('Kegerator taps') + '<div class="grid">' + slotCards + '</div>';
+    if(kz.noTap.length){
+      html += heading('In kegerator but no valid tap number (1–' + KEGERATOR_TAPS + ')') +
+        '<div class="grid">' + kz.noTap.map(i => card(i, '<span class="keg-badge kicked">No tap #</span>')).join('') + '</div>';
+    }
+    if(kz.waiting.length){
+      html += heading('Volume set, not yet in kegerator') +
+        '<div class="grid">' + kz.waiting.map(i => card(i, '<span class="keg-badge">Waiting</span>')).join('') + '</div>';
+    }
+    if(kz.kicked.length){
+      html += heading('Recently kicked') +
+        '<div class="grid">' + kz.kicked.map(i => card(i, '<span class="keg-badge kicked">Kicked</span>')).join('') + '</div>';
+    }
+    el.content.innerHTML = html;
+  }
+
   function renderCurrentTab(){
     if(!lastComputed) return;
     if(currentTab === 'conditioning'){
@@ -879,6 +948,8 @@
       renderTimeline(lastComputed.kegs, lastComputed.conditioning, lastComputed.fermenting);
     } else if(currentTab === 'volonhand'){
       renderVolOnHand(lastComputed.volOnHand, lastComputed.requestLogError);
+    } else if(currentTab === 'kegerator'){
+      renderKegerator(lastComputed.kegerator);
     } else {
       renderOnTap(lastComputed.kegs);
     }
@@ -1193,7 +1264,7 @@
         requestLogError = reqErr.message;
       }
 
-      lastComputed = { kegs, conditioning, fermenting, volOnHand, requestLogError };
+      lastComputed = { kegs, conditioning, fermenting, volOnHand, requestLogError, kegerator: computeKegerator(batches) };
       renderCurrentTab();
 
       if(batches.length > 0){
