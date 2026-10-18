@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
+<meta name="ocd-version" content="0.3.1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olde Cellar | Operations Dashboard</title>
 <link rel="stylesheet" href="css/theme.css">
@@ -10,7 +11,7 @@
 </head><body>
 <header class="app-header">
   <div class="dash-bar">
-    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard</h1></div>
+    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.3.1</span></h1></div>
     <button class="dash-btn" id="refresh-all">Refresh Data</button>
   </div>
   <nav class="dash-tabs" id="tabs"></nav>
@@ -238,6 +239,7 @@
 </div></section>
 <section id="view-catalog" hidden><div class="dash-panel dash-soon">Beer Catalog: not yet ported from the standalone app.</div></section>
 </main>
+<footer id="ver" class="dash-verline"></footer>
 <script src="js/request-log.js"></script>
 <script src="js/on-tap.js"></script>
 <script src="js/app.js"></script>
