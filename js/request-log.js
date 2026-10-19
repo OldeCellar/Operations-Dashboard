@@ -1,9 +1,10 @@
-(window.OCD_V=window.OCD_V||{})['request-log.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['request-log.js']='0.2.0';
 /* Request Log module: reads the public Google Sheet (gviz CSV). RequestLog.mount() runs once. */
 window.RequestLog=(()=>{
 let mounted=false,reload=()=>{};
-function mount(){
+async function mount(){
 if(mounted)return;mounted=true;
+try{await (window.OCD&&OCD.ready)}catch(e){}
 const root=document.getElementById("rl");
 
 
@@ -18,7 +19,7 @@ const SHEET_ID="1bbU3rU6K7-t5n1jnE6USjTngIFBTJEoAYgKQvsdlPMk",GID="0",CSV_URL=`h
     // categories. For example, MaiBock appears in both Seasonal
     // and Core Brands while Seasonal remains its primary category.
     // ============================================================
-    const BEER_CATALOG = {
+    const BEER_CATALOG = Object.assign({}, (window.OCD&&OCD.requestLogCatalog&&OCD.requestLogCatalog())||{}, {
         "Czech Mate": {
             primary: "Core Brands",
             categories: ["Core Brands"]
@@ -111,7 +112,7 @@ const SHEET_ID="1bbU3rU6K7-t5n1jnE6USjTngIFBTJEoAYgKQvsdlPMk",GID="0",CSV_URL=`h
             primary: "Seasonal",
             categories: ["Seasonal"]
         }
-};
+});
 let ROWS=[],filter="",view="weekly",sorts={all:{k:"popularityScore",d:-1},core:{k:"popularityScore",d:-1},fillers:{k:"popularityScore",d:-1},seasonal:{k:"popularityScore",d:-1},raw:{k:"date",d:-1}};
 const esc=v=>String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 const catalog=b=>BEER_CATALOG[b]||null;

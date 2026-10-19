@@ -1,0 +1,19 @@
+#cat{--v-catalog-css:"0.1.0"}
+#cat .cat-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+#cat select,#cat input[type=search]{font:13px var(--mono);padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+#cat label{font:12px var(--mono);color:var(--ink-2);display:flex;gap:6px;align-items:center}
+#cat .cat-status{font:12px var(--mono);color:var(--ink-3);margin:0 0 10px}
+#cat .cat-status.err{color:var(--red);font-weight:700}
+#cat .tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+#cat table{border-collapse:collapse;width:100%;font-size:13px}
+#cat th{background:#8a8478;color:#fff;font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 10px;white-space:nowrap}
+#cat td{padding:9px 10px;border-top:1px solid var(--border);vertical-align:top}
+#cat td.n,#cat th.n{text-align:right;font-family:var(--mono)}
+#cat td.nm{font:600 15px var(--serif)}
+#cat td.note{color:var(--ink-2);min-width:180px}
+#cat tr.off{opacity:.5}
+#cat .empty{text-align:center;color:var(--ink-3);padding:28px}
+#cat .pill{font:11px var(--mono);padding:2px 8px;border-radius:10px;border:1px solid var(--border);background:var(--panel-alt);white-space:nowrap}
+#cat .pill.core-brand{background:#f3e0c0;border-color:#d9b87a}
+#cat .pill.seasonal{background:#e3d3ee;border-color:#bda4d3}
+#cat .pill.filler{background:#dbe7d6;border-color:#a9c3a0}
