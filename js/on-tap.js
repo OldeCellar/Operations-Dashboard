@@ -1057,7 +1057,7 @@
   }
 
   let timelineRowsCache = [];
-  let timelineSortMode = 'batch';
+  let timelineSortMode = 'ontap';
 
   function renderTimeline(kegs, conditioning, fermenting){
     const rows = sortTimelineRows(computeTimeline(kegs, conditioning, fermenting), timelineSortMode);
