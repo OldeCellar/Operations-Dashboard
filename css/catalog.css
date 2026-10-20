@@ -1,4 +1,4 @@
-#cat{--v-catalog-css:"0.1.0"}
+#cat{--v-catalog-css:"0.2.0"}
 #cat .cat-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 #cat select,#cat input[type=search]{font:13px var(--mono);padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
 #cat label{font:12px var(--mono);color:var(--ink-2);display:flex;gap:6px;align-items:center}
@@ -17,3 +17,5 @@
 #cat .pill.core-brand{background:#f3e0c0;border-color:#d9b87a}
 #cat .pill.seasonal{background:#e3d3ee;border-color:#bda4d3}
 #cat .pill.filler{background:#dbe7d6;border-color:#a9c3a0}
+#cat .editbtn{font:11px var(--mono);padding:3px 9px;border:1px solid var(--btn-hover);background:var(--btn);border-radius:3px;cursor:pointer;color:var(--ink)}
+#cat .cat-add{margin-left:auto}

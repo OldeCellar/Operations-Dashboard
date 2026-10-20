@@ -1,5 +1,5 @@
 /* Brewery Amber theme (approximated from Scheduler v33.28). Retune the variables only. */
-:root{--v-theme:"0.3.0";--page:#e9dcc3;--header:#f6ecd8;--panel:#fcf7ec;--panel-alt:#f1e6d0;--border:#d8c7a4;
+:root{--v-theme:"0.4.0";--page:#e9dcc3;--header:#f6ecd8;--panel:#fcf7ec;--panel-alt:#f1e6d0;--border:#d8c7a4;
 --ink:#3a2a1a;--ink-2:#5c4630;--ink-3:#8a7458;--btn:#b9955f;--btn-hover:#a88350;--amber:#a05a0c;
 --green:#2f7d4f;--red:#b3392e;
 --serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
@@ -21,3 +21,18 @@ main.app{max-width:1200px;margin:auto;padding:20px}
 .dash-ver{font:11px var(--mono);color:var(--ink-3);border:1px solid var(--border);border-radius:10px;padding:1px 7px;vertical-align:middle;margin-left:6px}
 .dash-verline{max-width:1200px;margin:0 auto;padding:6px 20px 30px;font:11px var(--mono);color:var(--ink-3)}
 .dash-verline .bad{color:var(--red);font-weight:700}
+
+/* shared modal + form styles (Settings, Beer Catalog editor) */
+.ocd-modal{position:fixed;inset:0;background:rgba(58,42,26,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 14px;overflow-y:auto;z-index:100}
+.ocd-modal[hidden]{display:none!important}
+.ocd-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:22px;width:100%;max-width:560px}
+.ocd-box h3{margin:0 0 10px;font:700 20px var(--serif)}
+.ocd-box label{display:block;font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin-top:12px}
+.ocd-box input[type=text],.ocd-box input[type=password],.ocd-box input[type=number],.ocd-box select,.ocd-box textarea{display:block;width:100%;margin-top:4px;padding:8px 9px;font:14px var(--mono);border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+.ocd-box .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ocd-help{font-size:13px;color:var(--ink-2);margin:0}
+.ocd-msg{font:12px var(--mono);margin:12px 0 0;min-height:16px;color:var(--green)} .ocd-msg.err{color:var(--red);font-weight:700}
+.ocd-actions{display:flex;gap:8px;align-items:center;margin-top:18px}
+.ocd-btn{font:12px var(--mono);padding:8px 14px;border:1px solid var(--btn-hover);background:var(--btn);color:var(--ink);border-radius:3px;cursor:pointer}
+.ocd-btn:hover{background:var(--btn-hover)} .ocd-btn.ghost{background:transparent} .ocd-btn.danger{background:transparent;color:var(--red);border-color:var(--red)}
+.ocd-btn[disabled]{opacity:.5;cursor:not-allowed}

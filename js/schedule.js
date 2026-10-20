@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['schedule.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['schedule.js']='0.2.0';
 /* Production Schedule tab (read-only). All scheduling decisions come from SchedulerEngine (the Scheduler v33.28 code). */
 window.ProductionSchedule=(()=>{
   let started=false,wired=false,R=null,tlOffset=0;
@@ -88,6 +88,7 @@ window.ProductionSchedule=(()=>{
   }
   return{
     mount(){ if(started)return; started=true; wire(); OCD.ready.then(render); },
-    reload(){ if(started) OCD.reload().then(render); }
+    reload(){ if(started) OCD.reload().then(render); },
+    refresh(){ if(started) render(); }
   };
 })();

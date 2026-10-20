@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="ocd-version" content="0.7.0">
+<meta name="ocd-version" content="0.8.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olde Cellar | Operations Dashboard</title>
 <link rel="stylesheet" href="css/theme.css">
@@ -13,8 +13,8 @@
 </head><body>
 <header class="app-header">
   <div class="dash-bar">
-    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.7.0</span></h1></div>
-    <button class="dash-btn" id="refresh-all">Refresh Data</button>
+    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.8.0</span></h1></div>
+    <div><button class="dash-btn" id="open-settings">Settings</button> <button class="dash-btn" id="refresh-all">Refresh Data</button></div>
   </div>
   <nav class="dash-tabs" id="tabs"></nav>
 </header>
@@ -250,13 +250,15 @@
     <select id="cat-lane"><option value="">All lanes</option><option value="ipa">Tank 01 · IPA</option><option value="lager">Tank 02 · Lager</option><option value="flex">Tank 03 · Flex</option></select>
     <input id="cat-search" type="search" placeholder="Search beer, style, note">
     <label><input id="cat-disabled" type="checkbox"> Show disabled</label>
+    <button class="ocd-btn cat-add" id="cat-add">+ Add beer</button>
   </div>
   <p class="cat-status" id="cat-status">Loading catalog…</p>
-  <div class="tablewrap"><table><thead><tr><th>Beer</th><th>Style</th><th>Category</th><th>Lane</th><th class="n">Ferment d</th><th class="n">Condition d</th><th class="n">Total d</th><th class="n">Priority</th><th class="n">Rotation</th><th>Serve target</th><th>Status</th><th>Notes</th></tr></thead><tbody id="cat-body"></tbody></table></div>
+  <div class="tablewrap"><table><thead><tr><th>Beer</th><th>Style</th><th>Category</th><th>Lane</th><th class="n">Ferment d</th><th class="n">Condition d</th><th class="n">Total d</th><th class="n">Priority</th><th class="n">Rotation</th><th>Serve target</th><th>Status</th><th>Notes</th><th></th></tr></thead><tbody id="cat-body"></tbody></table></div>
 </div></section>
 </main>
 <footer id="ver" class="dash-verline"></footer>
 <script src="js/data.js"></script>
+<script src="js/settings.js"></script>
 <script src="js/request-log.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/scheduler-engine.js"></script>
