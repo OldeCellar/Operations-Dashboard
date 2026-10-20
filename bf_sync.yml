@@ -1,0 +1,290 @@
+name: Sync Brewfather Data
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # Every day at 01:00
+      timezone: 'America/New_York' # EST in winter, EDT in summer
+  workflow_dispatch: # Also manually triggerable from Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Sync Brewfather to brewery_data.json
+        env:
+          BF_USER_ID: ${{ secrets.BF_USER_ID }}
+          BF_API_KEY: ${{ secrets.BF_API_KEY }}
+        run: |
+          python3 - << 'PYEOF'
+          import os
+          import json
+          import requests
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          BF_USER = os.environ['BF_USER_ID']
+          BF_KEY = os.environ['BF_API_KEY']
+          DATA_FILE = 'brewery_data.json'
+
+          # "America/New_York" automatically uses EST or EDT as appropriate.
+          EASTERN_TZ = ZoneInfo('America/New_York')
+
+          if os.path.exists(DATA_FILE):
+              with open(DATA_FILE, encoding='utf-8') as f:
+                  data = json.load(f)
+          else:
+              print("ERROR: brewery_data.json not found - push from app first")
+              raise SystemExit(1)
+
+          auth = (BF_USER, BF_KEY)
+          headers = {'Content-Type': 'application/json'}
+
+          def ts_to_iso(ms):
+              """Convert Brewfather millisecond timestamps to Eastern calendar dates."""
+              if not ms:
+                  return ''
+
+              try:
+                  return datetime.fromtimestamp(
+                      int(ms) / 1000,
+                      tz=EASTERN_TZ
+                  ).strftime('%Y-%m-%d')
+              except (TypeError, ValueError, OSError, OverflowError):
+                  return ''
+
+          def eastern_timestamp():
+              """Return an ISO-8601 timestamp with the Eastern UTC offset."""
+              return datetime.now(EASTERN_TZ).isoformat()
+
+          # 1. Sync batch history - status and keg dates only
+          STATUSES = [
+              'Fermenting',
+              'Conditioning',
+              'Completed',
+              'Archived',
+              'Planning',
+          ]
+
+          bf_batches = []
+
+          for status in STATUSES:
+              url = (
+                  f'https://api.brewfather.app/v2/batches?status={status}&limit=50'
+                  f'&include=recipe.name,measuredOg,measuredFg,estimatedColor'
+              )
+
+              try:
+                  response = requests.get(
+                      url,
+                      auth=auth,
+                      headers=headers,
+                      timeout=15,
+                  )
+                  response.raise_for_status()
+                  batches = response.json()
+                  bf_batches.extend(batches)
+                  print(f"  {status}: {len(batches)} batches")
+              except Exception as exc:
+                  print(f"  WARNING {status}: {exc}")
+
+          hist_by_batch = {
+              history['batch']: history
+              for history in data.get('history', [])
+              if history.get('batch') is not None
+          }
+
+          bf_cache = data.get('bfBatchCache', {})
+          updated = 0
+
+          for batch in bf_batches:
+              bf_id = batch.get('_id', '')
+              bf_num = batch.get('batchNo')
+              status = batch.get('status', '')
+              recipe = batch.get('recipe') or {}
+              name = recipe.get('name', batch.get('name', ''))
+
+              created_seconds = (batch.get('_created') or {}).get('_seconds', 0)
+              brew_ms = batch.get('brewDate') or (created_seconds * 1000)
+              brew_date = ts_to_iso(brew_ms)
+
+              keg_date = (
+                  ts_to_iso(batch.get('bottlingDate'))
+                  if batch.get('bottlingDate')
+                  else ''
+              )
+
+              if bf_num:
+                  cache_key = str(bf_num)
+                  existing_cache = bf_cache.get(cache_key, {})
+
+                  bf_cache[cache_key] = {
+                      **existing_cache,
+                      'status': status,
+                      'bfBrewDate': brew_date,
+                      'kegDate': keg_date or existing_cache.get('kegDate', ''),
+                      'abv': batch.get('estimatedAbv') or batch.get('measuredAbv', ''),
+                      'og': batch.get('measuredOg') or batch.get('estimatedOg', ''),
+                      'fg': batch.get('measuredFg') or batch.get('estimatedFg', ''),
+                      'recipeName': name,
+                      'bfId': bf_id,
+                  }
+
+              if bf_num and bf_num in hist_by_batch:
+                  history = hist_by_batch[bf_num]
+                  changed = False
+
+                  if status and history.get('bfStatus') != status:
+                      history['bfStatus'] = status
+                      changed = True
+
+                  if keg_date and history.get('kegDate') != keg_date:
+                      history['kegDate'] = keg_date
+                      changed = True
+
+                  if brew_date and history.get('date') != brew_date:
+                      history['date'] = brew_date
+                      changed = True
+
+                  if changed:
+                      updated += 1
+                      print(f"  Updated #{bf_num} {name}")
+
+          print(
+              f"Batches: {updated} history entries updated, "
+              f"{len(bf_cache)} cache entries"
+          )
+
+          # 2. Sync all 4 ingredient types from BF inventory
+          ING_TYPES = [
+              ('fermentables', 'Fermentable'),
+              ('hops', 'Hop'),
+              ('yeasts', 'Yeast'),
+              ('miscs', 'Misc'),
+          ]
+
+          if 'packaging' not in data:
+              data['packaging'] = {}
+
+          if 'inventory' not in data['packaging']:
+              data['packaging']['inventory'] = []
+
+          inventory = data['packaging']['inventory']
+          by_id = {
+              item['bf_id']: item
+              for item in inventory
+              if item.get('bf_id')
+          }
+
+          # Stored and displayed as an Eastern ISO-8601 timestamp,
+          # e.g. 2026-09-30T01:00:00-04:00.
+          now = eastern_timestamp()
+          ing_updated = 0
+          ing_added = 0
+
+          for endpoint, ing_type in ING_TYPES:
+              try:
+                  response = requests.get(
+                      f'https://api.brewfather.app/v1/inventory/{endpoint}',
+                      auth=auth,
+                      headers=headers,
+                      timeout=15,
+                  )
+                  response.raise_for_status()
+                  items = response.json()
+                  print(f"  {endpoint}: {len(items)} items")
+              except Exception as exc:
+                  print(f"  WARNING {endpoint}: {exc}")
+                  continue
+
+              for item in items:
+                  bf_inventory_id = item.get('_id', '')
+                  name = item.get('name', '')
+
+                  if not bf_inventory_id or not name:
+                      continue
+
+                  on_hand = item.get('inventory', 0) or 0
+
+                  if bf_inventory_id in by_id:
+                      existing = by_id[bf_inventory_id]
+                      existing['onHand'] = on_hand
+                      existing['name'] = name
+                      existing['bf_supplier'] = item.get(
+                          'supplier',
+                          existing.get('bf_supplier', ''),
+                      )
+                      existing['lastBFSync'] = now
+                      ing_updated += 1
+                  else:
+                      new_item = {
+                          'bf_id': bf_inventory_id,
+                          'name': name,
+                          'type': ing_type,
+                          'onHand': on_hand,
+                          'bf_supplier': item.get('supplier', ''),
+                          'bf_type': item.get('type', ''),
+                          'lotNumber': item.get('lotNumber', ''),
+                          'minStock': 0,
+                          'supplier': '',
+                          'sku': '',
+                          'purchaseQty': 0,
+                          'purchaseUnit': (
+                              'kg' if ing_type == 'Fermentable' else 'g'
+                          ),
+                          'lastBFSync': now,
+                          '_fromBF': True,
+                      }
+
+                      inventory.append(new_item)
+                      by_id[bf_inventory_id] = new_item
+                      ing_added += 1
+
+          print(f"Inventory: {ing_updated} updated, {ing_added} added")
+
+          # 3. Write back - only BF fields changed
+          data['bfBatchCache'] = bf_cache
+          data['bfSyncTime'] = now
+          data.pop('bfCreds', None)
+
+          with open(DATA_FILE, 'w', encoding='utf-8') as f:
+              json.dump(data, f, indent=2)
+
+          print(f"Done: {now}")
+          PYEOF
+
+      - name: Commit if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add brewery_data.json
+
+          if git diff --staged --quiet; then
+            echo "No changes - skipping commit"
+          else
+            git commit -m "BF auto-sync $(TZ=America/New_York date '+%Y-%m-%d %H:%M %Z')"
+
+            # Commit first, THEN rebase: the sync step leaves brewery_data.json modified
+            # in the working tree, and git refuses to pull --rebase over unstaged changes.
+            git pull --rebase origin "${{ github.ref_name }}"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
