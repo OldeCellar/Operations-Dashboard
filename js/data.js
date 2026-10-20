@@ -1,8 +1,8 @@
-(window.OCD_V=window.OCD_V||{})['data.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['data.js']='0.1.1';
 /* Shared data loader. ONE setting decides where brewery_data.json lives.
-   Stage 1: the Scheduler repo. Stage 2: change dataUrl to this repo's own copy (e.g. 'data/brewery_data.json'). */
+   Stage 2 (now): this repo's own copy, kept fresh by the nightly bf_sync.yml Action and by the Scheduler/dashboard saves. */
 window.OCD=window.OCD||{};
-OCD.config={dataUrl:'https://raw.githubusercontent.com/OldeCellar/Scheduler/main/brewery_data.json'};
+OCD.config={dataUrl:'https://raw.githubusercontent.com/OldeCellar/Operations-Dashboard/main/brewery_data.json'};
 OCD.status={ok:false,error:null,loadedAt:null};
 OCD._data=null;
 OCD.load=async function(){
