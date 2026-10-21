@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-21T11:37:05.471Z",
+  "savedAt": "2026-10-21T11:37:21.338Z",
   "beers": [
     {
       "id": 1,
@@ -394,7 +394,7 @@
       "target": null,
       "targets": null,
       "seqStart": null,
-      "note": "This is modeled on Kagua Saison",
+      "note": "Based on Kagua Saison",
       "enabled": true,
       "id": 21
     },
