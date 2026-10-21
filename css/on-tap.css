@@ -1,5 +1,5 @@
 /* On Tap module, scoped under #ot */
-#ot{--v-on-tap-css:"0.3.0";--bg: #f6f1e7;
+#ot{--v-on-tap-css:"0.3.1";--bg: #f6f1e7;
     --bg-panel: #fffdf9;
     --bg-card: #ffffff;
     --line: #e2d8c3;
@@ -75,7 +75,7 @@
     line-height: 1.7;}
 #ot .empty-state strong{color: var(--stone); font-family: var(--font-body); display:block; font-size:15px; margin-bottom:6px;}
 #ot .grid{display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
     gap: 16px;}
 #ot .keg{background: var(--bg-card);
     border: 1px solid var(--line);
@@ -125,10 +125,11 @@
     font-size: 12px;
     color: #000000;
     text-shadow: 0 0 4px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,0.9);}
-#ot .keg-meta{display:flex; justify-content: space-between;
+#ot .keg-meta{display:flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 14px;
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--stone-dim);}
+#ot .keg-meta span{white-space: nowrap;}
 #ot .keg-meta span b{color: var(--stone); font-weight: 500;}
 #ot .keg-history{font-family: var(--font-mono);
     font-size: 10.5px;

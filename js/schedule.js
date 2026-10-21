@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['schedule.js']='0.2.0';
+(window.OCD_V=window.OCD_V||{})['schedule.js']='0.3.0';
 /* Production Schedule tab (read-only). All scheduling decisions come from SchedulerEngine (the Scheduler v33.28 code). */
 window.ProductionSchedule=(()=>{
   let started=false,wired=false,R=null,tlOffset=0;
@@ -40,19 +40,40 @@ window.ProductionSchedule=(()=>{
     h+='<div class="legend">'+[...used].map(s=>`<span><i style="background:${E().STYLE_CLR[s]||'#6a6050'}"></i>${esc(s)}</span>`).join('')+'</div></div>';
     return h;
   }
-  function upcomingHtml(){
-    const rows=[];
-    R.upcoming.forEach(w=>{
-      if(w.skipped){rows.push(`<tr class="skip"><td>${DW(w.sat)}</td><td colspan="7">No brew — ${esc(w.skipReason||'skipped')}</td></tr>`);return;}
-      (w.brews||[]).forEach(b=>{
-        if(!b.beer) return;
-        const fl=[b.extra?'<span class="fl extra">Extra</span>':'',b.seasonal?'<span class="fl seas">Seasonal</span>':'',b.manual?'<span class="fl man">Manual</span>':''].join('');
-        rows.push(`<tr><td>${DW(b.brewDate||w.sat)}</td><td class="mono">${esc(b.tank||'—')}</td>
-          <td class="nm"><i style="background:${E().clr(b.beer)}"></i>${esc(b.beer.name)} ${fl}</td>
-          <td class="n">${b.seq||'—'}</td><td class="n">${esc(b.batch||'—')}</td><td>${D(b.kegDate)}</td><td>${D(b.readyDate)}</td><td class="note">${esc(b.notes||'')}</td></tr>`);
-      });
+  // ---- Schedule table: same columns, order and behaviour as the Scheduler's Schedule tab ----
+  let sort={col:'date',dir:1},filter='';
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dash=d=>d?WD[d.getDay()]+'-'+MO[d.getMonth()]+'/'+String(d.getDate()).padStart(2,'0')+'/'+d.getFullYear():'—';
+  const SC={'var(--blue2)':'#2c5aa0','var(--amber)':'#a05a0c','var(--gold2)':'#a05a0c','var(--hops)':'#2f7d4f','var(--muted)':'#8a7458','var(--green)':'#2f7d4f','var(--red2)':'#b3392e','#c47000':'#c47000','var(green)':'#2f7d4f'};
+  function fillViewFrom(){
+    const sel=$('sch-from'), prev=sel.value; sel.innerHTML='';
+    for(let i=-8;i<52;i++){ const sat=E().addDays(E().saturdayOf(R.today),i*7); const o=document.createElement('option'); o.value=i; o.textContent=D(sat)+(i===0?' ← this week':''); sel.appendChild(o); }
+    sel.value=prev!==''&&sel.querySelector('option[value="'+prev+'"]')?prev:'0';
+  }
+  function scheduleTable(){
+    const start=parseInt($('sch-from').value)||0, wks=parseInt($('sch-show').value)||16;
+    let rows=E().scheduleRows(start,wks);
+    const q=filter.toLowerCase().trim();
+    if(q) rows=rows.filter(r=>!r.b||(r._name.toLowerCase().includes(q)||String(r._batch).includes(q)||r._style.toLowerCase().includes(q)||r._tank.toLowerCase().includes(q)));
+    const col=sort.col,dir=sort.dir; let out;
+    if(col&&col!=='date'){
+      const br=rows.filter(r=>r.type==='brew').sort((a,b)=>{let av=a['_'+col],bv=b['_'+col];if(col==='batch'||col==='seq'){av=Number(av)||0;bv=Number(bv)||0;}return av<bv?-dir:av>bv?dir:0;});
+      let bi=0; out=rows.map(r=>r.type!=='brew'?r:br[bi++]);
+    } else out=dir===1?rows:[...rows].reverse();
+    const ar=c=>sort.col!==c?'<span class="ar">⇅</span>':'<span class="ar on">'+(sort.dir===1?'↑':'↓')+'</span>';
+    const th=(c,l)=>`<th class="sortable" data-sort="${c}">${l}${ar(c)}</th>`;
+    let h=`<thead><tr>${th('date','Brew Day')}${th('tank','Tank')}${th('batch','Batch#')}${th('name','Beer')}${th('seq','Seq#')}${th('style','Style')}<th>Cat</th>${th('kegDate','Scheduled Keg Date')}<th>Serve-Ready</th><th>Status</th></tr></thead><tbody>`;
+    out.forEach(r=>{
+      const now=r.isNow?'<span class="now">NOW</span>':'';
+      if(r.type==='skip'){ h+=`<tr class="nb"><td class="mono nw">${dash(r.sat)}${now}</td><td colspan="9">⊘ Skipped — ${esc(r.skipReason)}</td></tr>`; return; }
+      if(r.type==='nobrew'){ h+=`<tr class="nb ${r.isPast?'past':''}"><td class="mono nw">${dash(r.sat)}${now}</td><td colspan="9">${r.isPast?'No brew recorded':'No brew — all tanks busy'}</td></tr>`; return; }
+      const b=r.b, fl=(b.manual?'<span class="fl man">MANUAL</span>':'')+(b.extra?'<span class="fl extra">EXTRA</span>':'');
+      h+=`<tr class="${r.isPast?'past':''}${r.overridden?' ov':''}"><td class="mono nw">${dash(r.showDate)}${now}</td><td class="mono dim">${esc(b.tank||'')}</td><td class="bn">#${esc(b.batch)}</td>
+        <td class="nm">${b.beer?esc(b.beer.name):'?'}${fl}</td><td class="mono dim">#${esc(b.seq)}</td><td>${b.beer?`<span class="pill">${esc(b.beer.style)}</span>`:''}</td>
+        <td>${b.beer?`<span class="pill ${esc(b.beer.cat.replace(' ','-'))}">${esc(b.beer.cat)}</span>`:''}</td><td class="mono nw">${D(b.kegDate)}</td><td class="mono nw">${D(b.readyDate)}</td>
+        <td class="mono" style="color:${SC[r.statusColor]||'#8a7458'}">${esc(r.statusLabel)}</td></tr>`;
     });
-    return `<div class="tablewrap"><table><thead><tr><th>Brew date</th><th>Tank</th><th>Beer</th><th class="n">Brew #</th><th class="n">Batch #</th><th>Keg</th><th>Ready</th><th>Notes</th></tr></thead><tbody>${rows.join('')||'<tr><td colspan="8" class="empty">Nothing scheduled.</td></tr>'}</tbody></table></div>`;
+    return `<div class="tablewrap"><table>${h}</tbody></table></div>`;
   }
   function gapsHtml(){
     const min=E().GAP_DETAIL_MIN, g=R.gaps;
@@ -76,14 +97,17 @@ window.ProductionSchedule=(()=>{
     if(!d||!eng){st.className='sch-status err';st.textContent='Could not load schedule data'+(OCD.status.error?': '+OCD.status.error:'.');return;}
     try{ R=eng.build(d); }catch(e){ console.error(e); st.className='sch-status err'; st.textContent='Schedule engine error: '+e.message; return; }
     st.className='sch-status';
-    st.textContent='Built '+new Date().toLocaleTimeString()+' from data saved '+(d.savedAt?new Date(d.savedAt).toLocaleString():'unknown')+(d.bfSyncTime?' · Brewfather synced '+new Date(d.bfSyncTime).toLocaleString():'')+' · read-only: edit in the Scheduler for now';
+    st.textContent='Data saved '+(d.savedAt?new Date(d.savedAt).toLocaleString():'unknown')+(d.bfSyncTime?' · Brewfather synced '+new Date(d.bfSyncTime).toLocaleString():'')+' · read-only for now: edit in the Scheduler';
     $('sch-tanks').innerHTML=tanksHtml(); $('sch-timeline').innerHTML=timelineHtml();
-    $('sch-upcoming').innerHTML=upcomingHtml(); $('sch-gaps').innerHTML=gapsHtml();
+    fillViewFrom(); $('sch-table').innerHTML=scheduleTable(); $('sch-times').innerHTML='BF sync: <b>'+(d.bfSyncTime?new Date(d.bfSyncTime).toLocaleString():'not synced')+'</b> · Schedule built: <b>'+new Date().toLocaleString()+'</b>'; $('sch-gaps').innerHTML=gapsHtml();
   }
   function wire(){
     if(wired)return; wired=true;
     $('sch-prev').onclick=()=>{tlOffset-=4;if(R)$('sch-timeline').innerHTML=timelineHtml();};
     $('sch-next').onclick=()=>{tlOffset+=4;if(R)$('sch-timeline').innerHTML=timelineHtml();};
+    const redraw=()=>{ if(R) $('sch-table').innerHTML=scheduleTable(); };
+    $('sch-from').onchange=redraw; $('sch-show').onchange=redraw; $('sch-search').oninput=e=>{filter=e.target.value;redraw();};
+    $('sch-table').addEventListener('click',e=>{const h=e.target.closest('[data-sort]');if(!h)return;const c=h.dataset.sort;if(sort.col===c)sort.dir*=-1;else{sort.col=c;sort.dir=1;}redraw();});
     $('sch-today').onclick=()=>{tlOffset=0;if(R)$('sch-timeline').innerHTML=timelineHtml();};
   }
   return{

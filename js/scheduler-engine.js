@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.2.0';
+(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.3.0';
 /* Scheduling engine: the Scheduler v33.28 code, extracted VERBATIM (only change: `const TODAY` -> `let TODAY` so it refreshes each build),
    plus a small wrapper at the bottom. State comes from brewery_data.json instead of localStorage. */
 window.SchedulerEngine=(()=>{
@@ -1051,6 +1051,50 @@ function getBatchStatus(h, brewDateOverride){
     }
     return out;
   }
+  // Schedule table rows (same row-building logic as the Scheduler's renderSchedule: past weeks from history, future weeks from the engine)
+  function scheduleRows(startIdx, wks){
+    const pastByKey = {};
+    BREW_HISTORY.forEach(h => {
+      if(!h.date) return;
+      const sat = saturdayOf(parseDate(h.date)); if(!sat) return;
+      const k = wkKey(sat);
+      if(!pastByKey[k]) pastByKey[k] = { sat, key:k, brews:[], past:true };
+      const beer = beerByName(h.name);
+      pastByKey[k].brews.push({ beer, tank:h.tank, brewDate:parseDate(h.date),
+        kegDate: h.kegDate ? parseDate(h.kegDate) : (h.date && beer ? calcKegDate(null, parseDate(h.date), beer.t, []) : null),
+        readyDate: beer ? addDays(parseDate(h.date), beer.total) : null, batch:h.batch, seq:h.seq, notes:h.notes || '', bfStatus:h.bfStatus || '' });
+    });
+    const extraWeeks = getExtraWeekKeys(), rows = [];
+    for(let w = startIdx; w < startIdx + wks; w++){
+      const sat = addDays(saturdayOf(TODAY), w*7), k = wkKey(sat);
+      let week;
+      if(pastByKey[k]){
+        week = pastByKey[k];
+        const sw = SCHEDULE.find(x => x.key === k);
+        if(sw && sw.brews && sw.brews.length){
+          const add = sw.brews.filter(b => b.extra || extraWeeks.has(k)).map(b => Object.assign({}, b, { _sched:true }));
+          if(add.length) week = Object.assign({}, week, { brews: week.brews.concat(add) });
+        }
+      }
+      else if(sat > TODAY) week = SCHEDULE.find(x => x.key === k) || { sat, key:k, brews:[] };
+      else week = { sat, key:k, brews:[], past:true, empty:true };
+      const isPast = !!(week.past || week.empty) || (week.sat < TODAY && !week.brews.length);
+      const isNow = week.sat <= TODAY && addDays(week.sat, 7) > TODAY;
+      if(week.skipped){ rows.push({ type:'skip', sat:week.sat, key:week.key, skipReason:week.skipReason || '', isPast, isNow }); continue; }
+      if(!week.brews.length){ rows.push({ type:'nobrew', sat:week.sat, key:week.key, isPast, isNow, overridden:week.overridden }); continue; }
+      week.brews.slice().sort((a,b) => (a.brewDate || week.sat) - (b.brewDate || week.sat)).forEach(b => {
+        const bPast = isPast && !b._sched;
+        let status = b.extra ? { label:'Extra (accepted)', color:'var(--amber)' } : { label:'Scheduled', color:'var(--muted)' };
+        if(bPast){ const s = getBatchStatus({ batch:b.batch, name:b.beer ? b.beer.name : '', date:fmtISO(week.sat), kegDate:b.kegDate ? fmtISO(b.kegDate) : '' }, week.sat); status = { label:s.label, color:s.color }; }
+        else if(week.overridden) status = { label:'Manual', color:'var(--red2)' };
+        rows.push({ type:'brew', sat:week.sat, key:week.key, b, isPast:bPast, isNow, overridden:week.overridden || false,
+          showDate: b.extra && b.brewDate ? b.brewDate : week.sat, statusLabel:status.label, statusColor:status.color,
+          _date: fmtISO(b.extra && b.brewDate ? b.brewDate : week.sat), _batch:b.batch || 0, _name:b.beer ? b.beer.name : '', _seq:b.seq || 0,
+          _style:b.beer ? b.beer.style : '', _tank:b.tank || '', _kegDate:b.kegDate ? fmtISO(b.kegDate) : '' });
+      });
+    }
+    return rows;
+  }
   // Brew History rows: same computed fields as the Scheduler's renderHistory (status from BF cache, days on tap, per-beer averages)
   function historyRows(d){
     const t = new Date(); t.setHours(0,0,0,0); TODAY = t;
@@ -1071,5 +1115,5 @@ function getBatchStatus(h, brewDateOverride){
     list.forEach(r => { const a = by[r.h.name]; r.avgDaysOnTap = a ? Math.round(a.reduce((s,v) => s+v, 0) / a.length) : null; });
     return list;
   }
-  return { build, historyRows, fmtMDY, fmtFull, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
+  return { build, scheduleRows, historyRows, fmtMDY, fmtFull, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
 })();

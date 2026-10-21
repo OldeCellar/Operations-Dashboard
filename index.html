@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="ocd-version" content="0.9.0">
+<meta name="ocd-version" content="0.10.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olde Cellar | Operations Dashboard</title>
 <link rel="stylesheet" href="css/theme.css">
@@ -14,7 +14,7 @@
 </head><body>
 <header class="app-header">
   <div class="dash-bar">
-    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.9.0</span></h1></div>
+    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.10.0</span></h1></div>
     <div><button class="dash-btn" id="open-settings">Settings</button> <button class="dash-btn" id="refresh-all">Refresh Data</button></div>
   </div>
   <nav class="dash-tabs" id="tabs"></nav>
@@ -106,12 +106,18 @@
 
 </div></section>
 <section id="view-schedule" hidden><div id="sch">
+  <div class="schbar">
+    <label>View from</label><select id="sch-from"></select>
+    <label>Show</label><select id="sch-show"><option value="8">8 weeks</option><option value="16" selected>16 weeks</option><option value="26">26 weeks</option><option value="52">Full year</option></select>
+    <input id="sch-search" type="search" placeholder="Search beer, batch, tank…" style="width:210px">
+    <span class="times" id="sch-times"></span>
+  </div>
   <p class="sch-status" id="sch-status">Loading schedule…</p>
+  <div id="sch-table"></div>
   <h3>Tanks right now</h3><div class="tankrow" id="sch-tanks"></div>
   <h3>12-week tank timeline</h3>
   <div class="tlbar"><button id="sch-prev">◀ 4 wks</button><button id="sch-today">Today</button><button id="sch-next">4 wks ▶</button><span id="sch-tl-label"></span></div>
   <div class="tlwrap" id="sch-timeline"></div>
-  <h3>Upcoming brews</h3><div id="sch-upcoming"></div>
   <h3>Tank idle time</h3><div id="sch-gaps"></div>
 </div></section>
 <section id="view-history" hidden><div id="hist">

@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.5.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.5.1';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -1057,7 +1057,7 @@
   }
 
   let timelineRowsCache = [];
-  let timelineSortMode = 'ontap';
+  let timelineSortMode = 'batch';
 
   function renderTimeline(kegs, conditioning, fermenting){
     const rows = sortTimelineRows(computeTimeline(kegs, conditioning, fermenting), timelineSortMode);
@@ -1083,9 +1083,9 @@
     const maxCap = new Date(todayMidnight.getTime() + 240 * MS_PER_DAY);
     if(maxDate > maxCap) maxDate = maxCap;
 
-    const PX_PER_DAY = 20;
     const totalDays = daysFromBase(minDate, maxDate) + 2;
-    const trackWidth = totalDays * PX_PER_DAY;
+    const trackWidth = 1000 - 132;            // whole timeline is 1000px wide (132px label column + track)
+    const PX_PER_DAY = trackWidth / totalDays;
 
     // Weekly gridlines, aligned to ISO Monday week starts
     let gridHtml = '';
