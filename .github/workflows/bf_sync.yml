@@ -269,6 +269,15 @@ jobs:
           print(f"Done: {now}")
           PYEOF
 
+      - name: Import new batches into History
+        # Adds any new Brewfather batches to brewery_data.json history and refreshes tank / Date Tapped / Date Kicked.
+        # continue-on-error: if this step ever fails, the sync above and the commit below still happen.
+        continue-on-error: true
+        env:
+          BF_USER_ID: ${{ secrets.BF_USER_ID }}
+          BF_API_KEY: ${{ secrets.BF_API_KEY }}
+        run: python3 scripts/bf_import.py
+
       - name: Commit if changed
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
