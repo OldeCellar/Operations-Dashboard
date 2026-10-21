@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-21T10:12:49.042Z",
+  "savedAt": "2026-10-21T10:37:07.760Z",
   "beers": [
     {
       "id": 1,
@@ -2071,7 +2071,7 @@
       "tank": "Tank 02",
       "dateTapped": "",
       "dateKicked": "",
-      "notes": "",
+      "notes": "modeled on Kagua Saison",
       "bfStatus": "Fermenting"
     },
     {
