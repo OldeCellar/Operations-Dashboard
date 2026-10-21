@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.2.0';
 /* Scheduling engine: the Scheduler v33.28 code, extracted VERBATIM (only change: `const TODAY` -> `let TODAY` so it refreshes each build),
    plus a small wrapper at the bottom. State comes from brewery_data.json instead of localStorage. */
 window.SchedulerEngine=(()=>{
@@ -13,6 +13,8 @@ let TODAY = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
 function addDays(d,n){ if(!d) return null; const r=new Date(d); r.setDate(r.getDate()+n); return r; }
 
 function parseDate(s){ if(!s||typeof s!=='string'||!s.includes('-')) return null; const [y,m,d]=s.split('-').map(Number); if(!y) return null; return new Date(y,m-1,d); }
+
+function fmtFull(d){ if(!d||isNaN(new Date(d).getTime())) return '—'; return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
 
 function fmtISO(d){ if(!d) return ''; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
@@ -951,7 +953,60 @@ function getTankGaps(ct, upWeeks){
 
 let BF_BATCH_CACHE = {};
 
+const BF_STATUS_MAP = {
+  'Planning':     { label:'BF Planning',  color:'var(--blue2)',  desc:'Planned in Brewfather — not yet brewed' },
+  'Brewing':      { label:'Brewing',      color:'var(--amber)',  desc:'Brew day in progress' },
+  'Fermenting':   { label:'Fermenting',   color:'var(--blue2)',  desc:'In a fermenter tank' },
+  'Conditioning': { label:'Conditioning', color:'var(--gold2)',  desc:'Kegged or bottled, conditioning' },
+  'Completed':    { label:'Completed',    color:'var(--hops)',   desc:'Packaging complete' },
+  'Serving':      { label:'Serving',      color:'#c47000',       desc:'Currently on tap and being served' },
+  'Archived':     { label:'Archived',     color:'var(--muted)',  desc:'All packaging consumed/empty' },
+  'Kegerator':	  { label:'Kegerator', color:'var(green)', desc: 'Keg serving in Kegerator'},
+};
+
 const BF_IN_TANK_STATUSES    = new Set(['Brewing','Fermenting']);
+
+function fmtMDY(d){
+  if(!d || isNaN(new Date(d).getTime())) return '—';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + String(d.getDate()).padStart(2,'0') + ' ' + d.getFullYear();
+}
+
+function getBatchStatus(h, brewDateOverride){
+  // ── Source 1: Live BF cache (most current) ──
+  const cached = BF_BATCH_CACHE[h.batch];
+  if(cached && cached.status && cached.status !== 'Unknown'){
+    const map = BF_STATUS_MAP[cached.status];
+    if(map) return { label:map.label, color:map.color, source:'bf', desc:map.desc };
+    return { label:cached.status, color:'var(--muted)', source:'bf', desc:'' };
+  }
+
+  // ── Source 2: bfStatus stored at import time ──
+  if(h.bfStatus && h.bfStatus !== 'Unknown'){
+    const map = BF_STATUS_MAP[h.bfStatus];
+    if(map) return { label:map.label, color:map.color, source:'bf-stored', desc:map.desc+'  (from last import)' };
+    return { label:h.bfStatus, color:'var(--muted)', source:'bf-stored', desc:'' };
+  }
+
+  // ── Source 3: Date math fallback — no BF data ──
+  const beer = beerByName(h.name);
+  const bd   = brewDateOverride || (h.date ? parseDate(h.date) : null);
+
+  // No brew date → batch is planned but not yet scheduled to brew
+  if(!bd) return { label:'BF Planning', color:'var(--blue2)', source:'calc',
+    desc:'Planned in Brewfather — no brew date set yet' };
+
+  // Future brew date → planned/scheduled
+  if(bd > TODAY) return { label:'BF Planning', color:'var(--blue2)', source:'calc',
+    desc:'Brew date in the future — not yet started' };
+
+  const kd = h.kegDate ? parseDate(h.kegDate) : (beer ? calcKegDate(null,bd,beer.t,[]) : null);
+  const rd = beer ? addDays(bd, beer.total) : null;
+
+  if(rd && rd <= TODAY) return { label:'Completed',    color:'var(--hops)',   source:'calc', desc:'Estimated complete' };
+  if(kd && kd <= TODAY) return { label:'Conditioning', color:'var(--gold2)',  source:'calc', desc:'Estimated conditioning' };
+  return                       { label:'Fermenting',   color:'var(--blue2)',  source:'calc', desc:'Estimated fermenting' };
+}
 
   // ======== Dashboard wrapper (not part of the original Scheduler code) ========
   const clone = x => JSON.parse(JSON.stringify(x));
@@ -996,5 +1051,25 @@ const BF_IN_TANK_STATUSES    = new Set(['Brewing','Fermenting']);
     }
     return out;
   }
-  return { build, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
+  // Brew History rows: same computed fields as the Scheduler's renderHistory (status from BF cache, days on tap, per-beer averages)
+  function historyRows(d){
+    const t = new Date(); t.setHours(0,0,0,0); TODAY = t;
+    setData(d);
+    const list = BREW_HISTORY.map(h => {
+      const beer = beerByName(h.name), bd = h.date ? parseDate(h.date) : null;
+      const kd = h.kegDate ? parseDate(h.kegDate) : (beer && bd ? calcKegDate(null, bd, beer.t, []) : null);
+      const rd = beer && bd ? addDays(bd, beer.total) : null;
+      const tappedActual = h.dateTapped ? parseDate(h.dateTapped) : null, tappedDate = tappedActual || rd;
+      const kickedDate = h.dateKicked ? parseDate(h.dateKicked) : null;
+      const daysOnTap = (tappedActual && kickedDate) ? Math.round((kickedDate - tappedActual) / 86400000) : null;
+      const st = getBatchStatus(h, bd);
+      return { h, beer, bd, kd, rd, tappedDate, tappedActual, kickedDate, daysOnTap,
+        statusLabel: st.label, statusColor: st.color, source: st.source, statusDesc: st.desc || '' };
+    });
+    const by = {};
+    list.forEach(r => { if(r.daysOnTap == null) return; (by[r.h.name] = by[r.h.name] || []).push(r.daysOnTap); });
+    list.forEach(r => { const a = by[r.h.name]; r.avgDaysOnTap = a ? Math.round(a.reduce((s,v) => s+v, 0) / a.length) : null; });
+    return list;
+  }
+  return { build, historyRows, fmtMDY, fmtFull, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
 })();

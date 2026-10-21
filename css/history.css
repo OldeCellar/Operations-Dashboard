@@ -1,0 +1,18 @@
+#hist{--v-history-css:"0.1.0"}
+#hist .hist-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+#hist select,#hist input[type=search]{font:13px var(--mono);padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+#hist .hist-add{margin-left:auto}
+#hist .hist-status{font:12px var(--mono);color:var(--ink-3);margin:0 0 10px}
+#hist .hist-status.err{color:var(--red);font-weight:700}
+#hist .tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+#hist table{border-collapse:collapse;width:100%;font-size:13px}
+#hist th{background:#8a8478;color:#fff;font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:9px 8px;white-space:nowrap}
+#hist th.sortable{cursor:pointer;user-select:none} #hist .ar{opacity:.5;margin-left:3px;font-size:10px} #hist .ar.on{opacity:1;color:#ffe3a3}
+#hist td{padding:7px 8px;border-top:1px solid var(--border);vertical-align:middle}
+#hist .mono{font-family:var(--mono);font-size:11px;white-space:nowrap} #hist .dim{color:var(--ink-3)} #hist .c{text-align:center} #hist .est{color:var(--ink-3)}
+#hist td.bn{font:700 13px var(--mono);color:var(--amber)} #hist td.nm{font:600 14px var(--serif)} #hist .nw{white-space:nowrap}
+#hist .pill{font:10px var(--mono);padding:2px 8px;border-radius:10px;border:1px solid var(--border);background:var(--panel-alt);white-space:nowrap}
+#hist .pill.core-brand{background:#f3e0c0} #hist .pill.seasonal{background:#e3d3ee} #hist .pill.filler{background:#dbe7d6}
+#hist .stsel{font:11px var(--mono);padding:3px 5px;border:1px solid var(--border);border-radius:3px;background:var(--panel)} #hist .dot{margin-left:4px;font-size:10px;cursor:help}
+#hist .ib{border:1px solid var(--border);background:var(--panel-alt);border-radius:3px;padding:2px 7px;cursor:pointer;margin-right:3px} #hist .ib.x{color:var(--red)}
+#hist .empty{text-align:center;color:var(--ink-3);padding:28px}
