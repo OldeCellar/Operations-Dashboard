@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['history.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['history.js']='0.1.1';
 /* Brew History tab: the Scheduler's history table (status from the Brewfather cache, days on tap, per-beer averages) with log / edit / delete / status edits saved via OCD.save. */
 window.BrewHistory=(()=>{
   let started=false,wired=false,modal=null,sort={col:'batch',dir:-1},rows=[];
@@ -8,6 +8,8 @@ window.BrewHistory=(()=>{
   const STATUSES=['BF Planning','Brewing','Fermenting','Conditioning','Completed','Serving','Archived','Kegerator'];
   const KEY={'BF Planning':'Planning'};
   const iso=d=>d?E().fmtISO(d):'';
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dash=d=>d?WD[d.getDay()]+'-'+MO[d.getMonth()]+'/'+String(d.getDate()).padStart(2,'0')+'/'+d.getFullYear():'—';   // Sat-Oct/24/2026
   const DOT={bf:['●','Live from Brewfather (nightly sync)'],'bf-stored':['◑','From the last Brewfather import'],calc:['○','Estimated from dates, not in Brewfather yet']};
   const COLS=[['date','Date'],['tank','Tank'],['batch','Batch#'],['name','Beer'],['seq','Seq#'],['style','Style'],[null,'Cat'],['kegDate','Keg Date'],['dateTapped','Date Tapped'],['dateKicked','Date Kicked'],['daysOnTap','Days on Tap'],['avgDaysOnTap','Avg Days/Tap'],['status','Status']];
 
@@ -36,7 +38,7 @@ window.BrewHistory=(()=>{
     list.forEach(r=>{
       const col=COLOR[r.statusColor]||'#8a7458', dot=DOT[r.source]||DOT.calc, M=E().fmtMDY;
       const tapped=r.tappedDate?`<span class="${r.tappedActual?'':'est'}" title="${r.tappedActual?'Actual, from the Brewfather Date Tapped field':'Estimated: no Date Tapped logged yet'}">${M(r.tappedDate)}</span>`:'—';
-      h+=`<tr><td class="mono">${r.bd?E().fmtFull(r.bd):'—'}</td><td class="mono dim">${esc(r.h.tank||'—')}</td><td class="bn">#${esc(r.h.batch)}</td><td class="nm">${esc(r.h.name)}</td>
+      h+=`<tr><td class="mono">${dash(r.bd)}</td><td class="mono dim">${esc(r.h.tank||'—')}</td><td class="bn">#${esc(r.h.batch)}</td><td class="nm">${esc(r.h.name)}</td>
         <td class="mono dim">#${esc(r.h.seq||'—')}</td><td>${r.beer?esc(r.beer.style):''}</td><td>${r.beer?`<span class="pill ${esc(r.beer.cat.replace(' ','-'))}">${esc(r.beer.cat)}</span>`:''}</td>
         <td class="mono">${r.kd?E().fmtMDY(r.kd):'—'}</td><td class="mono">${tapped}</td><td class="mono">${r.kickedDate?M(r.kickedDate):'—'}</td>
         <td class="mono c">${r.daysOnTap!=null?r.daysOnTap+'d':'—'}</td><td class="mono c dim">${r.avgDaysOnTap!=null?r.avgDaysOnTap+'d':'—'}</td>
