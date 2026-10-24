@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.3.0';
+(window.OCD_V=window.OCD_V||{})['scheduler-engine.js']='0.4.0';
 /* Scheduling engine: the Scheduler v33.28 code, extracted VERBATIM (only change: `const TODAY` -> `let TODAY` so it refreshes each build),
    plus a small wrapper at the bottom. State comes from brewery_data.json instead of localStorage. */
 window.SchedulerEngine=(()=>{
@@ -1095,6 +1095,45 @@ function getBatchStatus(h, brewDateOverride){
     }
     return rows;
   }
+  // Extra-brew opportunities for the dashboard: every Mon/Tue inside an idle gap where a beer fits, minus days already holding a brew
+  // and minus any week that already has an extra (rule: at most ONE extra brew per week). Uses the same fit rule as getTankGaps.
+  function extraSlots(res){
+    const DAYMS = 86400000, dd = (a,b) => Math.round((b - a) / DAYMS);
+    const candidates = (BEERS || []).filter(b => b.enabled !== false && b.t > 0);
+    const allBrews = [], extraWeeks = new Set(getExtraWeekKeys());
+    res.upcoming.forEach(w => (w.brews || []).forEach(b => {
+      if(!b.beer) return;
+      const bd = b.brewDate || w.sat; if(!bd) return;
+      allBrews.push(fmtISO(bd));
+      if(b.extra) extraWeeks.add(wkKey(saturdayOf(bd)));
+    }));
+    const active = [];
+    (EXTRA_BREWS.accepted || []).forEach(x => {
+      const d = parseDate(x.date); if(!d || d < TODAY) return;
+      active.push({ id:x.id, tank:x.tank, beer:x.beer, date:d, iso:x.date });
+      extraWeeks.add(wkKey(saturdayOf(d)));
+    });
+    const slots = [];
+    res.gaps.tanks.forEach(t => t.gaps.forEach(g => {
+      if(g.idle < GAP_DETAIL_MIN) return;
+      const laneWant = TANK_LANE[t.name], options = [];
+      for(let d = new Date(g.from); d < g.to; d = addDays(d, 1)){
+        const dow = d.getDay(); if((dow !== 1 && dow !== 2) || d < TODAY) continue;
+        const iso = fmtISO(d), fits = [];
+        candidates.forEach(c => {
+          const keg = calcKegDate(null, d, c.t, []); if(!keg) return;
+          const slack = dd(addDays(keg, TANK_CLEAN_DAYS), g.to);
+          if(slack >= 0) fits.push({ beer:c, keg, slack, offLane: !!laneWant && !!c.lane && c.lane !== laneWant });
+        });
+        fits.sort((a,b) => (a.offLane - b.offLane) || (a.slack - b.slack) || a.beer.name.localeCompare(b.beer.name));
+        options.push({ date:d, iso, taken: allBrews.includes(iso), weekHasExtra: extraWeeks.has(wkKey(saturdayOf(d))), fits });
+      }
+      const open = options.filter(o => !o.taken && !o.weekHasExtra && o.fits.length);
+      slots.push({ tank:t.name, from:g.from, to:g.to, idle:g.idle, nextBeer:g.beer, declineKey:g.declineKey, declined:g.declined, emptyNow:g.emptyNow,
+                   options, open, status: g.declined ? 'declined' : (open.length ? 'open' : 'none') });
+    }));
+    return { slots, accepted:active, declinedCount:(EXTRA_BREWS.declined || []).length };
+  }
   // Brew History rows: same computed fields as the Scheduler's renderHistory (status from BF cache, days on tap, per-beer averages)
   function historyRows(d){
     const t = new Date(); t.setHours(0,0,0,0); TODAY = t;
@@ -1115,5 +1154,5 @@ function getBatchStatus(h, brewDateOverride){
     list.forEach(r => { const a = by[r.h.name]; r.avgDaysOnTap = a ? Math.round(a.reduce((s,v) => s+v, 0) / a.length) : null; });
     return list;
   }
-  return { build, scheduleRows, historyRows, fmtMDY, fmtFull, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
+  return { build, extraSlots, scheduleRows, historyRows, fmtMDY, fmtFull, timelineWeeks, clr, addDays, saturdayOf, wkKey, parseDate, fmtISO, GAP_DETAIL_MIN, STYLE_CLR };
 })();

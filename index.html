@@ -1,18 +1,8 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="ocd-version" content="0.10.0">
+<meta name="ocd-version" content="0.11.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olde Cellar | Operations Dashboard</title>
-  
-<!-- Browser favicon -->
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-
-<!-- Mobile home-screen icon -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="manifest" href="site.webmanifest">
-
 <link rel="stylesheet" href="css/theme.css">
 <link rel="stylesheet" href="css/request-log.css">
 <link rel="stylesheet" href="css/on-tap.css">
@@ -24,7 +14,7 @@
 </head><body>
 <header class="app-header">
   <div class="dash-bar">
-    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.10.0</span></h1></div>
+    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.11.0</span></h1></div>
     <div><button class="dash-btn" id="open-settings">Settings</button> <button class="dash-btn" id="refresh-all">Refresh Data</button></div>
   </div>
   <nav class="dash-tabs" id="tabs"></nav>
@@ -123,6 +113,7 @@
     <span class="times" id="sch-times"></span>
   </div>
   <p class="sch-status" id="sch-status">Loading schedule…</p>
+  <div id="sch-slots"></div>
   <div id="sch-table"></div>
   <h3>Tanks right now</h3><div class="tankrow" id="sch-tanks"></div>
   <h3>12-week tank timeline</h3>

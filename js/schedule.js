@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['schedule.js']='0.3.0';
+(window.OCD_V=window.OCD_V||{})['schedule.js']='0.4.0';
 /* Production Schedule tab (read-only). All scheduling decisions come from SchedulerEngine (the Scheduler v33.28 code). */
 window.ProductionSchedule=(()=>{
   let started=false,wired=false,R=null,tlOffset=0;
@@ -18,6 +18,12 @@ window.ProductionSchedule=(()=>{
         <div class="tm">Brewed ${D(t.brewDate)} → keg ${D(t.endDate)}${left!==null?' ('+(left>=0?left+' d left':Math.abs(left)+' d past')+')':''}</div></div>`;
     }).join('');
   }
+  function idleGap(tank,sat){
+    const t=R.gaps.tanks.find(x=>x.name===tank); if(!t) return null; const end=E().addDays(sat,7);
+    const g=t.gaps.find(x=>x.from<end&&x.to>sat); if(!g) return null;
+    const i=X?X.slots.findIndex(x=>x.declineKey===g.declineKey&&x.status==='open'):-1;
+    return {g,open:i>=0,i};
+  }
   function timelineHtml(){
     const W=12,COL=80,LABEL=90,weeks=E().timelineWeeks(tlOffset,W);
     $('sch-tl-label').textContent=D(weeks[0].sat)+' – '+D(weeks[W-1].sat);
@@ -32,13 +38,76 @@ window.ProductionSchedule=(()=>{
         const b=(w.brews||[]).find(x=>x.tank===tn);
         if(b&&b.beer) h+=`<div class="tlc" style="background:${E().clr(b.beer)}" title="${esc(b.beer.name)} #${b.seq||''} · keg ${D(b.kegDate)}">${esc(b.beer.name.split(' ').slice(0,2).join(' '))}</div>`;
         else if(b) h+=`<div class="tlc" style="background:#6a6050" title="Batch ${esc(b.batch)}">#${esc(b.batch)}</div>`;
-        else h+='<div class="tle"></div>';
+        else { const g=idleGap(tn,w.sat); h+=g?`<div class="tle idle${g.open?' open':''}" ${g.open?`data-slot="${g.i}"`:''} title="${g.open?'Idle — an extra brew fits here (click)':'Idle tank time'} · ${D(g.g.from)} → ${D(g.g.to)} (${g.g.idle} d)"></div>`:'<div class="tle"></div>'; }
       });
       h+='</div>';
     });
     const used=new Set(); weeks.forEach(w=>(w.brews||[]).forEach(b=>b.beer&&used.add(b.beer.type||b.beer.style)));
     h+='<div class="legend">'+[...used].map(s=>`<span><i style="background:${E().STYLE_CLR[s]||'#6a6050'}"></i>${esc(s)}</span>`).join('')+'</div></div>';
     return h;
+  }
+  // ---- Open slots: extra Mon/Tue brews that fill idle tank time (accept / not now), saved via OCD.save ----
+  let X=null;                                           // result of E().extraSlots(R)
+  const dayName=d=>d.toLocaleDateString('en-US',{weekday:'long'});
+  const normX=o=>{const x=o.extraBrews||{};o.extraBrews=Object.assign({},x,{dow:Number.isInteger(x.dow)?x.dow:1,accepted:Array.isArray(x.accepted)?x.accepted:[],declined:Array.isArray(x.declined)?x.declined:[]});return o.extraBrews;};
+  function needToken(){ if(OCD.gh.has()) return false; OCDSettings.open('To accept or decline extra brews, paste your GitHub token and click Save & test.'); return true; }
+  function flash(t,err){ const el=$('sch-flash'); if(!el) return; el.textContent=t; el.className='sch-flash'+(err?' err':''); setTimeout(()=>{el.textContent='';},6000); }
+  async function act(mutator,msg,done){
+    if(needToken()) return;
+    try{ await OCD.save(mutator,msg); render(); flash(done); }catch(e){ flash(e.message,true); }
+  }
+  function fitsHtml(slotIdx,optIdx){
+    const o=X.slots[slotIdx].open[optIdx];
+    const seen=new Set(), fits=o.fits.filter(f=>!seen.has(f.beer.name)&&seen.add(f.beer.name));
+    return fits.map((f,i)=>`<label class="fitrow"><input type="radio" name="fit-${slotIdx}" value="${esc(f.beer.name)}" ${i===0?'checked':''}> <b>${esc(f.beer.name)}</b>
+      <span class="dim">${f.beer.t} d in tank · kegs ${dash(f.keg)} · ${f.slack?f.slack+' d spare':'exact fit'}${f.offLane?' · off-lane':''}</span></label>`).join('');
+  }
+  function slotsHtml(){
+    const open=X.slots.filter(x=>x.status==='open'), none=X.slots.filter(x=>x.status==='none').length;
+    let h=`<div class="slotshead"><h3>Open slots <small>${open.length} extra brew${open.length===1?'':'s'} could fill idle tank time</small></h3><span class="sch-flash" id="sch-flash"></span></div>`;
+    if(!open.length) h+=`<div class="slotnone">No idle stretch is long enough for a beer to fit${none?' ('+none+' shorter gap'+(none===1?'':'s')+' checked)':''}.</div>`;
+    else h+='<div class="slotgrid">'+open.map(x=>{
+      const i=X.slots.indexOf(x);
+      return `<div class="slot" id="sch-slot-${i}" data-i="${i}">
+        <div class="sh"><b>${esc(x.tank)}</b> idle ${D(x.from)} → ${D(x.to)} <span class="idl">${x.idle} days</span></div>
+        <div class="sm">${x.emptyNow?'Empty now. ':''}Next scheduled in this tank: ${esc(x.nextBeer.name)} on ${DW(x.to)}</div>
+        <label class="lbl">Brew day <select class="s-date">${x.open.map((o,j)=>`<option value="${j}">${dash(o.date)} (${dayName(o.date)})</option>`).join('')}</select></label>
+        <div class="fits">${fitsHtml(i,0)}</div>
+        <div class="sa"><button class="ocd-btn s-accept">Accept extra brew</button> <button class="ocd-btn ghost s-decline">Not now</button></div></div>`;
+    }).join('')+'</div>';
+    h+='<div class="slotfoot">';
+    if(X.accepted.length) h+='<div class="acc"><b>Accepted extra brews</b>'+X.accepted.map(a=>`<div class="accrow" data-id="${esc(a.id)}"><span class="nm">${esc(a.beer)}</span> <span class="dim">${esc(a.tank)}</span>
+        <input type="date" class="a-date" value="${esc(a.iso)}"> <span class="dim">${dayName(a.date)}</span> <button class="ocd-btn ghost a-remove">Remove</button></div>`).join('')+'</div>';
+    if(X.declinedCount) h+=`<div class="dim">${X.declinedCount} declined suggestion${X.declinedCount===1?'':'s'} · <a href="#" class="s-restore">show again</a></div>`;
+    return h+'<div class="dim rule">Rule: Monday or Tuesday only, at most one extra brew per week, never on a day that already has a brew.</div></div>';
+  }
+  function wireSlots(){
+    const box=$('sch-slots');
+    box.addEventListener('change',e=>{ const sel=e.target.closest('.s-date'); if(sel){ const card=sel.closest('.slot'); card.querySelector('.fits').innerHTML=fitsHtml(+card.dataset.i,+sel.value); return; }
+      const ad=e.target.closest('.a-date'); if(ad&&ad.value){ const id=ad.closest('.accrow').dataset.id, iso=ad.value;
+        act(o=>{const ax=normX(o).accepted, x=ax.find(y=>y.id===id); if(!x) throw new Error('That extra brew no longer exists.');
+          const wk=E().wkKey(E().saturdayOf(E().parseDate(iso)));
+          if(ax.some(y=>y.id!==id&&(d=>d&&E().wkKey(E().saturdayOf(d))===wk)(E().parseDate(y.date)))) throw new Error('Another extra brew is already accepted that week (limit: one per week).');
+          x.date=iso;},'Change extra brew date to '+iso+' (dashboard)','Extra brew moved to '+iso+'.'); } });
+    box.addEventListener('click',e=>{
+      const card=e.target.closest('.slot');
+      if(e.target.closest('.s-accept')&&card){
+        const sl=X.slots[+card.dataset.i], opt=sl.open[+card.querySelector('.s-date').value], pick=card.querySelector('input[type=radio]:checked');
+        if(!pick) return; const beer=pick.value, iso=opt.iso, wk=E().wkKey(E().saturdayOf(opt.date));
+        act(o=>{ const x=normX(o);
+          if(x.accepted.some(y=>{const d=E().parseDate(y.date);return d&&E().wkKey(E().saturdayOf(d))===wk;})) throw new Error('Another extra brew is already accepted that week (limit: one per week).');
+          x.accepted.push({id:'x'+Date.now().toString(36),tank:sl.tank,date:iso,beer}); },
+          'Accept extra brew: '+beer+' in '+sl.tank+' on '+iso+' (dashboard)', 'Accepted: '+beer+' in '+sl.tank+' on '+dash(opt.date)+'.');
+      } else if(e.target.closest('.s-decline')&&card){
+        const sl=X.slots[+card.dataset.i];
+        act(o=>{const x=normX(o); if(!x.declined.includes(sl.declineKey)) x.declined.push(sl.declineKey);},'Decline extra brew gap '+sl.declineKey+' (dashboard)','Gap hidden. Use "show again" to bring declined suggestions back.');
+      } else if(e.target.closest('.a-remove')){
+        const id=e.target.closest('.accrow').dataset.id;
+        act(o=>{const x=normX(o); x.accepted=x.accepted.filter(y=>y.id!==id);},'Remove extra brew (dashboard)','Extra brew removed.');
+      } else if(e.target.closest('.s-restore')){
+        e.preventDefault(); act(o=>{normX(o).declined=[];},'Restore declined extra brew suggestions (dashboard)','Declined suggestions restored.');
+      }
+    });
   }
   // ---- Schedule table: same columns, order and behaviour as the Scheduler's Schedule tab ----
   let sort={col:'date',dir:1},filter='';
@@ -98,16 +167,19 @@ window.ProductionSchedule=(()=>{
     try{ R=eng.build(d); }catch(e){ console.error(e); st.className='sch-status err'; st.textContent='Schedule engine error: '+e.message; return; }
     st.className='sch-status';
     st.textContent='Data saved '+(d.savedAt?new Date(d.savedAt).toLocaleString():'unknown')+(d.bfSyncTime?' · Brewfather synced '+new Date(d.bfSyncTime).toLocaleString():'')+' · read-only for now: edit in the Scheduler';
+    X=eng.extraSlots(R);
     $('sch-tanks').innerHTML=tanksHtml(); $('sch-timeline').innerHTML=timelineHtml();
-    fillViewFrom(); $('sch-table').innerHTML=scheduleTable(); $('sch-times').innerHTML='BF sync: <b>'+(d.bfSyncTime?new Date(d.bfSyncTime).toLocaleString():'not synced')+'</b> · Schedule built: <b>'+new Date().toLocaleString()+'</b>'; $('sch-gaps').innerHTML=gapsHtml();
+    $('sch-slots').innerHTML=slotsHtml(); fillViewFrom(); $('sch-table').innerHTML=scheduleTable(); $('sch-times').innerHTML='BF sync: <b>'+(d.bfSyncTime?new Date(d.bfSyncTime).toLocaleString():'not synced')+'</b> · Schedule built: <b>'+new Date().toLocaleString()+'</b>'; $('sch-gaps').innerHTML=gapsHtml();
   }
   function wire(){
     if(wired)return; wired=true;
     $('sch-prev').onclick=()=>{tlOffset-=4;if(R)$('sch-timeline').innerHTML=timelineHtml();};
     $('sch-next').onclick=()=>{tlOffset+=4;if(R)$('sch-timeline').innerHTML=timelineHtml();};
+    wireSlots();
     const redraw=()=>{ if(R) $('sch-table').innerHTML=scheduleTable(); };
     $('sch-from').onchange=redraw; $('sch-show').onchange=redraw; $('sch-search').oninput=e=>{filter=e.target.value;redraw();};
     $('sch-table').addEventListener('click',e=>{const h=e.target.closest('[data-sort]');if(!h)return;const c=h.dataset.sort;if(sort.col===c)sort.dir*=-1;else{sort.col=c;sort.dir=1;}redraw();});
+    $('sch-timeline').addEventListener('click',e=>{const c=e.target.closest('[data-slot]'); if(c){const el=$('sch-slot-'+c.dataset.slot); if(el){if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'center'}); el.classList.add('hl'); setTimeout(()=>el.classList.remove('hl'),1800);}}});
     $('sch-today').onclick=()=>{tlOffset=0;if(R)$('sch-timeline').innerHTML=timelineHtml();};
   }
   return{
