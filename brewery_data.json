@@ -2033,7 +2033,7 @@
       "dateTapped": "2026-10-21",
       "dateKicked": "",
       "notes": "",
-      "bfStatus": "Conditioning"
+      "bfStatus": "Completed"
     },
     {
       "batch": 4,
@@ -2184,7 +2184,7 @@
         "unit": "kg",
         "bf_cost": 6.06,
         "bf_lotNo": "9625389",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Caramel 60L",
@@ -2206,7 +2206,7 @@
         "unit": "kg",
         "bf_cost": 4.17,
         "bf_lotNo": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Special B",
@@ -2354,7 +2354,7 @@
         "unit": "kg",
         "bf_cost": 3.29,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Roasted Barley 800",
@@ -2397,7 +2397,7 @@
         "unit": "kg",
         "bf_cost": 6.06,
         "bf_lotNo": "9468869",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Carafa Special III",
@@ -2419,7 +2419,7 @@
         "unit": "kg",
         "bf_cost": 4.76,
         "bf_lotNo": "8949182",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Honey Malt",
@@ -2462,7 +2462,7 @@
         "unit": "kg",
         "bf_cost": 3.69,
         "bf_lotNo": "1919B",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Peated Malt",
@@ -2547,7 +2547,7 @@
         "unit": "kg",
         "bf_cost": 5.29,
         "bf_lotNo": "9468869",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Roasted Barley 1500",
@@ -3307,7 +3307,7 @@
         "bf_cost": 0.025,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Citra",
@@ -3449,7 +3449,7 @@
         "bf_cost": 0.023,
         "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo\u00ae Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Belma",
@@ -3471,7 +3471,7 @@
         "bf_cost": 0.0177,
         "bf_lotNo": "test",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Amarillo",
@@ -3493,7 +3493,7 @@
         "bf_cost": 0.023,
         "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo\u00ae Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Cascade",
@@ -3675,7 +3675,7 @@
         "bf_cost": 0.019,
         "bf_lotNo": "CTZ is a trio blend of similar hops including Columbus, Tomahawk and Zeus. A descendant of Nugget, it is the first super high alpha variety and is primarily used for bittering purposes. Aroma Profile: Citrus, Dank, Earthy, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Citra",
@@ -4017,7 +4017,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "American Ale Yeast",
@@ -4039,7 +4039,7 @@
         "bf_cost": 0.897,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "West Coast",
@@ -4121,7 +4121,7 @@
         "bf_cost": 0.14,
         "bf_lotNo": "9785314",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "TurboShine Distiller's Yeast",
@@ -4163,7 +4163,7 @@
         "bf_cost": 0.13,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "German Lager Yeast",
@@ -4259,7 +4259,7 @@
         "bf_cost": 0.4999,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Wyeast Beer Nutrient Blend",
@@ -4400,12 +4400,12 @@
         "_fromBF": true,
         "bf_type": "Water Agent",
         "bf_use": "Mash",
-        "onHand": 1205.55,
+        "onHand": 1163.91,
         "unit": "g",
         "bf_cost": 0.0088,
         "bf_lotNo": "\"https://labelpeelers.com/beer-making/beer-brewing-additives/calcium-chloride-1-lb/\n\"\n",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Baking Soda (NaHCO3)",
@@ -4420,12 +4420,12 @@
         "_fromBF": true,
         "bf_type": "Water Agent",
         "bf_use": "Mash",
-        "onHand": 385.728,
+        "onHand": 382.258,
         "unit": "g",
         "bf_cost": null,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Phantasm Powder",
@@ -4553,7 +4553,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Gypsum (CaSO4)",
@@ -4586,12 +4586,12 @@
         "_fromBF": true,
         "bf_type": "Other",
         "bf_use": "Mash",
-        "onHand": 1816.86,
+        "onHand": 1813.102,
         "unit": "ml",
         "bf_cost": 0.057,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Silafine",
@@ -4642,12 +4642,12 @@
         "_fromBF": true,
         "bf_type": "Water Agent",
         "bf_use": "Mash",
-        "onHand": 3378.955,
+        "onHand": 3354.193,
         "unit": "g",
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Isinglass",
@@ -4687,7 +4687,7 @@
         "unit": "kg",
         "bf_cost": 6.036,
         "bf_lotNo": "9717961",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Flaked Corn (Yellow)",
@@ -5024,7 +5024,7 @@
         "unit": "kg",
         "bf_cost": 2.3,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00"
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00"
       },
       {
         "name": "Citra",
@@ -5081,7 +5081,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5097,7 +5097,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5113,7 +5113,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5129,7 +5129,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5145,7 +5145,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5161,7 +5161,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5177,7 +5177,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5193,7 +5193,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5209,7 +5209,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5225,7 +5225,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5241,7 +5241,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5257,7 +5257,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5273,7 +5273,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5289,7 +5289,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5305,7 +5305,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -5321,7 +5321,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-10-23T05:46:18.001156-04:00",
+        "lastBFSync": "2026-10-24T05:19:32.444133-04:00",
         "_fromBF": true
       },
       {
@@ -7100,7 +7100,7 @@
       "bfId": "lz9knzqZPrSTDca0CLdrF1vW9j7NRH"
     },
     "570": {
-      "status": "Conditioning",
+      "status": "Completed",
       "kegDate": "2026-10-13",
       "bfBrewDate": "2026-09-26",
       "abv": "",
@@ -7212,5 +7212,5 @@
       "bfId": "b23kr9MR1CfRmxl6olD9jAcfBptgiz"
     }
   },
-  "bfSyncTime": "2026-10-23T05:46:18.001156-04:00"
+  "bfSyncTime": "2026-10-24T05:19:32.444133-04:00"
 }
