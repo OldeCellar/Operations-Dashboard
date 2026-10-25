@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T12:10:15.820Z",
+  "savedAt": "2026-10-25T12:10:48.499Z",
   "beers": [
     {
       "id": 1,
@@ -5391,14 +5391,7 @@
   "kegOverrides": {},
   "extraBrews": {
     "dow": 1,
-    "accepted": [
-      {
-        "id": "xmvnscwi4",
-        "tank": "Tank 01",
-        "date": "2026-11-09",
-        "beer": "Wheat Vodka"
-      }
-    ],
+    "accepted": [],
     "declined": []
   },
   "bfBatchCache": {
