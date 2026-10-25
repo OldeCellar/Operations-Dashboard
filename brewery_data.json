@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:41:15.336Z",
+  "savedAt": "2026-10-25T11:45:02.281Z",
   "beers": [
     {
       "id": 1,
@@ -433,6 +433,24 @@
       "note": "",
       "enabled": false,
       "id": 23
+    },
+    {
+      "name": "Vodka",
+      "style": "Vodka",
+      "type": "Vodka",
+      "cat": "core brand",
+      "lane": "flex",
+      "pri": 3,
+      "t": 14,
+      "m": 7,
+      "total": 21,
+      "target": null,
+      "targets": null,
+      "note": "",
+      "enabled": true,
+      "rotationOrder": null,
+      "seqStart": null,
+      "id": 24
     }
   ],
   "history": [
