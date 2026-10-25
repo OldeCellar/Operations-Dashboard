@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:36:47.044Z",
+  "savedAt": "2026-10-25T11:37:08.333Z",
   "beers": [
     {
       "id": 1,
@@ -5379,12 +5379,6 @@
         "tank": "Tank 01",
         "date": "2026-11-09",
         "beer": "Pliny the Elder"
-      },
-      {
-        "id": "xmvnr5uis",
-        "tank": "Tank 03",
-        "date": "2027-03-29",
-        "beer": "Fiddlers Flame"
       }
     ],
     "declined": []
