@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['schedule.js']='0.4.0';
+(window.OCD_V=window.OCD_V||{})['schedule.js']='0.4.1';
 /* Production Schedule tab (read-only). All scheduling decisions come from SchedulerEngine (the Scheduler v33.28 code). */
 window.ProductionSchedule=(()=>{
   let started=false,wired=false,R=null,tlOffset=0;
@@ -62,9 +62,14 @@ window.ProductionSchedule=(()=>{
     return fits.map((f,i)=>`<label class="fitrow"><input type="radio" name="fit-${slotIdx}" value="${esc(f.beer.name)}" ${i===0?'checked':''}> <b>${esc(f.beer.name)}</b>
       <span class="dim">${f.beer.t} d in tank · kegs ${dash(f.keg)} · ${f.slack?f.slack+' d spare':'exact fit'}${f.offLane?' · off-lane':''}</span></label>`).join('');
   }
+  function acceptedHtml(){
+    if(!X.accepted.length) return '';
+    return '<div class="acc"><b>Accepted extra brews</b>'+X.accepted.map(a=>`<div class="accrow" data-id="${esc(a.id)}"><span class="nm">${esc(a.beer)}</span> <span class="dim">${esc(a.tank)}</span>
+        <input type="date" class="a-date" value="${esc(a.iso)}"> <span class="dim">${dayName(a.date)}</span> <button class="ocd-btn ghost a-remove">Remove</button></div>`).join('')+'</div>';
+  }
   function slotsHtml(){
     const open=X.slots.filter(x=>x.status==='open'), none=X.slots.filter(x=>x.status==='none').length;
-    let h=`<div class="slotshead"><h3>Open slots <small>${open.length} extra brew${open.length===1?'':'s'} could fill idle tank time</small></h3><span class="sch-flash" id="sch-flash"></span></div>`;
+    let h=`<div class="slotshead"><h3>Open slots <small>${open.length} extra brew${open.length===1?'':'s'} could fill idle tank time</small></h3></div>`;
     if(!open.length) h+=`<div class="slotnone">No idle stretch is long enough for a beer to fit${none?' ('+none+' shorter gap'+(none===1?'':'s')+' checked)':''}.</div>`;
     else h+='<div class="slotgrid">'+open.map(x=>{
       const i=X.slots.indexOf(x);
@@ -76,13 +81,11 @@ window.ProductionSchedule=(()=>{
         <div class="sa"><button class="ocd-btn s-accept">Accept extra brew</button> <button class="ocd-btn ghost s-decline">Not now</button></div></div>`;
     }).join('')+'</div>';
     h+='<div class="slotfoot">';
-    if(X.accepted.length) h+='<div class="acc"><b>Accepted extra brews</b>'+X.accepted.map(a=>`<div class="accrow" data-id="${esc(a.id)}"><span class="nm">${esc(a.beer)}</span> <span class="dim">${esc(a.tank)}</span>
-        <input type="date" class="a-date" value="${esc(a.iso)}"> <span class="dim">${dayName(a.date)}</span> <button class="ocd-btn ghost a-remove">Remove</button></div>`).join('')+'</div>';
     if(X.declinedCount) h+=`<div class="dim">${X.declinedCount} declined suggestion${X.declinedCount===1?'':'s'} · <a href="#" class="s-restore">show again</a></div>`;
     return h+'<div class="dim rule">Rule: Monday or Tuesday only, at most one extra brew per week, never on a day that already has a brew.</div></div>';
   }
   function wireSlots(){
-    const box=$('sch-slots');
+    [$('sch-accepted'),$('sch-slots')].forEach(box=>{
     box.addEventListener('change',e=>{ const sel=e.target.closest('.s-date'); if(sel){ const card=sel.closest('.slot'); card.querySelector('.fits').innerHTML=fitsHtml(+card.dataset.i,+sel.value); return; }
       const ad=e.target.closest('.a-date'); if(ad&&ad.value){ const id=ad.closest('.accrow').dataset.id, iso=ad.value;
         act(o=>{const ax=normX(o).accepted, x=ax.find(y=>y.id===id); if(!x) throw new Error('That extra brew no longer exists.');
@@ -107,6 +110,7 @@ window.ProductionSchedule=(()=>{
       } else if(e.target.closest('.s-restore')){
         e.preventDefault(); act(o=>{normX(o).declined=[];},'Restore declined extra brew suggestions (dashboard)','Declined suggestions restored.');
       }
+    });
     });
   }
   // ---- Schedule table: same columns, order and behaviour as the Scheduler's Schedule tab ----
@@ -169,7 +173,7 @@ window.ProductionSchedule=(()=>{
     st.textContent='Data saved '+(d.savedAt?new Date(d.savedAt).toLocaleString():'unknown')+(d.bfSyncTime?' · Brewfather synced '+new Date(d.bfSyncTime).toLocaleString():'')+' · read-only for now: edit in the Scheduler';
     X=eng.extraSlots(R);
     $('sch-tanks').innerHTML=tanksHtml(); $('sch-timeline').innerHTML=timelineHtml();
-    $('sch-slots').innerHTML=slotsHtml(); fillViewFrom(); $('sch-table').innerHTML=scheduleTable(); $('sch-times').innerHTML='BF sync: <b>'+(d.bfSyncTime?new Date(d.bfSyncTime).toLocaleString():'not synced')+'</b> · Schedule built: <b>'+new Date().toLocaleString()+'</b>'; $('sch-gaps').innerHTML=gapsHtml();
+    $('sch-accepted').innerHTML=acceptedHtml(); $('sch-slots').innerHTML=slotsHtml(); fillViewFrom(); $('sch-table').innerHTML=scheduleTable(); $('sch-times').innerHTML='BF sync: <b>'+(d.bfSyncTime?new Date(d.bfSyncTime).toLocaleString():'not synced')+'</b> · Schedule built: <b>'+new Date().toLocaleString()+'</b>'; $('sch-gaps').innerHTML=gapsHtml();
   }
   function wire(){
     if(wired)return; wired=true;
