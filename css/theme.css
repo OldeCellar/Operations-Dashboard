@@ -1,5 +1,5 @@
 /* Brewery Amber theme (approximated from Scheduler v33.28). Retune the variables only. */
-:root{--v-theme:"0.4.2";--page:#e9dcc3;--header:#f6ecd8;--panel:#fcf7ec;--panel-alt:#f1e6d0;--border:#d8c7a4;
+:root{--v-theme:"0.4.3";--page:#e9dcc3;--header:#f6ecd8;--panel:#fcf7ec;--panel-alt:#f1e6d0;--border:#d8c7a4;
 --ink:#3a2a1a;--ink-2:#5c4630;--ink-3:#8a7458;--btn:#b9955f;--btn-hover:#a88350;--amber:#a05a0c;
 --green:#2f7d4f;--red:#b3392e;
 --serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
@@ -37,3 +37,6 @@ main.app{max-width:none;margin:0;padding:20px 24px}
 .ocd-btn:hover{background:var(--btn-hover)} .ocd-btn.ghost{background:transparent} .ocd-btn.danger{background:transparent;color:var(--red);border-color:var(--red)}
 .ocd-btn[disabled]{opacity:.5;cursor:not-allowed}
 @media(max-width:600px){main.app{padding:14px 10px}.dash-bar{padding:10px 12px}.dash-tabs{padding:0 12px}}
+.ocd-box .hint{font:12px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink-3);margin-top:5px;text-transform:none;letter-spacing:0}
+.ocd-box label.chk{display:flex;gap:8px;align-items:center;font-size:14px;text-transform:none;letter-spacing:0;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+.ocd-box .row2>div>label,.ocd-box .row2>label{margin-top:12px}

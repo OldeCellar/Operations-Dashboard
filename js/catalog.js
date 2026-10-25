@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['catalog.js']='0.2.0';
+(window.OCD_V=window.OCD_V||{})['catalog.js']='0.2.1';
 /* Beer Catalog tab: view + edit. Edits go through OCD.save (re-reads the latest brewery_data.json, applies the change, commits). */
 window.BeerCatalog=(()=>{
   let started=false,wired=false,modal=null;
@@ -46,18 +46,23 @@ window.BeerCatalog=(()=>{
     modal=document.createElement('div');modal.className='ocd-modal';modal.hidden=true;
     const styles=[...new Set((OCD.get()?.beers||[]).map(b=>b.type||b.style).filter(Boolean))].sort();
     modal.innerHTML=`<div class="ocd-box"><h3 id="be-title">Edit beer</h3>
-      <label>Name<input id="be-name" type="text"></label>
+      <label>Beer name<input id="be-name" type="text"></label>
       <div class="row2"><label>Style<input id="be-style" type="text" list="be-styles"><datalist id="be-styles">${styles.map(s=>`<option value="${esc(s)}">`).join('')}</datalist></label>
         <label>Category<select id="be-cat"><option value="core brand">Core brand</option><option value="seasonal">Seasonal</option><option value="filler">Filler</option></select></label></div>
-      <div class="row2"><label>Lane (tank)<select id="be-lane"><option value="ipa">Tank 01 · IPA</option><option value="lager">Tank 02 · Lager</option><option value="flex">Tank 03 · Flex</option></select></label>
-        <label>Priority<input id="be-pri" type="number" min="1"></label></div>
-      <div class="row2"><label>Ferment days<input id="be-t" type="number" min="1"></label><label>Condition days<input id="be-m" type="number" min="0"></label></div>
-      <div class="row2"><label>Rotation order<input id="be-rot" type="number" min="1"></label><label>Seq start<input id="be-seq" type="number" min="1"></label></div>
-      <label>Serve targets (month/day, comma separated, e.g. 6/1, 7/1)<input id="be-targets" type="text"></label>
-      <label>Notes<input id="be-note" type="text"></label>
-      <label style="display:flex;gap:8px;align-items:center"><input id="be-enabled" type="checkbox"> Active (include in the schedule)</label>
+      <label>Lane<select id="be-lane"><option value="ipa">Tank 01 · IPA</option><option value="lager">Tank 02 · Lager</option><option value="flex">Tank 03 · Flex</option></select></label>
+      <div class="hint">Controls which tank lane this beer belongs to.</div>
+      <div class="row2"><div><label>Category tier (1=Core, 2=Lager, 3=Filler, 4=Kolsch, 5=Seasonal)<input id="be-pri" type="number" min="1"></label></div>
+        <div><label>Rotation order (1, 2, 3… or blank)<input id="be-rot" type="number" min="1"></label>
+        <div class="hint">Sets the brew sequence within this beer's category. Lower number = brewed first. E.g. set Mellow Yellow=1, Czech Mate=2, Equinox=3 and they cycle in that order. Applies to all categories. Leaving it blank keeps the current value.</div></div></div>
+      <div class="row2"><label>Tank days (fermentation)<input id="be-t" type="number" min="1"></label><label>Maturation days<input id="be-m" type="number" min="0"></label></div>
+      <label>Serve target dates (seasonal only — MM/DD, comma separated, e.g. 6/1, 7/1)<input id="be-targets" type="text"></label>
+      <div class="hint">Leave blank for non-seasonal. Scheduler will back-calculate the brew date.</div>
+      <label class="chk"><input id="be-enabled" type="checkbox"> Include in Scheduler</label>
+      <div class="row2"><label>Notes<input id="be-note" type="text"></label>
+        <div><label>Sequence start # (first brew number in BF history)<input id="be-seq" type="number" min="1"></label>
+        <div class="hint">If your BF history doesn't go back to brew #1 of this beer, set this to the actual brew number of the oldest batch in BF. E.g. Pliny's first BF batch was his 41st ever brew — enter 41. Leaving it blank keeps the current value.</div></div></div>
       <p class="ocd-msg" id="be-msg"></p>
-      <div class="ocd-actions"><button class="ocd-btn danger" id="be-delete">Delete</button><span style="flex:1"></span><button class="ocd-btn ghost" id="be-cancel">Cancel</button><button class="ocd-btn" id="be-save">Save</button></div></div>`;
+      <div class="ocd-actions"><button class="ocd-btn danger" id="be-delete">Delete beer</button><span style="flex:1"></span><button class="ocd-btn ghost" id="be-cancel">Cancel</button><button class="ocd-btn" id="be-save">Save beer</button></div></div>`;
     document.body.appendChild(modal);
     modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
     modal.querySelector('#be-cancel').onclick=()=>modal.hidden=true;
