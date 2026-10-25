@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:39:53.384Z",
+  "savedAt": "2026-10-25T11:41:15.336Z",
   "beers": [
     {
       "id": 1,
@@ -5378,6 +5378,12 @@
         "id": "xmvnr9uaw",
         "tank": "Tank 01",
         "date": "2026-11-09",
+        "beer": "Wheat Vodka"
+      },
+      {
+        "id": "xmvnrbljc",
+        "tank": "Tank 02",
+        "date": "2027-10-04",
         "beer": "Wheat Vodka"
       }
     ],
