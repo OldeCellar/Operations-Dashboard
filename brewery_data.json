@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:59:23.433Z",
+  "savedAt": "2026-10-25T12:07:13.854Z",
   "beers": [
     {
       "id": 1,
@@ -5392,12 +5392,6 @@
   "extraBrews": {
     "dow": 1,
     "accepted": [
-      {
-        "id": "xmvnr9uaw",
-        "tank": "Tank 01",
-        "date": "2026-11-09",
-        "beer": "Wheat Vodka"
-      },
       {
         "id": "xmvnrmv9c",
         "tank": "Tank 02",
