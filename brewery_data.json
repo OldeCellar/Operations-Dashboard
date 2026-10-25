@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:45:02.281Z",
+  "savedAt": "2026-10-25T11:46:06.683Z",
   "beers": [
     {
       "id": 1,
@@ -312,7 +312,7 @@
       "name": "Wheat Vodka",
       "style": "Spirit",
       "type": "Spirit",
-      "cat": "filler",
+      "cat": "core brand",
       "lane": "flex",
       "pri": 3,
       "t": 14,
