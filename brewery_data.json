@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T11:50:01.152Z",
+  "savedAt": "2026-10-25T11:58:22.152Z",
   "beers": [
     {
       "id": 1,
@@ -413,7 +413,7 @@
       "targets": null,
       "seqStart": null,
       "note": "Based on Kagua Blanc",
-      "enabled": true,
+      "enabled": false,
       "id": 22
     },
     {
