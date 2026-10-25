@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-25T12:10:56.915Z",
+  "savedAt": "2026-10-25T12:11:22.333Z",
   "beers": [
     {
       "id": 1,
@@ -5399,7 +5399,9 @@
         "beer": "Wheat Vodka"
       }
     ],
-    "declined": []
+    "declined": [
+      "Tank 02|2027-01-28|2027-02-13"
+    ]
   },
   "bfBatchCache": {
     "1": {
