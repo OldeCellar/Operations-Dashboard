@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-10-26T20:43:55.271Z",
+  "inventoryDate": "2026-10-26",
+  "beers": [
+    {
+      "name": "Golden Dragon",
+      "volume": 107,
+      "source": "brewfather",
+      "offered": true
+    },
+    {
+      "name": "NA Seltzer",
+      "volume": 65,
+      "source": "manual",
+      "offered": true
+    },
+    {
+      "name": "Queen Citra",
+      "volume": 54,
+      "source": "brewfather",
+      "offered": true
+    },
+    {
+      "name": "Strata",
+      "volume": 151,
+      "source": "brewfather",
+      "offered": true
+    },
+    {
+      "name": "Vanilla Porter",
+      "volume": 55,
+      "source": "brewfather",
+      "offered": true
+    }
+  ],
+  "offered": [
+    "Golden Dragon",
+    "NA Seltzer",
+    "Queen Citra",
+    "Strata",
+    "Vanilla Porter"
+  ],
+  "counts": {
+    "completedBatches": 5,
+    "requestRows": 1893,
+    "events": 1
+  }
+}
