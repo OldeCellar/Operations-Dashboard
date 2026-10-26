@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.5.2';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.6.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -446,43 +446,24 @@
     return kegs;
   }
 
-  // Vol On Hand per tapped batch, keyed by Brewfather batch ID:
-  //   Vol Kegged  -  Vol To Kegerator  -  Request Log volume for that beer dated after Date Tapped
-  // (through Date Kicked or today). No manual recount fields are involved.
+  // Vol On Hand: ONE calculation shared with the weekly report (js/vol-calc.js).
+  // Anchor = last Brewfather recount (Vol On Hand + Vol On Hand Date) else Bottling Volume at Date Tapped,
+  // minus requests since the anchor, minus events (Events tab), minus Vol To Kegerator when the anchor doesn't already exclude it.
   function computeVolOnHand(batches, tappedFieldName, kickedFieldName, requestRows){
-    const results = [];
-    for(const b of batches){
-      if(b.status !== 'Completed') continue;
-      const tappedDate = parseBFValue(findMeasuredField(b, tappedFieldName));
-      if(!tappedDate) continue; // never tapped, nothing to project
-      const kickedDate = parseBFValue(findMeasuredField(b, kickedFieldName));
-      const name = normalizeBeerName(getRecipeName(b));
-      const volKegged = (typeof b.measuredBottlingSize === 'number') ? b.measuredBottlingSize : null;
-      const kegeratorVol = kegeratorVolOf(b);
-      const batchId = batchKeyOf(b, name, tappedDate);
-      const base = { batchId, name, batchNumber: b.batchNo || b.batchNumber || null, tappedDate, volKegged, kegeratorVol };
-
-      if(kickedDate){
-        results.push(Object.assign(base, { kickedDate, anchorVolume: null, drawnDown: null, remaining: 0, requestCount: 0, kicked: true }));
-        continue;
-      }
-
-      const anchorVolume = (volKegged !== null) ? (volKegged - kegeratorVol) : null;
-      const windowEnd = new Date();
-      const matches = requestRows.filter(r =>
-        r.beer.trim().toLowerCase() === name.trim().toLowerCase() &&
-        r.date > tappedDate && r.date <= windowEnd
-      );
-      const drawnDown = matches.reduce((sum, r) => sum + r.volume, 0);
-      const remaining = (anchorVolume !== null) ? (anchorVolume - drawnDown) : null;
-      results.push(Object.assign(base, { kickedDate: null, anchorVolume, drawnDown, remaining, requestCount: matches.length, kicked: false }));
-    }
-
-    results.sort((a,b) => {
-      if(a.kicked !== b.kicked) return a.kicked ? 1 : -1;
-      return b.tappedDate.getTime() - a.tappedDate.getTime();
-    });
-    return results;
+    const ev = (window.OCD && OCD.get() && OCD.get().events) || [];
+    return VolCalc.compute({ batches, requestRows, events: ev, tappedField: tappedFieldName, kickedField: kickedFieldName });
+  }
+  let lastInputs = null;   // { batches, requestRows, tappedField, kickedField } so events can be re-applied without re-fetching
+  function applyVol(kegs, volOnHand){
+    const byId = new Map(volOnHand.map(v => [v.batchId, v]));
+    kegs.forEach(k => { const v = byId.get(k.batchId); k.volOnHand = (v && v.remaining !== null) ? Math.max(0, v.remaining) : null; });
+  }
+  function recomputeVol(){
+    if(!lastInputs || !lastComputed) return;
+    const li = lastInputs;
+    lastComputed.volOnHand = computeVolOnHand(li.batches, li.tappedField, li.kickedField, li.requestRows);
+    applyVol(lastComputed.kegs, lastComputed.volOnHand);
+    renderCurrentTab();
   }
 
   function computeConditioning(batches, conditioningFieldName, historyByBeer, breweryAvg){
@@ -699,43 +680,77 @@
         'No Completed batches have a ' + '"' + getSettings().tappedField + '"' + ' date.</div>';
       return;
     }
-
-    const cards = list.map(k => {
+    const today = VolCalc.toCompact(new Date());
+    const live = list.filter(k => !k.kickedInBF).sort((a,b) => (a.remaining ?? Infinity) - (b.remaining ?? Infinity));
+    const done = list.filter(k => k.kickedInBF);
+    const row = (label, val, cls) => '<div class="voh-row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + val + '</b></div>';
+    const L = v => v.toFixed(2) + ' L';
+    const cards = live.concat(done).map(k => {
       const color = colorForBeer(k.name);
-      let badge = k.kicked
-        ? '<span class="keg-badge kicked">Kicked ' + fmtDate(k.kickedDate) + '</span>'
-        : '';
-      const over = (k.remaining !== null && k.remaining < 0);
-
-      let mathHtml;
-      const row = (label, val, cls) => '<div class="voh-row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + val + '</b></div>';
-      
-      if(k.kicked){
-        mathHtml = row('Vol Kegged', k.volKegged !== null ? k.volKegged.toFixed(2) + ' L' : '—') + row('Vol On Hand', '0.00 L', 'total');
-      } else if(k.volKegged === null){
-        mathHtml = row('No Vol Kegged on this batch, so it can\'t be projected.', '', 'warn');
-      } else {
-        mathHtml = row('Vol Kegged (tapped ' + fmtDate(k.tappedDate) + ')', k.volKegged.toFixed(2) + ' L') +
-          (k.kegeratorVol > 0 ? row('To kegerator', '−' + k.kegeratorVol.toFixed(2) + ' L') : '') +
-          row('Drawn down (' + k.requestCount + ' request' + (k.requestCount === 1 ? '' : 's') + ')', '−' + k.drawnDown.toFixed(2) + ' L') +
-          row('Vol On Hand' + (over ? ' (over-drawn?)' : ''), k.remaining.toFixed(2) + ' L', 'total' + (over ? ' warn' : ''));
+      const badge = k.kickedInBF ? '<span class="keg-badge kicked">Kicked ' + fmtDate(k.kickedDate) + '</span>'
+                  : (k.kicked ? '<span class="keg-badge kicked">Likely kicked</span>' : '');
+      let math, helper = '';
+      if(k.kickedInBF){ math = row('Date Kicked recorded in Brewfather', fmtDate(k.kickedDate)); }
+      else if(!k.hasVolData){ math = row('No Bottling Volume or recount on this batch, so it can\'t be projected.', '', 'warn'); }
+      else {
+        const cur = Math.max(k.remaining, 0);
+        math = row(k.anchorIsManual ? 'Last recount (' + fmtDate(k.anchorDate) + ')' : 'Bottling Volume at tap (' + fmtDate(k.anchorDate) + ')', L(k.anchorVolume)) +
+          (k.kegeratorApplied ? row('To kegerator', '−' + L(k.kegeratorL)) : (k.kegeratorL > 0 ? row('To kegerator (already excluded by the recount)', '—') : '')) +
+          row('Requests since (' + k.requestCount + ')', '−' + L(k.requestsL)) +
+          row('Events since (' + k.eventCount + ')', '−' + L(k.eventsL)) +
+          row('Vol On Hand', L(cur), 'total' + (k.kicked ? ' warn' : ''));
+        helper = '<div class="voh-help">To record a fresh recount today in Brewfather: Vol On Hand = <b>' + cur + '</b> <button class="copybtn" data-copy="' + cur + '">copy</button> ' +
+                 'Vol On Hand Date = <b>' + today + '</b> <button class="copybtn" data-copy="' + today + '">copy</button></div>';
       }
-
-      return (
-        '<div class="keg" style="--tap-color:' + color + '">' +
-          badge +
-          '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
-          '<div class="keg-meta">' +
-            '<span>Batch <b>' + (k.batchNumber ? '#' + escapeHtml(String(k.batchNumber)) : '—') + '</b></span>' +
-            '<span>Tapped <b>' + fmtDate(k.tappedDate) + '</b></span>' +
-          '</div>' +
-          '<div class="voh-math">' + mathHtml + '</div>' +
-        '</div>'
-      );
+      return '<div class="keg" style="--tap-color:' + color + '">' + badge +
+        '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
+        '<div class="keg-meta"><span>Batch <b>' + (k.batchNumber ? '#' + escapeHtml(String(k.batchNumber)) : '—') + '</b></span><span>Tapped <b>' + fmtDate(k.tappedDate) + '</b></span></div>' +
+        '<div class="voh-math">' + math + '</div>' + helper + '</div>';
     }).join('');
-
-    el.content.innerHTML = '<div class="grid">' + cards + '</div>';
+    el.content.innerHTML = '<div class="voh-note">Same calculation as the weekly email. Add event drawdowns on the Events tab.</div><div class="grid">' + cards + '</div>';
   }
+
+  // ---- Events: extra drawdowns outside the Request Log (beer served at events etc.). Saved to brewery_data.json "events". ----
+  const isoDay = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  function renderEvents(){
+    const d = (window.OCD && OCD.get()) || {};
+    const ev = (d.events || []).slice().sort((a,b) => String(b.date).localeCompare(String(a.date)));
+    const beers = [...new Set(((lastComputed && lastComputed.volOnHand) || []).filter(r => !r.kickedInBF).map(r => r.name))].sort();
+    const opt = beers.map(n => '<option>' + escapeHtml(n) + '</option>').join('');
+    const rows = ev.map(e => '<tr><td>' + escapeHtml(e.date) + '</td><td>' + escapeHtml(e.beer) + '</td><td class="n">' + Number(e.volumeL).toFixed(1) + ' L</td><td>' + escapeHtml(e.note || '') + '</td>' +
+      '<td><button class="copybtn" data-ev-del="' + escapeHtml(e.id) + '">delete</button></td></tr>').join('');
+    el.content.innerHTML =
+      '<div class="ev-form"><div class="voh-note">Beer served outside the Request Log (events, tastings, spills). Each entry comes off that beer\'s Vol On Hand from its date, after the last recount.</div>' +
+      '<div class="ev-grid"><label>Date<input type="date" id="ev-date" value="' + isoDay(new Date()) + '"></label>' +
+      '<label>Beer<select id="ev-beer">' + opt + '</select></label>' +
+      '<label>Liters<input type="number" id="ev-vol" min="0" step="0.1" placeholder="e.g. 20"></label>' +
+      '<label>Note<input type="text" id="ev-note" placeholder="Open house"></label>' +
+      '<button class="btn primary" id="ev-add">Add event</button></div><div class="ev-msg" id="ev-msg"></div></div>' +
+      '<table class="ev-table"><thead><tr><th>Date</th><th>Beer</th><th class="n">Volume</th><th>Note</th><th></th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="5" class="empty">No events recorded yet.</td></tr>') + '</tbody></table>';
+  }
+  function evMsg(t, err){ const m = document.getElementById('ev-msg'); if(m){ m.textContent = t; m.className = 'ev-msg' + (err ? ' err' : ''); } }
+  async function evSave(mutator, message){
+    if(!(window.OCD && OCD.gh.has())){ if(window.OCDSettings) OCDSettings.open('To record events, paste your GitHub token and click Save & test.'); return false; }
+    try{ await OCD.save(mutator, message); recomputeVol(); return true; }catch(e){ evMsg(e.message, true); return false; }
+  }
+  el.content.addEventListener('click', async (e) => {
+    const cp = e.target.closest('[data-copy]');
+    if(cp){ try{ await navigator.clipboard.writeText(cp.dataset.copy); const t = cp.textContent; cp.textContent = 'copied'; setTimeout(() => cp.textContent = t, 1200); }catch(_){} return; }
+    if(e.target.closest('#ev-add')){
+      const date = document.getElementById('ev-date').value, beer = document.getElementById('ev-beer').value;
+      const vol = parseFloat(document.getElementById('ev-vol').value), note = document.getElementById('ev-note').value.trim();
+      if(!date || !beer || !(vol > 0)){ evMsg('Pick a date and beer, and enter liters greater than 0.', true); return; }
+      evMsg('Saving to GitHub…');
+      await evSave(o => { o.events = Array.isArray(o.events) ? o.events : [];
+        o.events.push({ id: 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2,5), date, beer, volumeL: vol, note }); },
+        'Add event: ' + beer + ' ' + vol + ' L on ' + date + ' (dashboard)');
+      return;
+    }
+    const del = e.target.closest('[data-ev-del]');
+    if(del && confirm('Delete this event?')){ const id = del.dataset.evDel;
+      await evSave(o => { o.events = (o.events || []).filter(x => x.id !== id); }, 'Delete event (dashboard)'); }
+  });
 
   function renderConditioning(list){
     if(list.length === 0){
@@ -948,6 +963,8 @@
       renderTimeline(lastComputed.kegs, lastComputed.conditioning, lastComputed.fermenting);
     } else if(currentTab === 'volonhand'){
       renderVolOnHand(lastComputed.volOnHand, lastComputed.requestLogError);
+    } else if(currentTab === 'events'){
+      renderEvents();
     } else if(currentTab === 'kegerator'){
       renderKegerator(lastComputed.kegerator);
     } else {
@@ -1057,7 +1074,7 @@
   }
 
   let timelineRowsCache = [];
-  let timelineSortMode = 'On Tap Date';
+  let timelineSortMode = 'batch';
 
   function renderTimeline(kegs, conditioning, fermenting){
     const rows = sortTimelineRows(computeTimeline(kegs, conditioning, fermenting), timelineSortMode);
@@ -1257,8 +1274,8 @@
       try{
         const requestRows = await fetchRequestRows();
         volOnHand = computeVolOnHand(batches, s.tappedField, s.kickedField, requestRows);
-        const byId = new Map(volOnHand.map(v => [v.batchId, v]));
-        kegs.forEach(k => { const v = byId.get(k.batchId); if(v && v.remaining !== null) k.volOnHand = Math.max(0, v.remaining); });
+        applyVol(kegs, volOnHand);
+        lastInputs = { batches, requestRows, tappedField: s.tappedField, kickedField: s.kickedField };
       } catch(reqErr){
         console.error(reqErr);
         requestLogError = reqErr.message;
@@ -1282,5 +1299,5 @@
   }
 
   let started=false;
-  window.OnTap={mount(){ if(!started){started=true; loadAndRender();} }, reload(){ if(started) loadAndRender(); }};
+  window.OnTap={mount(){ if(!started){started=true; loadAndRender();} }, reload(){ if(started) loadAndRender(); }, recompute(){ recomputeVol(); }};
 })();
