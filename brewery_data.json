@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-26T11:56:57.823Z",
+  "savedAt": "2026-10-26T11:59:12.888Z",
   "beers": [
     {
       "id": 1,
@@ -7267,6 +7267,13 @@
       "Vanilla Porter",
       "Strata"
     ],
-    "manual": []
+    "manual": [
+      {
+        "id": "mmvp7ejnchr",
+        "name": "NA Seltzer",
+        "vol": 65,
+        "date": "2026-10-26"
+      }
+    ]
   }
 }
