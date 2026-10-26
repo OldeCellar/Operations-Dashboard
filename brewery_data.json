@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-26T11:56:51.005Z",
+  "savedAt": "2026-10-26T11:56:52.761Z",
   "beers": [
     {
       "id": 1,
@@ -7262,7 +7262,8 @@
   ],
   "sheetSync": {
     "offered": [
-      "Golden Dragon"
+      "Golden Dragon",
+      "Queen Citra"
     ],
     "manual": []
   }
