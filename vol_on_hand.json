@@ -1,11 +1,17 @@
 {
-  "generatedAt": "2026-10-26T20:43:55.271Z",
+  "generatedAt": "2026-10-26T21:17:11.504Z",
   "inventoryDate": "2026-10-26",
   "beers": [
     {
       "name": "Golden Dragon",
       "volume": 107,
       "source": "brewfather",
+      "offered": true
+    },
+    {
+      "name": "Hard Seltzer",
+      "volume": 36,
+      "source": "manual",
       "offered": true
     },
     {
@@ -35,6 +41,7 @@
   ],
   "offered": [
     "Golden Dragon",
+    "Hard Seltzer",
     "NA Seltzer",
     "Queen Citra",
     "Strata",
