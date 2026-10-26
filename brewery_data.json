@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-26T21:12:34.166Z",
+  "savedAt": "2026-10-26T21:13:15.108Z",
   "beers": [
     {
       "id": 1,
@@ -7266,7 +7266,8 @@
       "Queen Citra",
       "Vanilla Porter",
       "Strata",
-      "NA Seltzer"
+      "NA Seltzer",
+      "Hard Seltzer"
     ],
     "manual": [
       {
