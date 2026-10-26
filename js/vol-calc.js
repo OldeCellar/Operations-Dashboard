@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();      // Node (GitHub Actions, tests)
-  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.1.0'; }   // browser
+  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.2.0'; }   // browser
 })(typeof self !== 'undefined' ? self : this, function(){
   /* ONE Vol On Hand calculation, shared by the dashboard and the weekly report/Action so they can never disagree.
      Rules (from the Weekly Vol On Hand Report):
@@ -123,5 +123,28 @@
       const o = m.get(r.name) || { name:r.name, volume:0, batches:[] }; o.volume = r2(o.volume + Math.max(r.remaining, 0)); o.batches.push(r.batchNumber); m.set(r.name, o); });
     return [...m.values()];
   }
-  return { compute, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L };
+  // Manual items (not in Brewfather, e.g. seltzers): a volume entered on a date, drawn down by requests and events after that date.
+  function computeManual(items, requestRows, events, now){
+    now = now || new Date();
+    const evRows = (events || []).map(e => ({ beer:e.beer, date:parseEventDate(e.date), volume:Number(e.volumeL) || 0 })).filter(e => e.date && e.volume > 0);
+    return (items || []).filter(i => i && i.name).map(i => {
+      const anchorDate = parseEventDate(i.date) || day0(now), key = normalizeBeerName(i.name).toLowerCase(), vol = Number(i.vol) || 0;
+      const inWin = r => r.date > anchorDate && r.date <= now && normalizeBeerName(r.beer).toLowerCase() === key;
+      const rq = (requestRows || []).filter(inWin), ev = evRows.filter(inWin), sum = a => a.reduce((s, r) => s + r.volume, 0);
+      return { id:i.id, name:normalizeBeerName(i.name), manual:true, anchorVolume:vol, anchorDate, requestsL:r2(sum(rq)), requestCount:rq.length,
+               eventsL:r2(sum(ev)), eventCount:ev.length, remaining:r2(vol - sum(rq) - sum(ev)) };
+    });
+  }
+  // What the Bellvale Settings sheet should receive: one row per beer name (H/I/J) and the offered list (E).
+  function sheetPlan(o){
+    const now = o.now || new Date(), offered = new Set((o.offered || []).map(n => normalizeBeerName(n).toLowerCase()));
+    const bf = totalsByBeer(o.volResults || []).map(t => ({ name:t.name, volume:t.volume, source:'brewfather' }));
+    const man = computeManual(o.manualItems, o.requestRows, o.events, now).map(m => ({ name:m.name, volume:Math.max(m.remaining, 0), source:'manual' }));
+    const seen = new Set(), beers = [];
+    bf.concat(man).forEach(b => { const k = b.name.toLowerCase(); if(seen.has(k)) return; seen.add(k); beers.push(Object.assign(b, { offered: offered.has(k) })); });
+    beers.sort((a, b) => a.name.localeCompare(b.name));
+    const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
+    return { inventoryDate: y + '-' + m + '-' + d, beers, offered: beers.filter(b => b.offered).map(b => b.name) };
+  }
+  return { compute, computeManual, sheetPlan, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L };
 });

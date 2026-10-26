@@ -1,5 +1,5 @@
 /* On Tap module, scoped under #ot */
-#ot{--v-on-tap-css:"0.3.2";--bg: #f6f1e7;
+#ot{--v-on-tap-css:"0.3.3";--bg: #f6f1e7;
     --bg-panel: #fffdf9;
     --bg-card: #ffffff;
     --line: #e2d8c3;
@@ -285,3 +285,6 @@
 #ot .ev-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--bg-panel);border:1px solid var(--line);border-radius:10px}
 #ot .ev-table th{text-align:left;font:11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;padding:9px 10px;background:#8a8478;color:#fff}
 #ot .ev-table td{padding:8px 10px;border-top:1px solid var(--line)} #ot .ev-table .n{text-align:right;font-family:var(--font-mono)} #ot .ev-table .empty{text-align:center;color:var(--stone-dim);padding:22px}
+#ot .sh-h{font:700 17px var(--font-body);margin:22px 0 8px;color:var(--cream)} #ot .sh-h small{font:12px var(--font-mono);color:var(--stone-dim);font-weight:400;margin-left:6px}
+#ot .ev-table input[type=text],#ot .ev-table input[type=number],#ot .ev-table input[type=date]{width:100%;padding:6px 8px;font:13px var(--font-mono);border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--cream)}
+#ot .ev-table input[type=checkbox]{width:18px;height:18px;cursor:pointer}

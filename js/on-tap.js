@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.6.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.7.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -710,6 +710,89 @@
     el.content.innerHTML = '<div class="voh-note">Same calculation as the weekly email. Add event drawdowns on the Events tab.</div><div class="grid">' + cards + '</div>';
   }
 
+  // ---- Request App tab: which beers the Bellvale Request app offers (Settings column E), every beer's Vol On Hand (H / I / J),
+  //      and manual items (e.g. seltzers that are not in Brewfather). Saved to brewery_data.json "sheetSync"; the Action publishes vol_on_hand.json. ----
+  const normSync = o => { const s = (o.sheetSync && typeof o.sheetSync === 'object') ? o.sheetSync : {}; s.offered = Array.isArray(s.offered) ? s.offered : []; s.manual = Array.isArray(s.manual) ? s.manual : []; o.sheetSync = s; return s; };
+  const syncNow = () => { const s = ((window.OCD && OCD.get()) || {}).sheetSync || {}; return { offered: s.offered || [], manual: s.manual || [] }; };
+  function sheetPlanNow(){
+    const st = syncNow();
+    return VolCalc.sheetPlan({ volResults: (lastComputed && lastComputed.volOnHand) || [], manualItems: st.manual, offered: st.offered,
+                               requestRows: lastInputs ? lastInputs.requestRows : [], events: ((window.OCD && OCD.get()) || {}).events || [] });
+  }
+  function renderSheet(){
+    const st = syncNow(), plan = sheetPlanNow();
+    const manualNames = new Set(st.manual.map(m => m.name.toLowerCase()));
+    const beerRows = plan.beers.map(b => '<tr><td><input type="checkbox" data-offer="' + escapeHtml(b.name) + '" ' + (b.offered ? 'checked' : '') + '></td>' +
+      '<td>' + escapeHtml(b.name) + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td><td>' + (b.source === 'manual' ? 'manual item' : 'Brewfather') + '</td></tr>').join('');
+    const manualRows = st.manual.map(m => '<tr data-mid="' + escapeHtml(m.id) + '"><td><input type="text" class="m-name" value="' + escapeHtml(m.name) + '"></td>' +
+      '<td><input type="number" class="m-vol" step="0.1" min="0" value="' + escapeHtml(String(m.vol)) + '"></td><td><input type="date" class="m-date" value="' + escapeHtml(String(m.date || '')) + '"></td>' +
+      '<td><button class="copybtn" data-m-save="' + escapeHtml(m.id) + '">save</button> <button class="copybtn" data-m-del="' + escapeHtml(m.id) + '">delete</button></td></tr>').join('');
+    const prev = plan.beers.map(b => '<tr><td>' + escapeHtml(b.name) + '</td><td>' + plan.inventoryDate + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td></tr>').join('');
+    el.content.innerHTML =
+      '<div class="voh-note">Tick the beers the Bellvale Request app should offer this week. Volumes come from the same Vol On Hand calculation as the weekly email. ' +
+      'The GitHub Action publishes them hourly and the sheet script copies them into Settings.</div>' +
+      (plan.offered.length > 9 ? '<div class="ev-msg err">Only the first 9 offered beers fit in Settings E2:E10.</div>' : '') +
+      '<h3 class="sh-h">Beers and Vol On Hand <small>(' + plan.offered.length + ' offered)</small></h3>' +
+      '<table class="ev-table"><thead><tr><th>Offer</th><th>Beer (column H)</th><th class="n">Vol in kegs (J)</th><th>Source</th></tr></thead><tbody>' +
+      (beerRows || '<tr><td colspan="4" class="empty">No beers yet.</td></tr>') + '</tbody></table>' +
+      '<h3 class="sh-h">Manual items <small>(not in Brewfather: seltzers, guest kegs)</small></h3>' +
+      '<div class="voh-note">Enter the volume you counted and the date. Requests and events after that date come off it automatically.</div>' +
+      '<table class="ev-table"><thead><tr><th>Name (exactly as in the Request app)</th><th>Liters counted</th><th>Counted on</th><th></th></tr></thead><tbody>' + manualRows +
+      '<tr><td><input type="text" id="m-new-name" placeholder="Hard Seltzer"></td><td><input type="number" id="m-new-vol" step="0.1" min="0" placeholder="36"></td>' +
+      '<td><input type="date" id="m-new-date" value="' + isoDay(new Date()) + '"></td><td><button class="btn primary" id="m-add">Add item</button></td></tr></tbody></table>' +
+      '<div class="ev-msg" id="sh-msg"></div>' +
+      '<h3 class="sh-h">What the Settings sheet will receive</h3>' +
+      '<div class="voh-note">Column E (offered): <b>' + (plan.offered.map(escapeHtml).join(', ') || 'none') + '</b></div>' +
+      '<table class="ev-table"><thead><tr><th>H · On Tap</th><th>I · inventory date</th><th class="n">J · Vol in kegs</th></tr></thead><tbody>' + (prev || '<tr><td colspan="3" class="empty">Nothing yet.</td></tr>') + '</tbody></table>' +
+      '<div class="voh-note" id="sh-pub">Checking the published file…</div>';
+    showPublished();
+  }
+  async function showPublished(){
+    const box = document.getElementById('sh-pub'); if(!box) return;
+    try{ const c = (window.OCD && OCD.gh.cfg()) || { repo: 'OldeCellar/Operations-Dashboard', branch: 'main' };
+      const r = await fetch('https://raw.githubusercontent.com/' + c.repo + '/' + c.branch + '/vol_on_hand.json?t=' + Date.now());
+      if(!r.ok) throw new Error('HTTP ' + r.status); const p = await r.json(); if(!p.generatedAt) throw new Error('not a Vol On Hand file'); const h = Math.round((Date.now() - new Date(p.generatedAt)) / 3600000);
+      box.textContent = 'Published file vol_on_hand.json: calculated ' + new Date(p.generatedAt).toLocaleString() + ' (' + h + ' h ago). The sheet shows this file\'s numbers, so changes here reach it after the next hourly run.';
+    }catch(e){ box.textContent = 'Published file vol_on_hand.json not found yet. It appears after the "Publish Vol On Hand" Action has run once.'; }
+  }
+  function shMsg(t, err){ const m = document.getElementById('sh-msg'); if(m){ m.textContent = t; m.className = 'ev-msg' + (err ? ' err' : ''); } }
+  async function shSave(mutator, message){
+    if(!(window.OCD && OCD.gh.has())){ if(window.OCDSettings) OCDSettings.open('To change these settings, paste your GitHub token and click Save & test.'); renderSheet(); return false; }
+    try{ await OCD.save(mutator, message); renderSheet(); return true; }catch(e){ renderSheet(); shMsg(e.message, true); return false; }
+  }
+  el.content.addEventListener('change', async (e) => {
+    const cb = e.target.closest('[data-offer]'); if(!cb) return;
+    const name = cb.dataset.offer, on = cb.checked, k = name.toLowerCase();
+    await shSave(o => { const s = normSync(o); s.offered = s.offered.filter(n => n.toLowerCase() !== k); if(on) s.offered.push(name); },
+      (on ? 'Offer ' : 'Stop offering ') + name + ' in the Request app (dashboard)');
+  });
+  el.content.addEventListener('click', async (e) => {
+    const nameTaken = (n, exceptId) => {
+      const k = n.trim().toLowerCase();
+      const bf = ((lastComputed && lastComputed.volOnHand) || []).some(r => !r.kickedInBF && r.name.toLowerCase() === k);
+      return bf || syncNow().manual.some(m => m.id !== exceptId && m.name.trim().toLowerCase() === k);
+    };
+    if(e.target.closest('#m-add')){
+      const name = document.getElementById('m-new-name').value.trim(), vol = parseFloat(document.getElementById('m-new-vol').value), date = document.getElementById('m-new-date').value;
+      if(!name || !(vol >= 0) || !date){ shMsg('Enter a name, the liters counted and the date.', true); return; }
+      if(nameTaken(name)){ shMsg('"' + name + '" is already used by another beer or item.', true); return; }
+      shMsg('Saving to GitHub…');
+      await shSave(o => { normSync(o).manual.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2,4), name, vol, date }); }, 'Add manual item: ' + name + ' ' + vol + ' L (dashboard)');
+      return;
+    }
+    const sv = e.target.closest('[data-m-save]');
+    if(sv){ const row = sv.closest('tr'), id = sv.dataset.mSave;
+      const name = row.querySelector('.m-name').value.trim(), vol = parseFloat(row.querySelector('.m-vol').value), date = row.querySelector('.m-date').value;
+      if(!name || !(vol >= 0) || !date){ shMsg('Enter a name, the liters counted and the date.', true); return; }
+      if(nameTaken(name, id)){ shMsg('"' + name + '" is already used by another beer or item.', true); return; }
+      shMsg('Saving to GitHub…');
+      await shSave(o => { const m = normSync(o).manual.find(x => x.id === id); if(!m) throw new Error('That item no longer exists.'); m.name = name; m.vol = vol; m.date = date; }, 'Update manual item: ' + name + ' (dashboard)');
+      return; }
+    const dl = e.target.closest('[data-m-del]');
+    if(dl && confirm('Delete this manual item?')){ const id = dl.dataset.mDel;
+      await shSave(o => { const s = normSync(o); s.manual = s.manual.filter(x => x.id !== id); }, 'Delete manual item (dashboard)'); }
+  });
+
   // ---- Events: extra drawdowns outside the Request Log (beer served at events etc.). Saved to brewery_data.json "events". ----
   const isoDay = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   function renderEvents(){
@@ -963,6 +1046,8 @@
       renderTimeline(lastComputed.kegs, lastComputed.conditioning, lastComputed.fermenting);
     } else if(currentTab === 'volonhand'){
       renderVolOnHand(lastComputed.volOnHand, lastComputed.requestLogError);
+    } else if(currentTab === 'sheet'){
+      renderSheet();
     } else if(currentTab === 'events'){
       renderEvents();
     } else if(currentTab === 'kegerator'){
