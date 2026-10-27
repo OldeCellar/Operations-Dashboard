@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();      // Node (GitHub Actions, tests)
-  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.2.0'; }   // browser
+  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.3.0'; }   // browser
 })(typeof self !== 'undefined' ? self : this, function(){
   /* ONE Vol On Hand calculation, shared by the dashboard and the weekly report/Action so they can never disagree.
      Rules (from the Weekly Vol On Hand Report):
@@ -120,8 +120,10 @@
   function totalsByBeer(results){
     const m = new Map();
     results.filter(r => !r.kickedInBF && r.remaining !== null).forEach(r => {
-      const o = m.get(r.name) || { name:r.name, volume:0, batches:[] }; o.volume = r2(o.volume + Math.max(r.remaining, 0)); o.batches.push(r.batchNumber); m.set(r.name, o); });
-    return [...m.values()];
+      const o = m.get(r.name) || { name:r.name, volume:0, batches:[], withVolume:[] }; o.volume = r2(o.volume + Math.max(r.remaining, 0));
+      if(r.batchNumber !== null && r.batchNumber !== undefined){ o.batches.push(r.batchNumber); if(r.remaining > 0) o.withVolume.push(r.batchNumber); } m.set(r.name, o); });
+    // batch numbers that still hold beer (all of them if none do)
+    return [...m.values()].map(o => ({ name:o.name, volume:o.volume, batches:(o.withVolume.length ? o.withVolume : o.batches) }));
   }
   // Manual items (not in Brewfather, e.g. seltzers): a volume entered on a date, drawn down by requests and events after that date.
   function computeManual(items, requestRows, events, now){
@@ -138,8 +140,8 @@
   // What the Bellvale Settings sheet should receive: one row per beer name (H/I/J) and the offered list (E).
   function sheetPlan(o){
     const now = o.now || new Date(), offered = new Set((o.offered || []).map(n => normalizeBeerName(n).toLowerCase()));
-    const bf = totalsByBeer(o.volResults || []).map(t => ({ name:t.name, volume:t.volume, source:'brewfather' }));
-    const man = computeManual(o.manualItems, o.requestRows, o.events, now).map(m => ({ name:m.name, volume:Math.max(m.remaining, 0), source:'manual' }));
+    const bf = totalsByBeer(o.volResults || []).map(t => ({ name:t.name, volume:t.volume, source:'brewfather', batches:t.batches }));
+    const man = computeManual(o.manualItems, o.requestRows, o.events, now).map(m => ({ name:m.name, volume:Math.max(m.remaining, 0), source:'manual', batches:[] }));
     const seen = new Set(), beers = [];
     bf.concat(man).forEach(b => { const k = b.name.toLowerCase(); if(seen.has(k)) return; seen.add(k); beers.push(Object.assign(b, { offered: offered.has(k) })); });
     beers.sort((a, b) => a.name.localeCompare(b.name));

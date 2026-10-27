@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.7.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.8.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -727,8 +727,9 @@
     const manualRows = st.manual.map(m => '<tr data-mid="' + escapeHtml(m.id) + '"><td><input type="text" class="m-name" value="' + escapeHtml(m.name) + '"></td>' +
       '<td><input type="number" class="m-vol" step="0.1" min="0" value="' + escapeHtml(String(m.vol)) + '"></td><td><input type="date" class="m-date" value="' + escapeHtml(String(m.date || '')) + '"></td>' +
       '<td><button class="copybtn" data-m-save="' + escapeHtml(m.id) + '">save</button> <button class="copybtn" data-m-del="' + escapeHtml(m.id) + '">delete</button></td></tr>').join('');
-    const prev = plan.beers.map(b => '<tr><td>' + escapeHtml(b.name) + '</td><td>' + plan.inventoryDate + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td></tr>').join('');
+    const prev = plan.beers.map(b => '<tr><td>' + escapeHtml(b.name) + '</td><td>' + plan.inventoryDate + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td><td>' + escapeHtml((b.batches || []).join(', ')) + '</td></tr>').join('');
     el.content.innerHTML =
+      '<div class="pub-bar"><button class="btn primary" id="sh-publish">Publish now</button><span id="sh-pubmsg" class="pub-msg"></span></div>' +
       '<div class="voh-note">Tick the beers the Bellvale Request app should offer this week. Volumes come from the same Vol On Hand calculation as the weekly email. ' +
       'The GitHub Action publishes them hourly and the sheet script copies them into Settings.</div>' +
       (plan.offered.length > 9 ? '<div class="ev-msg err">Only the first 9 offered beers fit in Settings E2:E10.</div>' : '') +
@@ -743,9 +744,9 @@
       '<div class="ev-msg" id="sh-msg"></div>' +
       '<h3 class="sh-h">What the Settings sheet will receive</h3>' +
       '<div class="voh-note">Column E (offered): <b>' + (plan.offered.map(escapeHtml).join(', ') || 'none') + '</b></div>' +
-      '<table class="ev-table"><thead><tr><th>H · On Tap</th><th>I · inventory date</th><th class="n">J · Vol in kegs</th></tr></thead><tbody>' + (prev || '<tr><td colspan="3" class="empty">Nothing yet.</td></tr>') + '</tbody></table>' +
+      '<table class="ev-table"><thead><tr><th>H · On Tap</th><th>I · inventory date</th><th class="n">J · Vol in kegs</th><th>K · Batch #</th></tr></thead><tbody>' + (prev || '<tr><td colspan="4" class="empty">Nothing yet.</td></tr>') + '</tbody></table>' +
       '<div class="voh-note" id="sh-pub">Checking the published file…</div>';
-    showPublished();
+    showPublished(); paintPublishMsg();
   }
   async function showPublished(){
     const box = document.getElementById('sh-pub'); if(!box) return;
@@ -754,6 +755,40 @@
       if(!r.ok) throw new Error('HTTP ' + r.status); const p = await r.json(); if(!p.generatedAt) throw new Error('not a Vol On Hand file'); const h = Math.round((Date.now() - new Date(p.generatedAt)) / 3600000);
       box.textContent = 'Published file vol_on_hand.json: calculated ' + new Date(p.generatedAt).toLocaleString() + ' (' + h + ' h ago). The sheet shows this file\'s numbers, so changes here reach it after the next hourly run.';
     }catch(e){ box.textContent = 'Published file vol_on_hand.json not found yet. It appears after the "Publish Vol On Hand" Action has run once.'; }
+  }
+  // Publish now: starts the "Publish Vol On Hand" GitHub Action and waits for it (needs a token with Actions: Read and write).
+  let pubMsg = { text: '', err: false }, publishing = false;
+  function paintPublishMsg(){ const m = document.getElementById('sh-pubmsg'); if(m){ m.textContent = pubMsg.text; m.className = 'pub-msg' + (pubMsg.err ? ' err' : ''); }
+    const b = document.getElementById('sh-publish'); if(b) b.disabled = publishing; }
+  function setPub(text, err){ pubMsg = { text, err: !!err }; paintPublishMsg(); }
+  async function publishNow(){
+    if(publishing) return;
+    if(!(window.OCD && OCD.gh.has())){ if(window.OCDSettings) OCDSettings.open('To publish, paste your GitHub token and click Save & test.'); return; }
+    const c = OCD.gh.cfg(), base = 'https://api.github.com/repos/' + c.repo + '/actions/workflows/vol_on_hand.yml';
+    publishing = true; setPub('Starting the Publish Vol On Hand Action…');
+    try{
+      const started = Date.now();
+      const r = await fetch(base + '/dispatches', { method: 'POST', headers: OCD.gh.headers(), body: JSON.stringify({ ref: c.branch }) });
+      if(r.status === 403 || r.status === 404 || r.status === 401){
+        throw new Error('GitHub refused (HTTP ' + r.status + '). Your token needs the "Actions: Read and write" permission for this repository, and the workflow file vol_on_hand.yml must exist.'); }
+      if(!r.ok) throw new Error('GitHub returned HTTP ' + r.status + ' when starting the Action.');
+      setPub('Started. Waiting for it to finish (about a minute)…');
+      for(let i = 0; i < 40; i++){
+        await new Promise(s => setTimeout(s, i === 0 ? 4000 : 5000));
+        const rr = await fetch(base + '/runs?event=workflow_dispatch&per_page=5&t=' + Date.now(), { headers: OCD.gh.headers() });
+        if(!rr.ok) continue;
+        const runs = (await rr.json()).workflow_runs || [];
+        const run = runs.find(x => new Date(x.created_at).getTime() >= started - 20000);
+        if(!run) continue;
+        if(run.status === 'completed'){
+          if(run.conclusion === 'success'){ setPub('Published at ' + new Date().toLocaleTimeString() + '. The sheet picks it up within 30 minutes (or run the sync in Apps Script).'); showPublished(); }
+          else setPub('The Action finished with "' + run.conclusion + '". Open the repo\'s Actions tab and click the run to read the error.', true);
+          return;
+        }
+      }
+      setPub('Still running after 3 minutes. Check the repo\'s Actions tab.', true);
+    }catch(e){ setPub(e.message, true); }
+    finally{ publishing = false; paintPublishMsg(); }
   }
   function shMsg(t, err){ const m = document.getElementById('sh-msg'); if(m){ m.textContent = t; m.className = 'ev-msg' + (err ? ' err' : ''); } }
   async function shSave(mutator, message){
@@ -772,6 +807,7 @@
       const bf = ((lastComputed && lastComputed.volOnHand) || []).some(r => !r.kickedInBF && r.name.toLowerCase() === k);
       return bf || syncNow().manual.some(m => m.id !== exceptId && m.name.trim().toLowerCase() === k);
     };
+    if(e.target.closest('#sh-publish')){ publishNow(); return; }
     if(e.target.closest('#m-add')){
       const name = document.getElementById('m-new-name').value.trim(), vol = parseFloat(document.getElementById('m-new-vol').value), date = document.getElementById('m-new-date').value;
       if(!name || !(vol >= 0) || !date){ shMsg('Enter a name, the liters counted and the date.', true); return; }
