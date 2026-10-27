@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T06:21:48.619Z",
+  "generatedAt": "2026-10-27T11:51:59.182Z",
   "inventoryDate": "2026-10-27",
   "beers": [
     {
@@ -41,7 +41,7 @@
       "batches": [
         570
       ],
-      "offered": true
+      "offered": false
     },
     {
       "name": "Vanilla Porter",
@@ -58,7 +58,6 @@
     "Hard Seltzer",
     "NA Seltzer",
     "Queen Citra",
-    "Strata",
     "Vanilla Porter"
   ],
   "counts": {
