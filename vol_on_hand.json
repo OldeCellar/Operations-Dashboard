@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T07:11:02.530Z",
+  "generatedAt": "2026-10-29T14:26:02.732Z",
   "inventoryDate": "2026-10-29",
   "beers": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 65,
+      "volume": 56.72,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -62,7 +62,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 1894,
+    "requestRows": 1895,
     "events": 1
   }
 }
