@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T01:01:19.377Z",
+  "generatedAt": "2026-10-29T07:11:02.530Z",
   "inventoryDate": "2026-10-29",
   "beers": [
     {
@@ -13,7 +13,7 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 33.93,
+      "volume": 36,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -62,7 +62,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 1895,
+    "requestRows": 1894,
     "events": 1
   }
 }
