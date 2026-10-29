@@ -1,0 +1,19 @@
+#pur{--v-purchasing-css:"0.1.0"}
+#pur .pur-msg{font:12px var(--mono);color:var(--green);min-height:16px;margin:0 0 8px} #pur .pur-msg.err{color:var(--red);font-weight:700}
+#pur .pur-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px} #pur .pur-sub{font:12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:var(--panel);border-radius:4px;cursor:pointer;color:var(--ink-2)}
+#pur .pur-sub.on{background:var(--btn);color:var(--ink);border-color:var(--btn-hover)} #pur .pur-sub.off{opacity:.45;cursor:not-allowed}
+#pur .pur-count{font:11px var(--mono);background:var(--amber);color:#fff;border-radius:9px;padding:1px 7px;margin-left:4px}
+#pur .pur-pend{background:#f3e0c0;border:1px solid #d9b87a;border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#pur .pur-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0} #pur .pur-dim{font:12px var(--mono);color:var(--ink-3)}
+#pur input[type=search],#pur select,#pur input[type=text],#pur input[type=number]{font:13px var(--mono);padding:6px 8px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+#pur .pur-note{font-size:13px;color:var(--ink-2);margin:6px 0 10px} #pur .pur-empty{background:var(--panel);border:1px dashed var(--border);border-radius:6px;padding:24px;text-align:center;color:var(--ink-3);font:13px var(--mono)}
+#pur .pur-wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+#pur table{border-collapse:collapse;width:100%;font-size:13px} #pur th{background:#8a8478;color:#fff;font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:8px 10px;white-space:nowrap}
+#pur td{padding:7px 10px;border-top:1px solid var(--border);vertical-align:middle} #pur .n{text-align:right;font-family:var(--mono)} #pur .mono{font-family:var(--mono);font-size:12px} #pur td.nm{font:600 14px var(--serif)}
+#pur tr.it{cursor:pointer} #pur tr.it:hover td{background:var(--panel-alt)} #pur tr.it.open td{background:var(--panel-alt)} #pur td.tg{width:22px;color:var(--ink-3)}
+#pur tr.offs>td{background:#fbf3e2;padding:10px 14px} #pur table.in th{background:#a79f8e} #pur .minstock{width:90px;text-align:right}
+#pur .star{border:0;background:none;font-size:18px;color:#cdbf9f;cursor:pointer} #pur .star.on{color:var(--amber)} #pur .lnk{border:0;background:none;color:var(--amber);cursor:pointer;font:12px var(--mono);text-decoration:underline}
+#pur .addrow input,#pur .addrow select{width:100%} #pur a{color:var(--amber)}
+#pur .pur-card{background:var(--panel);border:1px solid var(--border);border-left:6px solid var(--amber);border-radius:6px;padding:16px 18px;max-width:760px} #pur .pur-prog{font:11px var(--mono);color:var(--ink-3)}
+#pur .pc-name{font:700 20px var(--serif);margin:4px 0} #pur .pc-meta{font-size:12px;color:var(--ink-2);margin-bottom:10px} #pur .pc-q{font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:12px 0 6px}
+#pur .pc-opt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:7px 0;cursor:pointer} #pur .pc-btns{margin-top:14px;display:flex;gap:8px}

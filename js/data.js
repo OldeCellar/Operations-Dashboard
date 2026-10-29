@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['data.js']='0.2.0';
+(window.OCD_V=window.OCD_V||{})['data.js']='0.3.0';
 /* Shared data loader. ONE setting decides where brewery_data.json lives.
    Stage 2 (now): this repo's own copy, kept fresh by the nightly bf_sync.yml Action and by the Scheduler/dashboard saves. */
 window.OCD=window.OCD||{};
@@ -26,6 +26,39 @@ OCD.gh={
     if(!r.ok) throw new Error('Cannot open repo '+c.repo+' (HTTP '+r.status+'). Check the repo name and that the token has access to it.');
     const j=await r.json(); const rem=await OCD.gh.fetchRemote();
     return{repo:c.repo,canPush:!j.permissions||j.permissions.push!==false,savedAt:rem.data.savedAt};
+  }
+};
+
+/* ---- Bookkeeping repo (private): ledger.json / catalog.json / settings.json. Needs the same token, with access to that repo. ---- */
+OCD.books={
+  cfg(){ const c=OCD.gh.cfg(); return {repo:c.booksRepo||'OldeCellar/Olde-Cellar-Bookeeping',branch:c.booksBranch||'main'}; },
+  url(file){ return 'https://api.github.com/repos/'+OCD.books.cfg().repo+'/contents/'+file; },
+  async read(file){
+    if(!OCD.gh.has()) throw new Error('Add your GitHub token in Settings to open the bookkeeping data.');
+    const ref='?ref='+encodeURIComponent(OCD.books.cfg().branch)+'&t='+Date.now();
+    const r=await fetch(OCD.books.url(file)+ref,{headers:OCD.gh.headers()});
+    if(r.status===404) throw new Error(file+' was not found in '+OCD.books.cfg().repo+'. Upload it there first.');
+    if(r.status===401||r.status===403) throw new Error('GitHub refused access to '+OCD.books.cfg().repo+' (HTTP '+r.status+'). Give your token access to that repository.');
+    if(!r.ok) throw new Error('GitHub read failed: HTTP '+r.status);
+    const j=await r.json(); let text;
+    if(j.content&&j.encoding==='base64'){const bin=atob(j.content.replace(/\n/g,''));text=new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));}
+    else{const rr=await fetch(OCD.books.url(file)+ref,{headers:OCD.gh.headers(true)});if(!rr.ok)throw new Error('GitHub read failed: HTTP '+rr.status);text=await rr.text();}
+    return {data:JSON.parse(text),sha:j.sha};
+  },
+  async save(file,mutator,message){     // conflict-safe: re-reads the latest file, applies your change, commits
+    const c=OCD.books.cfg(); let lastErr='';
+    for(let attempt=1;attempt<=3;attempt++){
+      const remote=await OCD.books.read(file), obj=remote.data;
+      mutator(obj);
+      const bytes=new TextEncoder().encode(JSON.stringify(obj,null,1)); let bin='';
+      for(let i=0;i<bytes.length;i+=0x8000) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));
+      const r=await fetch(OCD.books.url(file),{method:'PUT',headers:OCD.gh.headers(),body:JSON.stringify({message:message||'Dashboard save',content:btoa(bin),branch:c.branch,sha:remote.sha})});
+      if(r.ok) return obj;
+      const e=await r.json().catch(()=>({}));lastErr=e.message||('HTTP '+r.status);
+      if((r.status===409||r.status===422)&&attempt<3){await new Promise(s=>setTimeout(s,800));continue;}
+      break;
+    }
+    throw new Error('Save failed: '+lastErr);
   }
 };
 /* Conflict-safe save: re-reads the LATEST file, applies your change to it, writes back. Nightly sync changes are never overwritten. */

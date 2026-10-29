@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="ocd-version" content="0.13.0">
+<meta name="ocd-version" content="0.14.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olde Cellar | Operations Dashboard</title>
 <link rel="stylesheet" href="css/theme.css">
@@ -9,12 +9,13 @@
 <link rel="stylesheet" href="css/catalog.css">
 <link rel="stylesheet" href="css/schedule.css">
 <link rel="stylesheet" href="css/history.css">
+<link rel="stylesheet" href="css/purchasing.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head><body>
 <header class="app-header">
   <div class="dash-bar">
-    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.13.0</span></h1></div>
+    <div><div class="dash-sub">Olde Cellar Brewery</div><h1>Operations Dashboard <span class="dash-ver">v0.14.0</span></h1></div>
     <div><button class="dash-btn" id="open-settings">Settings</button> <button class="dash-btn" id="refresh-all">Refresh Data</button></div>
   </div>
   <nav class="dash-tabs" id="tabs"></nav>
@@ -265,6 +266,7 @@
         <div id="rawEmpty" class="empty" hidden>No rows match.</div>
     </section>
 </div></section>
+<section id="view-purchasing" hidden><div id="pur"><p class="pur-msg" id="pur-msg">Loading…</p><div id="pur-body"></div></div></section>
 <section id="view-catalog" hidden><div id="cat">
   <div class="cat-bar">
     <select id="cat-category"><option value="">All categories</option><option value="core brand">Core Brands</option><option value="seasonal">Seasonal</option><option value="filler">Fillers</option></select>
@@ -285,6 +287,7 @@
 <script src="js/scheduler-engine.js"></script>
 <script src="js/schedule.js"></script>
 <script src="js/history.js"></script>
+<script src="js/purchasing.js"></script>
 <script src="js/vol-calc.js"></script>
 <script src="js/on-tap.js"></script>
 <script src="js/app.js"></script>
