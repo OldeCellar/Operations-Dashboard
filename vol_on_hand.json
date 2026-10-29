@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-29T14:26:02.732Z",
+  "generatedAt": "2026-10-29T20:21:00.001Z",
   "inventoryDate": "2026-10-29",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 107,
+      "volume": 104.93,
       "source": "brewfather",
       "batches": [
         566
@@ -27,7 +27,7 @@
     },
     {
       "name": "Queen Citra",
-      "volume": 49.86,
+      "volume": 43.65,
       "source": "brewfather",
       "batches": [
         569
@@ -62,7 +62,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 1895,
+    "requestRows": 1913,
     "events": 1
   }
 }
