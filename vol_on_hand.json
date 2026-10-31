@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T02:28:17.324Z",
+  "generatedAt": "2026-10-31T15:45:35.671Z",
   "inventoryDate": "2026-10-31",
   "beers": [
     {
@@ -21,6 +21,13 @@
     {
       "name": "NA Seltzer",
       "volume": 31.88,
+      "source": "manual",
+      "batches": [],
+      "offered": true
+    },
+    {
+      "name": "Oktoberfest Marzen",
+      "volume": 22,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -57,6 +64,7 @@
     "Golden Dragon",
     "Hard Seltzer",
     "NA Seltzer",
+    "Oktoberfest Marzen",
     "Queen Citra",
     "Vanilla Porter"
   ],
