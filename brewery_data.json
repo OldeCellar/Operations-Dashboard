@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T14:38:13.217Z",
+  "savedAt": "2026-10-31T14:40:25.632Z",
   "beers": [
     {
       "id": 1,
@@ -7268,6 +7268,12 @@
         "name": "Hard Seltzer",
         "vol": 36,
         "date": "2026-10-26"
+      },
+      {
+        "id": "mmvwid4ioj0",
+        "name": "Oktoberfest Marzen",
+        "vol": 22,
+        "date": "2026-10-31"
       }
     ]
   }
