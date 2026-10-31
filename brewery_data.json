@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T16:05:35.839Z",
+  "savedAt": "2026-10-31T16:07:47.526Z",
   "beers": [
     {
       "id": 1,
@@ -7267,8 +7267,8 @@
       {
         "id": "mmvp7ejnchr",
         "name": "NA Seltzer",
-        "vol": 65,
-        "date": "2026-10-26"
+        "vol": 22,
+        "date": "2026-10-31"
       },
       {
         "id": "mmvpr639fev",
