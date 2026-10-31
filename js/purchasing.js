@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.2.0';
 /* Purchasing tab (private bookkeeping repo): Catalog = items (tied to Brewfather inventory) with their vendor offers (vendor, SKU, link, pack size),
    plus a match review that links the offers imported from your workbook to Brewfather items. Later: Purchases, Order List, Costs. */
 window.Purchasing=(()=>{
@@ -32,9 +32,10 @@ window.Purchasing=(()=>{
     $('pur-body').innerHTML=
       `<div class="pur-bar"><button class="pur-sub ${sub==='catalog'?'on':''}" data-sub="catalog">Catalog</button>
         <button class="pur-sub ${sub==='review'?'on':''}" data-sub="review">Match review${unm?` <span class="pur-count">${unm}</span>`:''}</button>
-        <button class="pur-sub off" disabled title="coming next">Purchases</button><button class="pur-sub off" disabled title="coming next">Order List</button><button class="pur-sub off" disabled title="coming next">Costs</button></div>`+
+        <button class="pur-sub ${sub==='demand'?'on':''}" data-sub="demand">Demand</button><button class="pur-sub ${sub==='order'?'on':''}" data-sub="order">Order List</button>
+        <button class="pur-sub off" disabled title="coming next">Purchases</button><button class="pur-sub off" disabled title="coming next">Costs</button></div>`+
       (nPend()?`<div class="pur-pend"><b>${nPend()}</b> match decision${nPend()===1?'':'s'} waiting. <button class="ocd-btn" id="pur-save">Save to GitHub</button> <button class="ocd-btn ghost" id="pur-discard">Discard</button></div>`:'')+
-      (sub==='catalog'?catalogHtml():reviewHtml());
+      (sub==='catalog'?catalogHtml():sub==='review'?reviewHtml():sub==='demand'?demandHtml():orderHtml());
   }
 
   // ---------------- Catalog ----------------
@@ -103,6 +104,93 @@ window.Purchasing=(()=>{
       <div class="pc-btns"><button class="ocd-btn ghost" id="pc-prev" ${card?'':'disabled'}>Back</button> <button class="ocd-btn" id="pc-ok">Confirm</button> <button class="ocd-btn ghost" id="pc-skip">Decide later</button></div></div>`;
   }
 
+
+  // ---------------- Demand + Order List ----------------
+  const RKEY='ocd_recipes'; let RC=null, dem={weeks:26,type:'',onlyOrder:true}, sel={}, qtyOv={}, demCache=null;
+  try{ RC=JSON.parse(localStorage.getItem(RKEY)||'null'); }catch(e){}
+  const slim=r=>({name:r.name,batchSize:r.batchSize,fermentables:(r.fermentables||[]).map(x=>({name:x.name,amount:x.amount,unit:x.unit,type:x.type})),
+    hops:(r.hops||[]).map(x=>({name:x.name,amount:x.amount,unit:x.unit,type:x.type,use:x.use})),
+    yeasts:(r.yeasts||[]).map(x=>({name:x.name,amount:x.amount,unit:x.unit,laboratory:x.laboratory,productId:x.productId})),
+    miscs:(r.miscs||[]).map(x=>({name:x.name,amount:x.amount,unit:x.unit,type:x.type}))});
+  async function reloadRecipes(){
+    const u=localStorage.getItem('ontap_bf_userid'), k=localStorage.getItem('ontap_bf_apikey');
+    if(!u||!k){ msg('Save your Brewfather User ID and API key first (Operations & Cellar, then Settings).',true); return; }
+    msg('Loading recipes from Brewfather…');
+    try{ const out=[]; let start=null;
+      for(let pg=0;pg<20;pg++){ const url='https://api.brewfather.app/v2/recipes?limit=50&complete=true'+(start?'&start_after='+encodeURIComponent(start):'');
+        const r=await fetch(url,{headers:{Authorization:'Basic '+btoa(u+':'+k)}}); if(!r.ok) throw new Error('Brewfather returned HTTP '+r.status);
+        const a=await r.json(); if(!Array.isArray(a)||!a.length) break; out.push(...a); if(a.length<50) break; start=a[a.length-1]._id; }
+      const byName={}; out.forEach(r=>{ if(r.name) byName[r.name.toLowerCase()]=slim(r); });
+      RC={fetchedAt:new Date().toISOString(),byName}; try{localStorage.setItem(RKEY,JSON.stringify(RC));}catch(e){}
+      msg('Loaded '+Object.keys(byName).length+' recipes.'); render();
+    }catch(e){ msg(e.message,true); }
+  }
+  function plannedBrews(weeks){
+    const d=OCD.get(), E=window.SchedulerEngine, R=E.build(d), today=R.today, cutoff=E.addDays(today,weeks*7), sched=[];
+    R.schedule.forEach(w=>{ if(w.sat<today||w.sat>cutoff) return; (w.brews||[]).forEach(b=>{ if(b.beer) sched.push({batch:b.batch,name:b.beer.name,date:E.fmtISO(w.sat)}); }); });
+    const have=new Set(sched.map(b=>b.batch)), cache=d.bfBatchCache||{};
+    const hist=(d.history||[]).filter(h=>{ if(have.has(h.batch)) return false; const st=(cache[h.batch]||{}).status||h.bfStatus||''; if(st!=='Planning') return false; if(!h.date) return true; const bd=E.parseDate(h.date); return !bd||bd<=cutoff; })
+      .map(h=>({batch:h.batch,name:h.name,date:h.date||''}));
+    return hist.concat(sched);
+  }
+  function computeAll(){
+    const d=OCD.get(); if(!d||!window.SchedulerEngine||!window.DemandCalc) return null;
+    const brews=plannedBrews(dem.weeks), invL=inv();
+    const dm=DemandCalc.computeDemand(brews,b=>RC&&RC.byName[(b.name||'').toLowerCase()],invL);
+    const rows=DemandCalc.shortfalls(dm.rows,invL,C?C.items:[]);
+    return {brews,uncached:dm.uncached,rows};
+  }
+  const qn=n=>n==null?'—':(Math.abs(n)>=100?n.toFixed(0):Math.abs(n)>=10?n.toFixed(1):n.toFixed(2));
+  function demandHeader(extra){
+    const age=RC?new Date(RC.fetchedAt).toLocaleDateString():null;
+    return `<div class="pur-tools"><label>Look ahead <select id="dm-weeks">${[8,12,26,52].map(w=>`<option value="${w}" ${dem.weeks===w?'selected':''}>${w} weeks</option>`).join('')}</select></label>
+      ${extra||''}<span class="pur-dim">${RC?Object.keys(RC.byName).length+' recipes cached ('+age+')':'No recipes cached yet'}</span> <button class="ocd-btn ghost" id="dm-reload">Reload recipes from Brewfather</button></div>`;
+  }
+  function demandHtml(){
+    if(!RC) return demandHeader()+'<div class="pur-empty">Load your recipes from Brewfather first. They are kept in this browser only.</div>';
+    const a=computeAll(); if(!a) return demandHeader()+'<div class="pur-empty">Schedule data is not ready yet.</div>'; demCache=a;
+    let rows=a.rows.filter(r=>(!dem.type||r.type===dem.type)&&(!dem.onlyOrder||r.order>0||!r.matched)).sort((x,y)=>(y.order>0)-(x.order>0)||x.type.localeCompare(y.type)||x.name.localeCompare(y.name));
+    const hdr=demandHeader(`<label>Type <select id="dm-type"><option value="">All</option>${['Fermentable','Hop','Yeast','Misc'].map(t=>`<option ${dem.type===t?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label><input type="checkbox" id="dm-only" ${dem.onlyOrder?'checked':''}> only items to order</label>`);
+    let h=hdr+`<div class="pur-note">${a.brews.length} planned brews in the next ${dem.weeks} weeks${a.uncached?` · <b>${a.uncached} have no cached recipe</b> (the beer name must match a Brewfather recipe name)`:''}. To order = minimum stock − (on hand − needed). Items without a minimum stock only order what the brews need beyond what you have.</div>`;
+    h+='<div class="pur-wrap"><table><thead><tr><th></th><th>Ingredient</th><th>Type</th><th class="n">Needed</th><th class="n">On hand</th><th class="n">Min stock</th><th class="n">After brews</th><th class="n">To order</th></tr></thead><tbody>';
+    rows.forEach(r=>{ const k=esc(r.key), open=expanded.has('d:'+r.key);
+      h+=`<tr class="it dm ${open?'open':''}" data-dm="${k}"><td class="tg">${r.refs.length?(open?'▾':'▸'):''}</td><td class="nm">${esc(r.name)}${!r.matched?' <span class="pur-warn">not in inventory</span>':''}${r.unitMismatch?' <span class="pur-warn">check units</span>':''}</td><td>${esc(r.type)}</td>
+        <td class="n">${qn(r.total)} ${esc(r.unit)}</td><td class="n">${r.onHand==null?'—':qn(r.onHand)}</td><td class="n">${r.minStock==null?'—':qn(r.minStock)}</td>
+        <td class="n ${r.projected<0?'neg':''}">${r.onHand==null?'—':qn(r.projected)}</td><td class="n ${r.order>0?'ord':''}">${r.order>0?qn(r.order)+' '+esc(r.unit):'—'}</td></tr>`;
+      if(open) h+=`<tr class="offs"><td></td><td colspan="7"><table class="in"><thead><tr><th>Batch</th><th>Beer</th><th>Brew date</th><th class="n">Amount</th></tr></thead><tbody>`+r.refs.map(f=>`<tr><td>#${esc(f.batch)}</td><td>${esc(f.beer)}</td><td>${esc(f.date||'—')}</td><td class="n">${qn(f.rawAmount)} ${esc(f.rawUnit)}</td></tr>`).join('')+'</tbody></table></td></tr>';
+    });
+    return h+(rows.length?'':'<tr><td colspan="8" class="pur-empty">Nothing to order for this window.</td></tr>')+'</tbody></table></div>';
+  }
+  function offerFor(item){ if(!item) return null; const offs=C.offers.filter(o=>o.itemId===item.id); if(!offs.length) return null;
+    return offs.find(o=>o.id===(sel[item.id]||item.preferredOfferId))||offs.slice().sort((a,b)=>(b.lastDate||'').localeCompare(a.lastDate||''))[0]; }
+  function orderHtml(){
+    if(!RC) return demandHeader()+'<div class="pur-empty">Load your recipes from Brewfather first (button above).</div>';
+    const a=computeAll(); if(!a) return demandHeader()+'<div class="pur-empty">Schedule data is not ready yet.</div>';
+    const lines=[], noVendor=[];
+    a.rows.filter(r=>r.order>0&&r.matched).forEach(r=>{
+      const it=r.catalogItem, off=offerFor(it), pq=off?DemandCalc.packQuantity(off,r.unit,S.units,r.order):null;
+      if(!off||!pq){ noVendor.push(r); return; }
+      const ov=qtyOv[r.key]; lines.push({r,it,off,pq,packs:ov!=null?ov.packs:pq.packs,inc:ov?ov.inc!==false:true});
+    });
+    const byV=new Map(); lines.forEach(l=>{ const v=l.off.vendor||'(no vendor)'; if(!byV.has(v)) byV.set(v,[]); byV.get(v).push(l); });
+    let h=demandHeader()+`<div class="pur-note">Suggested orders for the next ${a.brews.length?dem.weeks:dem.weeks} weeks, grouped by vendor. Packs are rounded up from what is needed. Change the quantity or the vendor offer, untick lines you don't want, then open each vendor page to add the items to your cart.</div>`;
+    if(!lines.length&&!noVendor.length) return h+'<div class="pur-empty">Nothing needs ordering for this window.</div>';
+    [...byV.entries()].sort((x,y)=>x[0].localeCompare(y[0])).forEach(([v,ls])=>{
+      const sub=ls.filter(l=>l.inc).reduce((s,l)=>s+(l.off.lastPrice!=null?l.packs*l.off.lastPrice:0),0);
+      h+=`<div class="ord-v"><div class="ord-vh"><b>${esc(v)}</b><span class="pur-dim">${ls.filter(l=>l.inc).length} lines · est. $${sub.toFixed(2)}</span><button class="lnk" data-copyv="${esc(v)}">copy order text</button></div>
+        <div class="pur-wrap"><table><thead><tr><th></th><th>Item</th><th class="n">Need to buy</th><th>Offer</th><th class="n">Packs</th><th>SKU</th><th>Link</th><th class="n">Est. cost</th></tr></thead><tbody>`+
+        ls.map(l=>{ const offs=C.offers.filter(o=>o.itemId===l.it.id);
+          return `<tr data-ok="${esc(l.r.key)}"><td><input type="checkbox" class="o-inc" ${l.inc?'checked':''}></td><td class="nm">${esc(l.r.name)}</td><td class="n">${qn(l.r.order)} ${esc(l.r.unit)}</td>
+          <td>${offs.length>1?`<select class="o-off" data-item="${esc(l.it.id)}">${offs.map(o=>`<option value="${esc(o.id)}" ${o.id===l.off.id?'selected':''}>${esc((o.vendor||'?')+' · '+(o.packSize!=null?o.packSize+' '+(o.unit||''):'')+' · '+money(o.lastPrice))}</option>`).join('')}</select>`:esc((l.off.packSize!=null?l.off.packSize+' '+(l.off.unit||''):'')+' · '+money(l.off.lastPrice))}</td>
+          <td class="n"><input class="o-qty" type="number" min="0" step="1" value="${l.packs}" style="width:64px"></td><td class="mono">${esc(l.off.sku||'—')}</td>
+          <td>${l.off.link?`<a href="${esc(l.off.link)}" target="_blank" rel="noopener">open ↗</a>`:'—'}</td><td class="n">${l.off.lastPrice!=null?'$'+(l.packs*l.off.lastPrice).toFixed(2):'—'}</td></tr>`; }).join('')+'</tbody></table></div></div>';
+    });
+    if(noVendor.length) h+=`<div class="ord-v"><div class="ord-vh"><b>No vendor offer yet</b><span class="pur-dim">${noVendor.length} items need ordering but have no usable offer. Add one in the Catalog.</span></div><div class="pur-wrap"><table><thead><tr><th>Item</th><th class="n">Need to buy</th></tr></thead><tbody>`+
+      noVendor.map(r=>`<tr><td class="nm">${esc(r.name)}</td><td class="n">${qn(r.order)} ${esc(r.unit)}</td></tr>`).join('')+'</tbody></table></div></div>';
+    return h;
+  }
+
   // ---------------- saving ----------------
   function applyDecisions(cat,decisions,invList){
     const byBf=new Map(cat.items.filter(i=>i.bfId).map(i=>[i.bfId,i]));
@@ -133,6 +221,12 @@ window.Purchasing=(()=>{
       if((b=t.closest('[data-rtab]'))){ rtab=b.dataset.rtab; card=0; render(); return; }
       if(t.closest('#pur-save')){ saveDecisions(); return; }
       if(t.closest('#pur-discard')){ if(confirm('Discard the waiting match decisions?')){ pend={}; savePend(); render(); } return; }
+
+      if(t.closest('#dm-reload')){ reloadRecipes(); return; }
+      if((b=t.closest('tr.dm'))){ const k='d:'+b.dataset.dm; expanded.has(k)?expanded.delete(k):expanded.add(k); render(); return; }
+      if((b=t.closest('[data-copyv]'))){ const v=b.dataset.copyv, a=demCache||computeAll(); let txt='Order for '+v+'\n';
+        root.querySelectorAll('.ord-v').forEach(box=>{ if(box.querySelector('.ord-vh b').textContent!==v) return; box.querySelectorAll('tbody tr').forEach(tr=>{ const inc=tr.querySelector('.o-inc'); if(inc&&!inc.checked) return; const c=tr.children; txt+='- '+c[1].textContent+' x '+tr.querySelector('.o-qty').value+' ('+c[5].textContent+') '+((tr.querySelector('a')||{}).href||'')+'\n'; }); });
+        navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>msg('Order text copied.')); return; }
       if(t.closest('.minstock')||t.closest('.a-vendor,.a-sku,.a-link,.a-pack,.a-unit,.a-price')) return;
       if((b=t.closest('[data-star]'))){ const oid=b.dataset.star, iid=b.dataset.item; mutate(o=>{const it=o.items.find(i=>i.id===iid); if(it) it.preferredOfferId=(it.preferredOfferId===oid?null:oid);},'Set preferred offer (dashboard)'); return; }
       if((b=t.closest('[data-deloff]'))){ const oid=b.dataset.deloff; if(confirm('Remove this vendor offer from the catalog?')) mutate(o=>{o.offers=o.offers.filter(x=>x.id!==oid);},'Remove vendor offer (dashboard)'); return; }
@@ -152,6 +246,12 @@ window.Purchasing=(()=>{
     });
     root.addEventListener('input',e=>{ if(e.target.id==='pur-q'){ filt.q=e.target.value; const pos=e.target.selectionStart; render(); const q=$('pur-q'); if(q){q.focus();q.setSelectionRange(pos,pos);} } });
     root.addEventListener('change',e=>{
+      if(e.target.id==='dm-weeks'){ dem.weeks=parseInt(e.target.value); render(); return; }
+      if(e.target.id==='dm-type'){ dem.type=e.target.value; render(); return; }
+      if(e.target.id==='dm-only'){ dem.onlyOrder=e.target.checked; render(); return; }
+      const oo=e.target.closest('.o-off'); if(oo){ sel[oo.dataset.item]=oo.value; render(); return; }
+      const oq=e.target.closest('.o-qty'); if(oq){ const k=oq.closest('tr').dataset.ok; qtyOv[k]=Object.assign(qtyOv[k]||{},{packs:Math.max(0,parseInt(oq.value)||0)}); render(); return; }
+      const oi=e.target.closest('.o-inc'); if(oi){ const k=oi.closest('tr').dataset.ok; qtyOv[k]=Object.assign(qtyOv[k]||{packs:null},{inc:oi.checked}); if(qtyOv[k].packs===null) delete qtyOv[k].packs; render(); return; }
       if(e.target.id==='pur-type'){ filt.type=e.target.value; render(); return; }
       const ms=e.target.closest('.minstock'); if(ms){ const iid=ms.dataset.ms, v=ms.value===''?null:parseFloat(ms.value);
         mutate(o=>{const it=o.items.find(i=>i.id===iid); if(it) it.minStock=(v===null||isNaN(v))?null:v;},'Set minimum stock (dashboard)','Minimum stock saved.'); }
