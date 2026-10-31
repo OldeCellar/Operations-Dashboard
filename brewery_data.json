@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T14:40:25.632Z",
+  "savedAt": "2026-10-31T14:40:29.510Z",
   "beers": [
     {
       "id": 1,
@@ -7254,7 +7254,8 @@
       "Vanilla Porter",
       "NA Seltzer",
       "Hard Seltzer",
-      "Strata"
+      "Strata",
+      "Oktoberfest Marzen"
     ],
     "manual": [
       {
