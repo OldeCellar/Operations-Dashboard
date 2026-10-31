@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-31T15:45:35.671Z",
+  "generatedAt": "2026-10-31T16:25:37.411Z",
   "inventoryDate": "2026-10-31",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 86.3,
+      "volume": 66,
       "source": "brewfather",
       "batches": [
         566
@@ -13,14 +13,14 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 29.79,
+      "volume": 22,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "NA Seltzer",
-      "volume": 31.88,
+      "volume": 102,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -34,7 +34,7 @@
     },
     {
       "name": "Queen Citra",
-      "volume": 10.53,
+      "volume": 24,
       "source": "brewfather",
       "batches": [
         569
@@ -52,7 +52,7 @@
     },
     {
       "name": "Vanilla Porter",
-      "volume": 50.86,
+      "volume": 55,
       "source": "brewfather",
       "batches": [
         568
@@ -71,6 +71,6 @@
   "counts": {
     "completedBatches": 5,
     "requestRows": 1930,
-    "events": 1
+    "events": 2
   }
 }
