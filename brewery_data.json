@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T14:40:37.462Z",
+  "savedAt": "2026-10-31T15:05:58.575Z",
   "beers": [
     {
       "id": 1,
@@ -7272,6 +7272,12 @@
       {
         "id": "mmvwid4ioj0",
         "name": "Oktoberfest Marzen",
+        "vol": 22,
+        "date": "2026-10-31"
+      },
+      {
+        "id": "mmvwj9zcfoo",
+        "name": "October Fest",
         "vol": 22,
         "date": "2026-10-31"
       }
