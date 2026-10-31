@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T15:06:13.303Z",
+  "savedAt": "2026-10-31T16:05:35.839Z",
   "beers": [
     {
       "id": 1,
@@ -7245,6 +7245,13 @@
       "beer": "Golden Dragon",
       "volumeL": 7,
       "note": "Bloughs event"
+    },
+    {
+      "id": "emvwlenku8ua",
+      "date": "2026-10-31",
+      "beer": "Golden Dragon",
+      "volumeL": 20,
+      "note": "Oktoberfest"
     }
   ],
   "sheetSync": {
