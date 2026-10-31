@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-10-31T16:08:42.609Z",
+  "savedAt": "2026-10-31T16:08:59.054Z",
   "beers": [
     {
       "id": 1,
@@ -7273,8 +7273,8 @@
       {
         "id": "mmvpr639fev",
         "name": "Hard Seltzer",
-        "vol": 36,
-        "date": "2026-10-26"
+        "vol": 22,
+        "date": "2026-10-31"
       },
       {
         "id": "mmvwid4ioj0",
