@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-31T16:25:37.411Z",
-  "inventoryDate": "2026-10-31",
+  "generatedAt": "2026-11-01T06:15:45.602Z",
+  "inventoryDate": "2026-11-01",
   "beers": [
     {
       "name": "Golden Dragon",
@@ -34,7 +34,7 @@
     },
     {
       "name": "Queen Citra",
-      "volume": 24,
+      "volume": 21.93,
       "source": "brewfather",
       "batches": [
         569
