@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03T02:57:21.577Z",
+  "generatedAt": "2026-11-03T18:28:45.099Z",
   "inventoryDate": "2026-11-03",
   "beers": [
     {
@@ -34,7 +34,7 @@
     },
     {
       "name": "Queen Citra",
-      "volume": 21.93,
+      "volume": 19.86,
       "source": "brewfather",
       "batches": [
         569
@@ -70,7 +70,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 1930,
+    "requestRows": 1952,
     "events": 2
   }
 }
