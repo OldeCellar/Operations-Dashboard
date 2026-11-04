@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-03T18:28:45.099Z",
-  "inventoryDate": "2026-11-03",
+  "generatedAt": "2026-11-04T00:00:26.057Z",
+  "inventoryDate": "2026-11-04",
   "beers": [
     {
       "name": "Golden Dragon",
@@ -20,7 +20,7 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 102,
+      "volume": 91.65,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -70,7 +70,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 1952,
+    "requestRows": 1957,
     "events": 2
   }
 }
