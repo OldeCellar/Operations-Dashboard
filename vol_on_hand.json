@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T02:30:39.310Z",
+  "generatedAt": "2026-11-05T18:48:18.751Z",
   "inventoryDate": "2026-11-05",
   "beers": [
     {
@@ -13,32 +13,23 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 22,
+      "volume": 17.86,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "NA Seltzer",
-      "volume": 91.65,
+      "volume": 83.37,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Oktoberfest Marzen",
-      "volume": 22,
+      "volume": 13.72,
       "source": "manual",
       "batches": [],
-      "offered": true
-    },
-    {
-      "name": "Queen Citra",
-      "volume": 19.86,
-      "source": "brewfather",
-      "batches": [
-        569
-      ],
       "offered": true
     },
     {
@@ -65,12 +56,11 @@
     "Hard Seltzer",
     "NA Seltzer",
     "Oktoberfest Marzen",
-    "Queen Citra",
     "Vanilla Porter"
   ],
   "counts": {
-    "completedBatches": 5,
-    "requestRows": 1955,
+    "completedBatches": 4,
+    "requestRows": 1983,
     "events": 2
   }
 }
