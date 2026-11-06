@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-06T00:21:03.167Z",
+  "generatedAt": "2026-11-06T15:07:35.623Z",
   "inventoryDate": "2026-11-06",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 39.09,
+      "volume": 37.02,
       "source": "brewfather",
       "batches": [
         566
@@ -13,7 +13,7 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 13.72,
+      "volume": 11.65,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -60,7 +60,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 1997,
+    "requestRows": 2004,
     "events": 2
   }
 }
