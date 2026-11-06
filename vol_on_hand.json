@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-05T18:48:18.751Z",
-  "inventoryDate": "2026-11-05",
+  "generatedAt": "2026-11-06T00:21:03.167Z",
+  "inventoryDate": "2026-11-06",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 63.93,
+      "volume": 39.09,
       "source": "brewfather",
       "batches": [
         566
@@ -13,21 +13,21 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 17.86,
+      "volume": 13.72,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "NA Seltzer",
-      "volume": 83.37,
+      "volume": 75.09,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Oktoberfest Marzen",
-      "volume": 13.72,
+      "volume": 11.65,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -43,7 +43,7 @@
     },
     {
       "name": "Vanilla Porter",
-      "volume": 55,
+      "volume": 44.65,
       "source": "brewfather",
       "batches": [
         568
@@ -60,7 +60,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 1983,
+    "requestRows": 1997,
     "events": 2
   }
 }
