@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();
-  else { root.DemandCalc = factory(); (root.OCD_V = root.OCD_V || {})['demand-calc.js'] = '0.1.0'; }
+  else { root.DemandCalc = factory(); (root.OCD_V = root.OCD_V || {})['demand-calc.js'] = '0.2.0'; }
 })(typeof self !== 'undefined' ? self : this, function(){
   /* Ingredient demand from planned brews, ported from the Scheduler's "Demand by Period" (matching rules), plus order quantities:
        need = recipe amounts of every planned brew inside the look-ahead window
@@ -68,13 +68,14 @@
       const onHand = r.onHand != null ? r.onHand : 0, need = r.total || 0;
       const target = min != null ? min : 0;
       const projected = onHand - need;
-      const order = Math.max(0, target - projected);
-      return Object.assign({}, r, { catalogItem: it || null, minStock: min, projected, order });
+      const noRestock = !!(it && it.restock === false);
+      const order = noRestock ? 0 : Math.max(0, target - projected);
+      return Object.assign({}, r, { catalogItem: it || null, minStock: min, projected, order, noRestock });
     };
     demandRows.forEach(r => { out.push(mk(r)); if(r.bfId) seen.add(r.bfId); });
     // items with a minimum but no demand in the window
     (catalogItems || []).forEach(it => {
-      if(!it.bfId || seen.has(it.bfId) || it.minStock == null) return;
+      if(!it.bfId || seen.has(it.bfId) || it.minStock == null || it.restock === false) return;
       const inv = inventory.find(i => i.bf_id === it.bfId); if(!inv) return;
       out.push(mk({ key: inv.bf_id, bfId: inv.bf_id, name: inv.name, type: inv.type, unit: inv.unit || defaultUnit(inv.type), matched: true, onHand: Number(inv.onHand) || 0, total: 0, refs: [], unitMismatch: false }));
     });
@@ -90,5 +91,31 @@
     const packs = Math.ceil(shortfall / perPack - 1e-9);
     return { perPack, packs, cost: offer.lastPrice != null ? packs * offer.lastPrice : null };
   }
-  return { computeDemand, shortfalls, packQuantity, matchInventory, convert, norm };
+
+  // settings.json units: { lbs:{to:'kg',factor:0.4536}, gal:{to:'Liters',...}, ... }  ->  amounts in the item's own unit
+  const metricName = t => (t === 'Liters' ? 'l' : t === 'gram' ? 'g' : t);
+  function fromVendorUnit(value, vendorUnit, itemUnit, units){      // e.g. 55 lbs -> kg
+    const u = units && units[vendorUnit]; if(!u) return convert(value, vendorUnit, itemUnit);
+    return convert(value * u.factor, metricName(u.to), itemUnit);
+  }
+  function toVendorUnit(value, itemUnit, vendorUnit, units){        // e.g. 24.9 kg -> lbs
+    const u = units && units[vendorUnit]; if(!u) return convert(value, itemUnit, vendorUnit);
+    const m = convert(value, itemUnit, metricName(u.to)); return m === null ? null : m / u.factor;
+  }
+  // per ingredient (inventory item): how many recipes use it, the largest single-brew amount and which recipe
+  function recipeUsage(recipesByName, inventory){
+    const out = {};
+    Object.values(recipesByName || {}).forEach(rec => {
+      const R = rec.recipe || rec, per = {};
+      [['fermentables','Fermentable'],['hops','Hop'],['yeasts','Yeast'],['miscs','Misc']].forEach(([k,type]) => (R[k] || []).forEach(ing => {
+        const inv = matchInventory(ing, type, inventory); if(!inv) return;
+        const unit = inv.unit || defaultUnit(type), raw = ing.unit || defaultUnit(type); let a = convert(Number(ing.amount) || 0, raw, unit); if(a === null) a = Number(ing.amount) || 0;
+        per[inv.bf_id] = (per[inv.bf_id] || 0) + a; }));
+      Object.entries(per).forEach(([id, amt]) => { const o = out[id] || (out[id] = { count: 0, max: 0, maxRecipe: null, list: [] });
+        o.count++; o.list.push({ recipe: rec.name || R.name, amount: amt }); if(amt > o.max){ o.max = amt; o.maxRecipe = rec.name || R.name; } });
+    });
+    Object.values(out).forEach(o => o.list.sort((a, b) => b.amount - a.amount));
+    return out;
+  }
+  return { computeDemand, shortfalls, packQuantity, matchInventory, convert, norm, fromVendorUnit, toVendorUnit, recipeUsage };
 });

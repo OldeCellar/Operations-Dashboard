@@ -1,4 +1,4 @@
-#pur{--v-purchasing-css:"0.2.0"}
+#pur{--v-purchasing-css:"0.4.0"}
 #pur .pur-msg{font:12px var(--mono);color:var(--green);min-height:16px;margin:0 0 8px} #pur .pur-msg.err{color:var(--red);font-weight:700}
 #pur .pur-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px} #pur .pur-sub{font:12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:var(--panel);border-radius:4px;cursor:pointer;color:var(--ink-2)}
 #pur .pur-sub.on{background:var(--btn);color:var(--ink);border-color:var(--btn-hover)} #pur .pur-sub.off{opacity:.45;cursor:not-allowed}
@@ -20,3 +20,8 @@
 #pur .pur-warn{font:10px var(--mono);background:#f3d6d0;border:1px solid #d9988d;color:var(--red);border-radius:9px;padding:1px 7px;margin-left:4px}
 #pur td.neg{color:var(--red)} #pur td.ord{font-weight:700;color:var(--amber)} #pur tr.dm td.nm{font:600 14px var(--serif)}
 #pur .ord-v{margin:18px 0} #pur .ord-vh{display:flex;gap:14px;align-items:baseline;margin-bottom:6px;font-size:16px} #pur .ord-vh b{font:700 17px var(--serif)}
+#pur .msbox{display:flex;gap:4px;align-items:center} #pur .msbox .minstock{width:78px} #pur .eq{font:11px var(--mono);color:var(--ink-3);margin-top:2px} #pur .uses{font-size:13px;margin-bottom:10px;line-height:1.7}
+#pur .pur-add{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:12px}
+#pur .pur-add label{font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)} #pur .pur-add label>*{display:block;margin-top:3px}
+#pur tr.norest td{opacity:.55} #pur .uses .chk{display:inline-flex;gap:6px;align-items:center;margin-right:16px;font-size:13px}
+#pur tr.editrow td{background:#f6ead0} #pur .editrow input,#pur .editrow select{max-width:100%} #pur .ordform{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:6px 0}
