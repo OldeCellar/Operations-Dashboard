@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-06T16:56:57.528Z",
-  "inventoryDate": "2026-11-06",
+  "generatedAt": "2026-11-07T00:57:36.871Z",
+  "inventoryDate": "2026-11-07",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 51.51,
+      "volume": 41.16,
       "source": "brewfather",
       "batches": [
         566
@@ -20,7 +20,7 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 75.09,
+      "volume": 60.6,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -36,7 +36,7 @@
     },
     {
       "name": "Vanilla Porter",
-      "volume": 44.65,
+      "volume": 34.3,
       "source": "brewfather",
       "batches": [
         568
