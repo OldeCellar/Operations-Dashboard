@@ -1,8 +1,8 @@
-(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.4.1';
+(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.5.0';
 /* Purchasing tab (private bookkeeping repo): Catalog = items (tied to Brewfather inventory) with their vendor offers (vendor, SKU, link, pack size),
    plus a match review that links the offers imported from your workbook to Brewfather items. Later: Purchases, Order List, Costs. */
 window.Purchasing=(()=>{
-  let started=false,wired=false,C=null,S=null,sub='catalog',rtab='auto',card=0,expanded=new Set(),filt={q:'',type:''},addFor=null,editOff=null,addItemOpen=false,newOfferFor=null;
+  let started=false,wired=false,C=null,S=null,sub='catalog',rtab='auto',card=0,expanded=new Set(),filt={q:'',type:''},addFor=null,editOff=null,addItemOpen=false,newOfferFor=null,oth={q:'',cat:''};
   const PKEY='ocd_books_pending';
   let pend={}; try{pend=JSON.parse(localStorage.getItem(PKEY)||'{}')}catch(e){}
   const $=id=>document.getElementById(id);
@@ -23,7 +23,7 @@ window.Purchasing=(()=>{
       C=c.data; S=s.data; C.items=C.items||[]; C.offers=C.offers||[]; msg(''); render();
     }catch(e){ C=null; $('pur-body').innerHTML=''; msg(e.message,true); }
   }
-  const unmatched=()=>C.offers.filter(o=>!o.itemId);
+  const unmatched=()=>C.offers.filter(o=>!o.itemId&&o.matchStatus!=='skipped'&&o.matchStatus!=='historyOnly');
   const queue=k=>unmatched().filter(o=>!pend[o.id]&&(k==='auto'?o.matchStatus==='auto':k==='review'?o.matchStatus==='review':k==='weak'?(o.matchStatus==='weak'||o.matchStatus==='none'):(!o.matchStatus&&o.matchStatus!=='skipped')));
 
   function render(){
@@ -38,6 +38,24 @@ window.Purchasing=(()=>{
       (sub==='catalog'?catalogHtml():sub==='review'?reviewHtml():sub==='demand'?demandHtml():orderHtml());
   }
 
+
+
+  const nameOf=it=>(it.bfId&&bfById().get(it.bfId)||{}).name||it.name;
+  const latestBatchOf=name=>{ const h=((OCD.get()||{}).history||[]).filter(x=>(x.name||'').toLowerCase()===String(name||'').toLowerCase()); if(!h.length) return null; return h.reduce((a,b)=>(Number(b.batch)||0)>(Number(a.batch)||0)?b:a).batch; };
+  async function refreshInventory(){
+    const u=localStorage.getItem('ontap_bf_userid'), k=localStorage.getItem('ontap_bf_apikey');
+    if(!u||!k){ msg('Save your Brewfather User ID and API key first (Operations & Cellar, then Settings).',true); return; }
+    msg('Reading your inventory from Brewfather…');
+    try{ const auth='Basic '+btoa(u+':'+k), list=inv(), byId=new Map(list.map(i=>[i.bf_id,i])); let upd=0, fresh=0, total=0;
+      for(const ep of ['fermentables','hops','yeasts','miscs']){ let start=null;
+        for(let pg=0;pg<40;pg++){ const url='https://api.brewfather.app/v1/inventory/'+ep+'?limit=50'+(start?'&start_after='+encodeURIComponent(start):'');
+          const r=await fetch(url,{headers:{Authorization:auth}}); if(!r.ok) throw new Error('Brewfather returned HTTP '+r.status);
+          const a=await r.json(); if(!Array.isArray(a)||!a.length) break;
+          a.forEach(x=>{ total++; const i=byId.get(x._id); if(i){ i.onHand=x.inventory; i.name=x.name||i.name; if(x.unit) i.unit=x.unit; if(x.supplier!==undefined) i.bf_supplier=x.supplier; upd++; } else fresh++; });
+          if(a.length<50) break; start=a[a.length-1]._id; } }
+      msg('Inventory refreshed from Brewfather: '+upd+' items updated'+(fresh?', '+fresh+' new items will appear after the next nightly sync':'')+'.'); render();
+    }catch(e){ msg(e.message,true); }
+  }
 
   // ---- recipe usage, minimum stock (Brewfather unit) and what that means in vendor packs ----
   let usageMemo=null, usageKey='';
@@ -55,9 +73,9 @@ window.Purchasing=(()=>{
     return `<td><div class="msbox"><input class="minstock" data-ms="${esc(it.id)}" type="number" step="any" min="0" value="${it.minStock==null?'':esc(String(it.minStock))}" placeholder="—"><span class="pur-dim">${esc(unit)}</span></div>${eq}</td>`;
   }
   function maxCell(it,offs,unit,u){
-    if(!RC) return '<td class="pur-dim">load recipes</td>'; if(!u) return '<td class="pur-dim">not in any recipe</td>';
-    const pref=prefOffer(it,offs), vu=pref&&pref.unit&&S.units&&S.units[pref.unit]?pref.unit:null, alt=vu?DemandCalc.toVendorUnit(u.max,unit,vu,S.units):null;
-    return `<td>${fq(u.max)} ${esc(unit)}${alt!=null?` <span class="pur-dim">(${fq(alt)} ${esc(vu)})</span>`:''}<div class="eq">${esc(u.maxRecipe||'')}</div></td>`;
+    if(!RC) return '<td><button class="lnk" data-reloadrec="1">load recipes</button></td>'; if(!u) return '<td class="pur-dim">not in any recipe</td>';
+    const pref=prefOffer(it,offs), vu=pref&&pref.unit&&S.units&&S.units[pref.unit]?pref.unit:null, alt=vu?DemandCalc.toVendorUnit(u.max,unit,vu,S.units):null, bn=latestBatchOf(u.maxRecipe);
+    return `<td>${fq(u.max)} ${esc(unit)}${alt!=null?` <span class="pur-dim">(${fq(alt)} ${esc(vu)})</span>`:''}<div class="eq">${esc(u.maxRecipe||'')}${bn?' · latest batch #'+esc(String(bn)):''}</div></td>`;
   }
   const offerFormRow=(iid,select,cols)=>`<tr class="addrow"><td></td><td><input class="a-vendor" placeholder="Vendor"></td><td><input class="a-sku" placeholder="SKU"></td><td><input class="a-link" placeholder="https://…"></td>
     <td><input class="a-pack" type="number" step="any" placeholder="size" style="width:64px"> <select class="a-unit">${unitOpts()}</select></td><td></td>
@@ -66,7 +84,7 @@ window.Purchasing=(()=>{
   // ---------------- Catalog ----------------
   function catalogHtml(){
     const by=bfById(), q=filt.q.toLowerCase();
-    const items=C.items.filter(i=>(!filt.type||i.type===filt.type)&&(!q||i.name.toLowerCase().includes(q)||C.offers.some(o=>o.itemId===i.id&&((o.vendor||'')+' '+(o.sku||'')+' '+(o.item||'')).toLowerCase().includes(q)))).sort((a,b)=>a.type.localeCompare(b.type)||a.name.localeCompare(b.name));
+    const items=C.items.filter(i=>(!filt.type||i.type===filt.type)&&(!q||nameOf(i).toLowerCase().includes(q)||C.offers.some(o=>o.itemId===i.id&&((o.vendor||'')+' '+(o.sku||'')+' '+(o.item||'')).toLowerCase().includes(q)))).sort((a,b)=>a.type.localeCompare(b.type)||nameOf(a).localeCompare(nameOf(b)));
     const types=['Fermentable','Hop','Yeast','Misc','Supply'], have=new Set(C.items.filter(i=>i.bfId).map(i=>i.bfId));
     let h=`<div class="pur-note">The catalog is your <b>current ordering menu</b>: every ingredient or supply you reorder, with each vendor option for it (vendor, SKU, link, pack size, last price). Your purchase <i>history</i> lives in the Purchases ledger, and recording an order updates the last price and date here. The ★ marks the <b>default offer</b> the Order List uses for that item.</div>
       <div class="pur-tools"><input id="pur-q" type="search" placeholder="Search item, vendor, SKU" value="${esc(filt.q)}">
@@ -75,25 +93,30 @@ window.Purchasing=(()=>{
       <span class="pur-dim">${items.length} items · ${C.offers.filter(o=>o.itemId).length} vendor offers linked · ${unmatched().length} offers not matched yet</span></div>`;
     if(addItemOpen) h+=`<div class="pur-add"><label>Brewfather item <select id="ai-bf"><option value="">Not in Brewfather (supply item)</option>${inv().filter(i=>!have.has(i.bf_id)).sort((a,b)=>a.name.localeCompare(b.name)).map(i=>`<option value="${esc(i.bf_id)}">${esc(i.name)} (${esc(i.type)})</option>`).join('')}</select></label>
       <label>Name (for a supply item) <input id="ai-name" type="text" placeholder="e.g. Silicone gaskets"></label><label>Unit <input id="ai-unit" type="text" placeholder="each, kg, ml" style="width:90px"></label><button class="ocd-btn" id="ai-add">Add to catalog</button></div>`;
+    const renamed=C.items.filter(i=>i.bfId&&bfById().get(i.bfId)&&bfById().get(i.bfId).name!==i.name);
+    const syncAt=(OCD.get()||{}).bfSyncTime;
+    h+=`<div class="pur-tools"><span class="pur-dim">Recipes: ${RC?Object.keys(RC.byName).length+' cached ('+new Date(RC.fetchedAt).toLocaleDateString()+')':'not loaded'}</span> <button class="ocd-btn ghost" data-reloadrec="1">${RC?'Reload':'Load'} recipes from Brewfather</button>
+      <span class="pur-dim">Inventory counts as of ${syncAt?new Date(syncAt).toLocaleString():'the last nightly sync'}</span> <button class="ocd-btn ghost" id="inv-refresh">Refresh inventory from Brewfather</button></div>`+
+      (renamed.length?`<div class="pur-pend">${renamed.length} item${renamed.length===1?' was':'s were'} renamed in Brewfather (the catalog already shows the new names). <button class="ocd-btn" id="names-update">Save the new names</button></div>`:'');
     if(!C.items.length) return h+`<div class="pur-empty">No catalog items yet. Open <b>Match review</b> to link your imported vendor offers to Brewfather items.</div>`;
     h+='<div class="pur-wrap"><table><thead><tr><th></th><th>Item</th><th>Type</th><th>BF supplier</th><th class="n">On hand (BF)</th><th>Min stock (BF unit)</th><th>Max per brew</th><th class="n">Recipes</th><th class="n">Offers</th><th>Default offer</th></tr></thead><tbody>';
     items.forEach(it=>{
       const offs=C.offers.filter(o=>o.itemId===it.id), b=it.bfId?by.get(it.bfId):null, open=expanded.has(it.id), pref=prefOffer(it,offs), unit=itemUnit(it,by), us=usage()[it.bfId];
-      h+=`<tr class="it ${open?'open':''} ${it.restock===false?'norest':''}" data-it="${esc(it.id)}"><td class="tg">${open?'▾':'▸'}</td><td class="nm">${esc(it.name)}${it.restock===false?' <span class="pur-warn">don\'t restock</span>':''}</td><td>${esc(it.type)}</td><td>${b?esc(b.bf_supplier||'—'):'—'}</td>
+      h+=`<tr class="it ${open?'open':''} ${it.restock===false?'norest':''}" data-it="${esc(it.id)}"><td class="tg">${open?'▾':'▸'}</td><td class="nm">${esc(nameOf(it))}${it.restock===false?' <span class="pur-warn">don\'t restock</span>':''}</td><td>${esc(it.type)}</td><td>${b?esc(b.bf_supplier||'—'):'—'}</td>
         <td class="n">${b&&b.onHand!=null?esc(String(Math.round(b.onHand*100)/100))+' '+esc(b.unit||b.purchaseUnit||''):'—'}</td>
         ${minCell(it,offs,unit)}${maxCell(it,offs,unit,us)}<td class="n">${us?us.count:(RC?0:'—')}</td>
         <td class="n">${offs.length}</td><td>${pref?esc(pref.vendor||'?')+(pref.sku?' · '+esc(pref.sku):''):'—'}</td></tr>`;
       if(!open) return;
       const usL=(us&&us.list)||[];
       h+=`<tr class="offs"><td></td><td colspan="9"><div class="uses"><label class="chk"><input type="checkbox" data-norest="${esc(it.id)}" ${it.restock===false?'checked':''}> Don't restock (leave off the Order List)</label>
-        <button class="lnk" data-delitem="${esc(it.id)}">remove item from catalog</button></div>`+
-        (usL.length?`<div class="uses"><b>Used in ${usL.length} recipe${usL.length===1?'':'s'}:</b> ${usL.map(x=>`${esc(x.recipe)} ${fq(x.amount)} ${esc(unit)}`).join(' · ')} ${it.bfId&&us?`<button class="lnk" data-usemax="${esc(it.id)}">set minimum = largest brew (${fq(us.max)} ${esc(unit)})</button>`:''}</div>`:'')+
+        ${it.bfId?'':`<button class="lnk" data-rename="${esc(it.id)}">rename</button> `}<button class="lnk" data-delitem="${esc(it.id)}">remove item from catalog</button></div>`+
+        (usL.length?`<div class="uses"><b>Used in ${usL.length} recipe${usL.length===1?'':'s'}:</b> ${usL.map(x=>{const bn=latestBatchOf(x.recipe);return `${esc(x.recipe)}${bn?' (batch #'+esc(String(bn))+')':''} ${fq(x.amount)} ${esc(unit)}`;}).join(' · ')} ${it.bfId&&us?`<button class="lnk" data-usemax="${esc(it.id)}">set minimum = largest brew (${fq(us.max)} ${esc(unit)})</button>`:''}</div>`:'')+
         `<table class="in"><thead><tr><th></th><th>Vendor</th><th>SKU</th><th>Link</th><th>Pack (vendor units)</th><th>Metric</th><th class="n">Last price</th><th class="n">per metric unit</th><th>Last bought</th><th></th></tr></thead><tbody>`+
         offs.map(o=>{
           if(editOff===o.id) return `<tr class="editrow" data-eoid="${esc(o.id)}"><td></td><td><input class="e-vendor" value="${esc(o.vendor||'')}" placeholder="Vendor"></td><td><input class="e-sku" value="${esc(o.sku||'')}" placeholder="SKU"></td><td><input class="e-link" value="${esc(o.link||'')}" placeholder="https://…"></td>
             <td><input class="e-pack" type="number" step="any" value="${o.packSize==null?'':esc(String(o.packSize))}" style="width:64px"> <select class="e-unit">${unitOpts(o.unit)}</select></td>
             <td colspan="2"><input class="e-price" type="number" step="0.01" value="${o.lastPrice==null?'':esc(String(o.lastPrice))}" style="width:78px"> <span class="pur-dim">last price</span></td><td></td>
-            <td colspan="2"><label class="pur-dim">Belongs to <select class="e-belongs">${C.items.slice().sort((x,y)=>x.name.localeCompare(y.name)).map(x=>`<option value="${esc(x.id)}" ${x.id===o.itemId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
+            <td colspan="2"><label class="pur-dim">Belongs to <select class="e-belongs">${C.items.slice().sort((x,y)=>nameOf(x).localeCompare(nameOf(y))).map(x=>`<option value="${esc(x.id)}" ${x.id===o.itemId?'selected':''}>${esc(nameOf(x))}</option>`).join('')}</select></label>
             <div class="pur-dim" style="margin:3px 0">As purchased: ${esc((o.item||'').replace(/\s+/g,' ').slice(0,70))}</div><button class="ocd-btn" data-saveoff="${esc(o.id)}">Save</button> <button class="ocd-btn ghost" data-canceloff="1">Cancel</button></td></tr>`;
           const m=metric(o.packSize,o.unit);
           return `<tr><td><button class="star ${it.preferredOfferId===o.id?'on':''}" data-star="${esc(o.id)}" data-item="${esc(it.id)}" title="Default offer for the Order List">★</button></td>
@@ -121,8 +144,8 @@ window.Purchasing=(()=>{
 
   // ---------------- Match review ----------------
   function reviewHtml(){
-    const tabs=[['check','Check matches'],['auto','Confirm confident matches'],['review','Review'],['weak','Weak / none'],['other','Everything else']];
-    let h='<div class="pur-bar sub2">'+tabs.map(([k,l])=>`<button class="pur-sub ${rtab===k?'on':''}" data-rtab="${k}">${l} <span class="pur-count">${k==='check'?suspects().length:queue(k).length}</span></button>`).join('')+'</div>';
+    const tabs=[['check','Check matches'],['auto','Confirm confident matches'],['review','Review'],['weak','Weak / none'],['other','Everything else'],['hist','History only']];
+    let h='<div class="pur-bar sub2">'+tabs.map(([k,l])=>`<button class="pur-sub ${rtab===k?'on':''}" data-rtab="${k}">${l} <span class="pur-count">${k==='check'?suspects().length:k==='hist'?C.offers.filter(o=>o.matchStatus==='historyOnly').length:queue(k).length}</span></button>`).join('')+'</div>';
     if(rtab==='check'){ const sx=suspects(); if(!sx.length) return h+'<div class="pur-empty">No suspicious matches found.</div>';
       return h+`<div class="pur-note">These offers are linked to a malt whose <b>grade number</b> (like 60L vs 80L) differs from what you bought. Move each one to the right item.</div><div class="pur-wrap"><table><thead><tr><th>Purchased as</th><th>Vendor · SKU</th><th>Currently linked to</th><th>Move to</th></tr></thead><tbody>`+
         sx.map(s=>`<tr><td class="nm">${esc(s.offer.item.replace(/\s+/g,' '))}</td><td>${esc(s.offer.vendor||'')} <span class="mono">${esc(s.offer.sku||'')}</span></td><td>${esc(s.item.name)}</td><td>${s.sug.map(x=>`<button class="ocd-btn" data-fix="${esc(s.offer.id)}|${esc(x.bf_id)}">${esc(x.name)}</button>`).join(' ')||'<span class="pur-dim">no matching Brewfather item - use the Catalog to add one</span>'} <button class="lnk" data-fixok="${esc(s.offer.id)}">it is correct</button></td></tr>`).join('')+'</tbody></table></div>'; }
@@ -135,12 +158,16 @@ window.Purchasing=(()=>{
         rows.map(o=>{const b=by.get(o.proposedBfId);const bad=b&&gradeConflict(o.item,b.name); return `<tr><td><input type="checkbox" class="a-chk" data-oid="${esc(o.id)}" ${bad?'':'checked'}></td><td class="nm">${esc(o.item)}</td><td>${esc(o.vendor||'')} <span class="mono">${esc(o.sku||'')}</span></td><td>${b?esc(b.name):'?'}${bad?' <span class="pur-warn">grade differs</span>':''}</td><td class="n">${(o.matchScore||0).toFixed(2)}</td></tr>`;}).join('')+
         `</tbody></table></div><div class="pur-tools"><button class="ocd-btn" id="auto-add">Add ticked matches to waiting decisions</button></div>`;
     }
+    if(rtab==='hist'){ const hs=C.offers.filter(o=>o.matchStatus==='historyOnly'); if(!hs.length) return h+'<div class="pur-empty">Nothing marked history-only.</div>';
+      return h+`<div class="pur-note">Offers you chose not to track for reordering. They stay in your Purchases ledger.</div><div class="pur-wrap"><table><thead><tr><th>Purchased as</th><th>Category</th><th>Vendor</th><th></th></tr></thead><tbody>`+hs.slice(0,200).map(o=>`<tr><td class="nm">${esc(o.item.replace(/\s+/g,' ').slice(0,90))}</td><td>${esc(o.category||'')}</td><td>${esc(o.vendor||'')}</td><td><button class="lnk" data-histback="${esc(o.id)}">bring back</button></td></tr>`).join('')+'</tbody></table></div>'; }
     if(rtab==='other'){
-      const rows=q.slice(0,200);
-      return h+`<div class="pur-note">Offers for equipment, parts and other things that are not Brewfather ingredients. Turn the ones you reorder into supply items so they can have a minimum stock and show on the order list. ${q.length>200?'Showing the first 200.':''}</div>
-        <div class="pur-wrap"><table><thead><tr><th>Purchased as</th><th>Category</th><th>Vendor</th><th class="n">Last price</th><th></th></tr></thead><tbody>`+
-        rows.map(o=>`<tr><td class="nm">${esc(o.item.replace(/\s+/g,' ').slice(0,90))}</td><td>${esc(o.category||'')}</td><td>${esc(o.vendor||'')}</td><td class="n">${money(o.lastPrice)}</td>
-          <td><button class="lnk" data-supply="${esc(o.id)}">make supply item</button></td></tr>`).join('')+'</tbody></table></div>';
+      const base=queue('other'), cats=[...new Set(base.map(o=>o.category||'(none)'))].sort(), ql=oth.q.toLowerCase();
+      const rows=base.filter(o=>(!oth.cat||(o.category||'(none)')===oth.cat)&&(!ql||(o.item+' '+(o.vendor||'')).toLowerCase().includes(ql)));
+      return h+`<div class="pur-note"><b>These are already in your Purchases ledger.</b> Nothing here has to be moved. Choose what to do with each offer: <b>History only</b> (one-off buys you won't reorder through the dashboard) or <b>Supply item</b> (something you keep a minimum of and reorder, like gaskets or cleaners). Tick several rows to act on them together.</div>
+        <div class="pur-tools"><input id="oth-q" type="search" placeholder="Search" value="${esc(oth.q)}"><select id="oth-cat"><option value="">All categories</option>${cats.map(c=>`<option ${oth.cat===c?'selected':''}>${esc(c)}</option>`).join('')}</select>
+        <button class="ocd-btn" id="oth-hist">History only: ticked</button><button class="ocd-btn ghost" id="oth-hist-all">History only: all ${rows.length} shown</button><button class="ocd-btn ghost" id="oth-supply">Supply items: ticked</button></div>
+        <div class="pur-wrap"><table><thead><tr><th><input type="checkbox" id="oth-all"></th><th>Purchased as</th><th>Category</th><th>Vendor</th><th class="n">Last price</th></tr></thead><tbody>`+
+        rows.slice(0,300).map(o=>`<tr><td><input type="checkbox" class="o-chk" data-oid="${esc(o.id)}"></td><td class="nm">${esc(o.item.replace(/\s+/g,' ').slice(0,90))}</td><td>${esc(o.category||'')}</td><td>${esc(o.vendor||'')}</td><td class="n">${money(o.lastPrice)}</td></tr>`).join('')+`</tbody></table></div>${rows.length>300?'<div class="pur-dim">Showing the first 300. Filter to narrow it down.</div>':''}`;
     }
     // one-at-a-time cards for review / weak / none
     card=Math.min(card,q.length-1); const o=q[card], all=inv().slice().sort((a,b)=>a.name.localeCompare(b.name));
@@ -283,7 +310,7 @@ window.Purchasing=(()=>{
         root.querySelectorAll('.ord-v').forEach(box=>{ if(box.querySelector('.ord-vh b').textContent!==v) return; box.querySelectorAll('tbody tr').forEach(tr=>{ const inc=tr.querySelector('.o-inc'); if(inc&&!inc.checked) return; const c=tr.children; txt+='- '+c[1].textContent+' x '+tr.querySelector('.o-qty').value+' ('+c[5].textContent+') '+((tr.querySelector('a')||{}).href||'')+'\n'; }); });
         navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>msg('Order text copied.')); return; }
       if((b=t.closest('[data-usemax]'))){ const iid=b.dataset.usemax, it=C.items.find(i=>i.id===iid), us=usage()[it.bfId]; if(us) mutate(o=>{const x=o.items.find(i=>i.id===iid); if(x){ x.minStock=Math.ceil(us.max*100)/100; delete x.minStockEntry; }},'Set minimum stock to the largest brew (dashboard)','Minimum stock set.'); return; }
-      if(t.closest('.minstock,.a-vendor,.a-sku,.a-link,.a-pack,.a-unit,.a-price,.e-vendor,.e-sku,.e-link,.e-pack,.e-unit,.e-price,.e-belongs,#ai-bf,#ai-name,#ai-unit,.o-off,.o-qty,.o-inc,[data-norest],a')) return;
+      if(t.closest('.minstock,.a-vendor,.a-sku,.a-link,.a-pack,.a-unit,.a-price,.e-vendor,.e-sku,.e-link,.e-pack,.e-unit,.e-price,.e-belongs,#ai-bf,#ai-name,#ai-unit,.o-off,.o-qty,.o-inc,[data-norest],.o-chk,#oth-q,#oth-cat,#oth-all,a')) return;
       if(t.closest('#ai-toggle')){ addItemOpen=!addItemOpen; render(); return; }
       if(t.closest('#ai-add')){ const bf=$('ai-bf').value, nm=$('ai-name').value.trim(), un=$('ai-unit').value.trim();
         if(!bf&&!nm){ msg('Choose a Brewfather item, or type a name for a supply item.',true); return; }
@@ -294,6 +321,17 @@ window.Purchasing=(()=>{
         mutate(o=>{ let it=o.items.find(i=>i.bfId===bid); if(!it){ const n=Math.max(0,...o.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; it={id:'I'+String(n).padStart(4,'0'),name:b0.name,type:b0.type,bfId:bid,unit:b0.unit||b0.purchaseUnit||null,minStock:null}; o.items.push(it); }
           const off=o.offers.find(x=>x.id===oid); if(!off) return; const old=o.items.find(i=>i.id===off.itemId); if(old&&old.preferredOfferId===oid) old.preferredOfferId=null; off.itemId=it.id; off.matchStatus='confirmed'; },'Correct a catalog match (dashboard)','Offer moved.'); return; }
       if((b=t.closest('[data-fixok]'))){ const oid=b.dataset.fixok; mutate(o=>{const off=o.offers.find(x=>x.id===oid); if(off) off.checkedOk=true;},'Confirm a catalog match (dashboard)','Marked as correct.'); return; }
+      if(t.closest('[data-reloadrec]')){ reloadRecipes(); return; }
+      if(t.closest('#inv-refresh')){ refreshInventory(); return; }
+      if(t.closest('#names-update')){ mutate(o=>{ const m=bfById(); o.items.forEach(i=>{ const b=i.bfId&&m.get(i.bfId); if(b&&b.name!==i.name) i.name=b.name; }); },'Update catalog item names from Brewfather (dashboard)','Names updated.'); return; }
+      if((b=t.closest('[data-rename]'))){ const iid=b.dataset.rename, it=C.items.find(i=>i.id===iid), nn=prompt('New name for this item:',it.name); if(nn&&nn.trim()&&nn.trim()!==it.name) mutate(o=>{const x=o.items.find(i=>i.id===iid); if(x) x.name=nn.trim();},'Rename catalog item (dashboard)','Renamed.'); return; }
+      const ticked=()=>[...root.querySelectorAll('.o-chk:checked')].map(c=>c.dataset.oid);
+      const setHist=ids=>{ if(!ids.length){ msg('Tick at least one row first.',true); return; } mutate(o=>{ o.offers.forEach(x=>{ if(ids.includes(x.id)&&!x.itemId) x.matchStatus='historyOnly'; }); },'Mark '+ids.length+' catalog offers as history only (dashboard)',ids.length+' offers marked history only.'); };
+      if(t.closest('#oth-hist')){ setHist(ticked()); return; }
+      if(t.closest('#oth-hist-all')){ const ql=oth.q.toLowerCase(); setHist(queue('other').filter(o=>(!oth.cat||(o.category||'(none)')===oth.cat)&&(!ql||(o.item+' '+(o.vendor||'')).toLowerCase().includes(ql))).map(o=>o.id)); return; }
+      if(t.closest('#oth-supply')){ const ids=ticked(); if(!ids.length){ msg('Tick at least one row first.',true); return; } ids.forEach(id=>{ const o=C.offers.find(x=>x.id===id); if(o) pend[id]={supply:o.item.replace(/\s+/g,' ').slice(0,60)}; }); savePend(); render(); return; }
+      if(t.closest('#oth-all')){ const on=t.closest('#oth-all').checked; root.querySelectorAll('.o-chk').forEach(c=>c.checked=on); return; }
+      if((b=t.closest('[data-histback]'))){ const oid=b.dataset.histback; mutate(o=>{const x=o.offers.find(y=>y.id===oid); if(x) delete x.matchStatus;},'Bring back a catalog offer (dashboard)','Brought back.'); return; }
       if((b=t.closest('[data-neworder]'))){ newOfferFor=b.dataset.neworder; render(); return; }
       if((b=t.closest('[data-editoff]'))){ editOff=b.dataset.editoff; render(); return; }
       if(t.closest('[data-canceloff]')){ editOff=null; render(); return; }
@@ -323,7 +361,8 @@ window.Purchasing=(()=>{
       if(t.closest('#pc-prev')){ card=Math.max(0,card-1); render(); return; }
       if((b=t.closest('tr.it'))){ const id=b.dataset.it; expanded.has(id)?expanded.delete(id):expanded.add(id); render(); return; }
     });
-    root.addEventListener('input',e=>{ if(e.target.id==='pur-q'){ filt.q=e.target.value; const pos=e.target.selectionStart; render(); const q=$('pur-q'); if(q){q.focus();q.setSelectionRange(pos,pos);} } });
+    root.addEventListener('input',e=>{ if(e.target.id==='oth-q'){ oth.q=e.target.value; const pos=e.target.selectionStart; render(); const q=$('oth-q'); if(q){q.focus();q.setSelectionRange(pos,pos);} return; }
+      if(e.target.id==='pur-q'){ filt.q=e.target.value; const pos=e.target.selectionStart; render(); const q=$('pur-q'); if(q){q.focus();q.setSelectionRange(pos,pos);} } });
     root.addEventListener('change',e=>{
       if(e.target.id==='dm-weeks'){ dem.weeks=parseInt(e.target.value); render(); return; }
       if(e.target.id==='dm-type'){ dem.type=e.target.value; render(); return; }
@@ -331,6 +370,7 @@ window.Purchasing=(()=>{
       const oo=e.target.closest('.o-off'); if(oo){ if(oo.value==='__new'){ newOfferFor=oo.dataset.item; } else { sel[oo.dataset.item]=oo.value; newOfferFor=null; } render(); return; }
       const oq=e.target.closest('.o-qty'); if(oq){ const k=oq.closest('tr').dataset.ok; qtyOv[k]=Object.assign(qtyOv[k]||{},{packs:Math.max(0,parseInt(oq.value)||0)}); render(); return; }
       const oi=e.target.closest('.o-inc'); if(oi){ const k=oi.closest('tr').dataset.ok; qtyOv[k]=Object.assign(qtyOv[k]||{packs:null},{inc:oi.checked}); if(qtyOv[k].packs===null) delete qtyOv[k].packs; render(); return; }
+      if(e.target.id==='oth-cat'){ oth.cat=e.target.value; render(); return; }
       if(e.target.id==='pur-type'){ filt.type=e.target.value; render(); return; }
       const nr=e.target.closest('[data-norest]'); if(nr){ const iid=nr.dataset.norest, on=nr.checked; mutate(o=>{const it=o.items.find(i=>i.id===iid); if(!it) return; if(on) it.restock=false; else delete it.restock;},(on?"Don't restock ":'Restock ')+'item (dashboard)',on?"Marked don't restock.":'Back on the order list.'); return; }
       const ms=e.target.closest('.minstock'); if(ms){ const iid=ms.dataset.ms, v=ms.value===''?null:parseFloat(ms.value);

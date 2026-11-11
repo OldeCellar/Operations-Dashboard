@@ -1,4 +1,4 @@
-#pur{--v-purchasing-css:"0.4.0"}
+#pur{--v-purchasing-css:"0.5.0"}
 #pur .pur-msg{font:12px var(--mono);color:var(--green);min-height:16px;margin:0 0 8px} #pur .pur-msg.err{color:var(--red);font-weight:700}
 #pur .pur-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px} #pur .pur-sub{font:12px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--border);background:var(--panel);border-radius:4px;cursor:pointer;color:var(--ink-2)}
 #pur .pur-sub.on{background:var(--btn);color:var(--ink);border-color:var(--btn-hover)} #pur .pur-sub.off{opacity:.45;cursor:not-allowed}
