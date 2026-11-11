@@ -199,19 +199,33 @@ jobs:
           ing_added = 0
 
           for endpoint, ing_type in ING_TYPES:
+              # Brewfather returns only 10 items per call unless you page through (limit max 50 + start_after).
+              items = []
+              start_after = None
               try:
-                  response = requests.get(
-                      f'https://api.brewfather.app/v1/inventory/{endpoint}',
-                      auth=auth,
-                      headers=headers,
-                      timeout=15,
-                  )
-                  response.raise_for_status()
-                  items = response.json()
+                  for _page in range(40):
+                      url = f'https://api.brewfather.app/v1/inventory/{endpoint}?limit=50'
+                      if start_after:
+                          url += f'&start_after={start_after}'
+                      response = requests.get(
+                          url,
+                          auth=auth,
+                          headers=headers,
+                          timeout=15,
+                      )
+                      response.raise_for_status()
+                      page = response.json()
+                      if not isinstance(page, list) or not page:
+                          break
+                      items.extend(page)
+                      if len(page) < 50 or not page[-1].get('_id'):
+                          break
+                      start_after = page[-1]['_id']
                   print(f"  {endpoint}: {len(items)} items")
               except Exception as exc:
                   print(f"  WARNING {endpoint}: {exc}")
-                  continue
+                  if not items:
+                      continue
 
               for item in items:
                   bf_inventory_id = item.get('_id', '')
@@ -231,6 +245,8 @@ jobs:
                           existing.get('bf_supplier', ''),
                       )
                       existing['lastBFSync'] = now
+                      if item.get('unit'):
+                          existing['unit'] = item['unit']
                       ing_updated += 1
                   else:
                       new_item = {
@@ -249,6 +265,7 @@ jobs:
                               'kg' if ing_type == 'Fermentable' else 'g'
                           ),
                           'lastBFSync': now,
+                          'unit': item.get('unit', ''),
                           '_fromBF': True,
                       }
 
