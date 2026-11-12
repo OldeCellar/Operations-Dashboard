@@ -204,7 +204,7 @@ jobs:
               start_after = None
               try:
                   for _page in range(40):
-                      url = f'https://api.brewfather.app/v1/inventory/{endpoint}?limit=50'
+                      url = f'https://api.brewfather.app/v2/inventory/{endpoint}?limit=50'
                       if start_after:
                           url += f'&start_after={start_after}'
                       response = requests.get(
