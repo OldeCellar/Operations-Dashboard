@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.5.0';
+(window.OCD_V=window.OCD_V||{})['purchasing.js']='0.7.0';
 /* Purchasing tab (private bookkeeping repo): Catalog = items (tied to Brewfather inventory) with their vendor offers (vendor, SKU, link, pack size),
    plus a match review that links the offers imported from your workbook to Brewfather items. Later: Purchases, Order List, Costs. */
 window.Purchasing=(()=>{
@@ -7,8 +7,12 @@ window.Purchasing=(()=>{
   let pend={}; try{pend=JSON.parse(localStorage.getItem(PKEY)||'{}')}catch(e){}
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const inv=()=>((OCD.get()||{}).packaging||{}).inventory||[];
-  const bfById=()=>new Map(inv().map(i=>[i.bf_id,i]));
+  const rawInv=()=>((OCD.get()||{}).packaging||{}).inventory||[];
+  let invVer=0, gMemo=null, gKey='';
+  function grp(){ const k=rawInv().length+'|'+invVer+'|'+(C?C.items.map(i=>(i.bfIgnore||[]).join(',')).join(';'):''); if(gKey!==k||!gMemo){ gMemo=DemandCalc.groupInventory(rawInv(),C?C.items:[]); gKey=k; } return gMemo; }
+  const inv=()=>grp().virtual;
+  const gid=id=>grp().groupOf.get(id)||id;
+  const bfById=()=>{ const m=new Map(); grp().virtual.forEach(v=>v.members.forEach(x=>m.set(x.bf_id,v))); return m; };
   const money=v=>v==null?'—':'$'+Number(v).toFixed(2);
   const savePend=()=>{try{localStorage.setItem(PKEY,JSON.stringify(pend))}catch(e){}};
   const nPend=()=>Object.keys(pend).length;
@@ -40,20 +44,20 @@ window.Purchasing=(()=>{
 
 
 
-  const nameOf=it=>(it.bfId&&bfById().get(it.bfId)||{}).name||it.name;
+  const nameOf=it=>{ const v=it.bfId&&bfById().get(it.bfId); return v?(v.label||v.name):it.name; };
   const latestBatchOf=name=>{ const h=((OCD.get()||{}).history||[]).filter(x=>(x.name||'').toLowerCase()===String(name||'').toLowerCase()); if(!h.length) return null; return h.reduce((a,b)=>(Number(b.batch)||0)>(Number(a.batch)||0)?b:a).batch; };
   async function refreshInventory(){
     const u=localStorage.getItem('ontap_bf_userid'), k=localStorage.getItem('ontap_bf_apikey');
     if(!u||!k){ msg('Save your Brewfather User ID and API key first (Operations & Cellar, then Settings).',true); return; }
     msg('Reading your inventory from Brewfather…');
-    try{ const auth='Basic '+btoa(u+':'+k), list=inv(), byId=new Map(list.map(i=>[i.bf_id,i])); let upd=0, fresh=0, total=0;
+    try{ const auth='Basic '+btoa(u+':'+k), list=rawInv(), byId=new Map(list.map(i=>[i.bf_id,i])); let upd=0, fresh=0, total=0;
       for(const ep of ['fermentables','hops','yeasts','miscs']){ let start=null;
-        for(let pg=0;pg<40;pg++){ const url='https://api.brewfather.app/v1/inventory/'+ep+'?limit=50'+(start?'&start_after='+encodeURIComponent(start):'');
+        for(let pg=0;pg<40;pg++){ const url='https://api.brewfather.app/v2/inventory/'+ep+'?limit=50'+(start?'&start_after='+encodeURIComponent(start):'');
           const r=await fetch(url,{headers:{Authorization:auth}}); if(!r.ok) throw new Error('Brewfather returned HTTP '+r.status);
           const a=await r.json(); if(!Array.isArray(a)||!a.length) break;
           a.forEach(x=>{ total++; const i=byId.get(x._id); if(i){ i.onHand=x.inventory; i.name=x.name||i.name; if(x.unit) i.unit=x.unit; if(x.supplier!==undefined) i.bf_supplier=x.supplier; upd++; } else fresh++; });
           if(a.length<50) break; start=a[a.length-1]._id; } }
-      msg('Inventory refreshed from Brewfather: '+upd+' items updated'+(fresh?', '+fresh+' new items will appear after the next nightly sync':'')+'.'); render();
+      invVer++; msg('Inventory refreshed from Brewfather: '+upd+' items updated'+(fresh?', '+fresh+' new items will appear after the next nightly sync':'')+'.'); render();
     }catch(e){ msg(e.message,true); }
   }
 
@@ -93,6 +97,8 @@ window.Purchasing=(()=>{
       <span class="pur-dim">${items.length} items · ${C.offers.filter(o=>o.itemId).length} vendor offers linked · ${unmatched().length} offers not matched yet</span></div>`;
     if(addItemOpen) h+=`<div class="pur-add"><label>Brewfather item <select id="ai-bf"><option value="">Not in Brewfather (supply item)</option>${inv().filter(i=>!have.has(i.bf_id)).sort((a,b)=>a.name.localeCompare(b.name)).map(i=>`<option value="${esc(i.bf_id)}">${esc(i.name)} (${esc(i.type)})</option>`).join('')}</select></label>
       <label>Name (for a supply item) <input id="ai-name" type="text" placeholder="e.g. Silicone gaskets"></label><label>Unit <input id="ai-unit" type="text" placeholder="each, kg, ml" style="width:90px"></label><button class="ocd-btn" id="ai-add">Add to catalog</button></div>`;
+    const have2=new Set(C.items.filter(i=>i.bfId).map(i=>gid(i.bfId))), missing=inv().filter(v=>!have2.has(v.bf_id)), mTypes=missing.reduce((a,v)=>{a[v.type]=(a[v.type]||0)+1;return a;},{});
+    h+=missing.length?`<div class="pur-pend"><b>${missing.length}</b> Brewfather inventory items are not in the catalog yet (${Object.entries(mTypes).map(([t,n])=>n+' '+t.toLowerCase()+(n===1?'':'s')).join(', ')}). <button class="ocd-btn" id="add-missing">Add them all</button></div>`:'';
     const renamed=C.items.filter(i=>i.bfId&&bfById().get(i.bfId)&&bfById().get(i.bfId).name!==i.name);
     const syncAt=(OCD.get()||{}).bfSyncTime;
     h+=`<div class="pur-tools"><span class="pur-dim">Recipes: ${RC?Object.keys(RC.byName).length+' cached ('+new Date(RC.fetchedAt).toLocaleDateString()+')':'not loaded'}</span> <button class="ocd-btn ghost" data-reloadrec="1">${RC?'Reload':'Load'} recipes from Brewfather</button>
@@ -101,14 +107,16 @@ window.Purchasing=(()=>{
     if(!C.items.length) return h+`<div class="pur-empty">No catalog items yet. Open <b>Match review</b> to link your imported vendor offers to Brewfather items.</div>`;
     h+='<div class="pur-wrap"><table><thead><tr><th></th><th>Item</th><th>Type</th><th>BF supplier</th><th class="n">On hand (BF)</th><th>Min stock (BF unit)</th><th>Max per brew</th><th class="n">Recipes</th><th class="n">Offers</th><th>Default offer</th></tr></thead><tbody>';
     items.forEach(it=>{
-      const offs=C.offers.filter(o=>o.itemId===it.id), b=it.bfId?by.get(it.bfId):null, open=expanded.has(it.id), pref=prefOffer(it,offs), unit=itemUnit(it,by), us=usage()[it.bfId];
+      const offs=C.offers.filter(o=>o.itemId===it.id), b=it.bfId?by.get(it.bfId):null, open=expanded.has(it.id), pref=prefOffer(it,offs), unit=itemUnit(it,by), us=usage()[gid(it.bfId)];
       h+=`<tr class="it ${open?'open':''} ${it.restock===false?'norest':''}" data-it="${esc(it.id)}"><td class="tg">${open?'▾':'▸'}</td><td class="nm">${esc(nameOf(it))}${it.restock===false?' <span class="pur-warn">don\'t restock</span>':''}</td><td>${esc(it.type)}</td><td>${b?esc(b.bf_supplier||'—'):'—'}</td>
         <td class="n">${b&&b.onHand!=null?esc(String(Math.round(b.onHand*100)/100))+' '+esc(b.unit||b.purchaseUnit||''):'—'}</td>
         ${minCell(it,offs,unit)}${maxCell(it,offs,unit,us)}<td class="n">${us?us.count:(RC?0:'—')}</td>
         <td class="n">${offs.length}</td><td>${pref?esc(pref.vendor||'?')+(pref.sku?' · '+esc(pref.sku):''):'—'}</td></tr>`;
       if(!open) return;
       const usL=(us&&us.list)||[];
-      h+=`<tr class="offs"><td></td><td colspan="9"><div class="uses"><label class="chk"><input type="checkbox" data-norest="${esc(it.id)}" ${it.restock===false?'checked':''}> Don't restock (leave off the Order List)</label>
+      const mem=it.bfId&&b?(b.members||[]):[], ign=new Set(it.bfIgnore||[]);
+      const memHtml=mem.length?`<div class="uses"><b>Brewfather inventory counted for this item:</b> `+mem.map(m=>`<label class="chk"><input type="checkbox" data-bfign="${esc(it.id)}|${esc(m.bf_id)}" ${ign.has(m.bf_id)?'':'checked'}> ${esc(m.name)}${m.bf_supplier?' · '+esc(m.bf_supplier):''} · ${fq(Number(m.onHand)||0)} ${esc(m.unit||'')}${(Number(m.onHand)||0)<0?' <span class="pur-dim">(negative counts as 0)</span>':''}</label>`).join(' ')+`</div>`:'';
+      h+=`<tr class="offs"><td></td><td colspan="9">${memHtml}<div class="uses"><label class="chk"><input type="checkbox" data-norest="${esc(it.id)}" ${it.restock===false?'checked':''}> Don't restock (leave off the Order List)</label>
         ${it.bfId?'':`<button class="lnk" data-rename="${esc(it.id)}">rename</button> `}<button class="lnk" data-delitem="${esc(it.id)}">remove item from catalog</button></div>`+
         (usL.length?`<div class="uses"><b>Used in ${usL.length} recipe${usL.length===1?'':'s'}:</b> ${usL.map(x=>{const bn=latestBatchOf(x.recipe);return `${esc(x.recipe)}${bn?' (batch #'+esc(String(bn))+')':''} ${fq(x.amount)} ${esc(unit)}`;}).join(' · ')} ${it.bfId&&us?`<button class="lnk" data-usemax="${esc(it.id)}">set minimum = largest brew (${fq(us.max)} ${esc(unit)})</button>`:''}</div>`:'')+
         `<table class="in"><thead><tr><th></th><th>Vendor</th><th>SKU</th><th>Link</th><th>Pack (vendor units)</th><th>Metric</th><th class="n">Last price</th><th class="n">per metric unit</th><th>Last bought</th><th></th></tr></thead><tbody>`+
@@ -135,11 +143,15 @@ window.Purchasing=(()=>{
     return new Set((s.match(/\b\d{2,3}\s*l?\b/g)||[]).map(x=>x.replace(/\D/g,'')).filter(x=>!/^(19|20)\d\d$/.test(x))); };
   const sameSet=(a,b)=>a.size===b.size&&[...a].every(x=>b.has(x));
   function gradeConflict(offerName,bfName){ const a=gradeNums(offerName), b=gradeNums(bfName); return a.size>0&&b.size>0&&!sameSet(a,b); }
+  const inferForm=s=>{ s=String(s||'').toLowerCase(); return /pellet|t-?90/.test(s)?'pellet':/whole|cone|\bleaf\b/.test(s)?'whole':/co2|extract/.test(s)?'extract':null; };
   function suspects(){ const by=bfById(), itemById=new Map(C.items.map(i=>[i.id,i])); const out=[];
-    C.offers.forEach(o=>{ if(!o.itemId||o.checkedOk) return; const it=itemById.get(o.itemId); if(!it||!it.bfId||it.type!=='Fermentable') return;
-      const b=by.get(it.bfId); if(!b||!gradeConflict(o.item,b.name)) return; const g=gradeNums(o.item);
-      const sug=inv().filter(x=>x.type===it.type&&x.bf_id!==it.bfId&&sameSet(gradeNums(x.name),g)&&x.name.toLowerCase().split(/\s+/)[0]===b.name.toLowerCase().split(/\s+/)[0]);
-      out.push({offer:o,item:it,sug}); });
+    C.offers.forEach(o=>{ if(!o.itemId||o.checkedOk) return; const it=itemById.get(o.itemId); if(!it||!it.bfId) return; const b=by.get(it.bfId); if(!b) return;
+      if(it.type==='Fermentable'){ if(!gradeConflict(o.item,b.name)) return; const g=gradeNums(o.item);
+        const sug=inv().filter(x=>x.type===it.type&&x.bf_id!==b.bf_id&&sameSet(gradeNums(x.name),g)&&x.name.toLowerCase().split(/\s+/)[0]===b.name.toLowerCase().split(/\s+/)[0]);
+        out.push({offer:o,item:it,cur:nameOf(it),sug,why:'grade'}); return; }
+      if(it.type==='Hop'){ const f=inferForm(o.item), cur=DemandCalc.normForm(b.bf_type), same=inv().filter(x=>x.type==='Hop'&&x.bf_id!==b.bf_id&&DemandCalc.stripYear(x.name)===DemandCalc.stripYear(b.name));
+        if(f&&f!==cur) out.push({offer:o,item:it,cur:nameOf(it),sug:same.filter(x=>DemandCalc.normForm(x.bf_type)===f),why:'form'});
+        else if(!f&&same.length) out.push({offer:o,item:it,cur:nameOf(it),sug:same,why:'unknown form'}); } });
     return out; }
 
   // ---------------- Match review ----------------
@@ -147,8 +159,8 @@ window.Purchasing=(()=>{
     const tabs=[['check','Check matches'],['auto','Confirm confident matches'],['review','Review'],['weak','Weak / none'],['other','Everything else'],['hist','History only']];
     let h='<div class="pur-bar sub2">'+tabs.map(([k,l])=>`<button class="pur-sub ${rtab===k?'on':''}" data-rtab="${k}">${l} <span class="pur-count">${k==='check'?suspects().length:k==='hist'?C.offers.filter(o=>o.matchStatus==='historyOnly').length:queue(k).length}</span></button>`).join('')+'</div>';
     if(rtab==='check'){ const sx=suspects(); if(!sx.length) return h+'<div class="pur-empty">No suspicious matches found.</div>';
-      return h+`<div class="pur-note">These offers are linked to a malt whose <b>grade number</b> (like 60L vs 80L) differs from what you bought. Move each one to the right item.</div><div class="pur-wrap"><table><thead><tr><th>Purchased as</th><th>Vendor · SKU</th><th>Currently linked to</th><th>Move to</th></tr></thead><tbody>`+
-        sx.map(s=>`<tr><td class="nm">${esc(s.offer.item.replace(/\s+/g,' '))}</td><td>${esc(s.offer.vendor||'')} <span class="mono">${esc(s.offer.sku||'')}</span></td><td>${esc(s.item.name)}</td><td>${s.sug.map(x=>`<button class="ocd-btn" data-fix="${esc(s.offer.id)}|${esc(x.bf_id)}">${esc(x.name)}</button>`).join(' ')||'<span class="pur-dim">no matching Brewfather item - use the Catalog to add one</span>'} <button class="lnk" data-fixok="${esc(s.offer.id)}">it is correct</button></td></tr>`).join('')+'</tbody></table></div>'; }
+      return h+`<div class="pur-note">These offers may be linked to the wrong item: a malt whose <b>grade</b> differs (60L vs 80L), or a hop in the wrong <b>form</b> (pellet vs whole). Where the purchase name doesn't say the form, choose it. Move each one to the right item.</div><div class="pur-wrap"><table><thead><tr><th>Purchased as</th><th>Vendor · SKU</th><th>Currently linked to</th><th>Move to</th></tr></thead><tbody>`+
+        sx.map(s=>`<tr><td class="nm">${esc(s.offer.item.replace(/\s+/g,' '))}</td><td>${esc(s.offer.vendor||'')} <span class="mono">${esc(s.offer.sku||'')}</span></td><td>${esc(s.cur)}${s.why==='unknown form'?' <span class="pur-dim">(form not in the name)</span>':''}</td><td>${s.sug.map(x=>`<button class="ocd-btn" data-fix="${esc(s.offer.id)}|${esc(x.bf_id)}">${esc(x.label||x.name)}</button>`).join(' ')||'<span class="pur-dim">no matching Brewfather item - use the Catalog to add one</span>'} <button class="lnk" data-fixok="${esc(s.offer.id)}">it is correct</button></td></tr>`).join('')+'</tbody></table></div>'; }
     const q=queue(rtab);
     if(!q.length) return h+`<div class="pur-empty">Nothing left in this list${nPend()?'. Remember to save your waiting decisions.':'.'}</div>`;
     if(rtab==='auto'){
@@ -216,7 +228,7 @@ window.Purchasing=(()=>{
     const d=OCD.get(); if(!d||!window.SchedulerEngine||!window.DemandCalc) return null;
     const brews=plannedBrews(dem.weeks), invL=inv();
     const dm=DemandCalc.computeDemand(brews,b=>RC&&RC.byName[(b.name||'').toLowerCase()],invL);
-    const rows=DemandCalc.shortfalls(dm.rows,invL,C?C.items:[]);
+    const rows=DemandCalc.shortfalls(dm.rows,invL,C?C.items:[],grp().groupOf);
     return {brews,uncached:dm.uncached,rows};
   }
   const qn=n=>n==null?'—':(Math.abs(n)>=100?n.toFixed(0):Math.abs(n)>=10?n.toFixed(1):n.toFixed(2));
@@ -275,20 +287,20 @@ window.Purchasing=(()=>{
 
   // ---------------- saving ----------------
   function applyDecisions(cat,decisions,invList){
-    const byBf=new Map(cat.items.filter(i=>i.bfId).map(i=>[i.bfId,i]));
+    const byBf=new Map(cat.items.filter(i=>i.bfId).map(i=>[gid(i.bfId),i]));
     let next=Math.max(0,...cat.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; const nid=()=>'I'+String(next++).padStart(4,'0');
     for(const [oid,dec] of Object.entries(decisions)){
       const off=cat.offers.find(o=>o.id===oid); if(!off) continue;
       if(dec.skip){ off.matchStatus='skipped'; continue; }
       let item=null;
-      if(dec.bfId){ item=byBf.get(dec.bfId); if(!item){ const b=invList.find(x=>x.bf_id===dec.bfId); if(!b) continue; item={id:nid(),name:b.name,type:b.type,bfId:b.bf_id,unit:b.unit||b.purchaseUnit||null,minStock:null}; cat.items.push(item); byBf.set(b.bf_id,item); } }
+      if(dec.bfId){ const g=gid(dec.bfId); item=byBf.get(g); if(!item){ const b=invList.find(x=>x.bf_id===dec.bfId); if(!b) continue; item={id:nid(),name:b.name,type:b.type,bfId:g,unit:b.unit||b.purchaseUnit||null,minStock:null}; cat.items.push(item); byBf.set(g,item); } }
       else if(dec.supply){ const nm=String(dec.supply).trim(); if(!nm) continue; item=cat.items.find(i=>!i.bfId&&i.name.toLowerCase()===nm.toLowerCase()); if(!item){ item={id:nid(),name:nm,type:'Supply',bfId:null,unit:null,minStock:null}; cat.items.push(item); } }
       if(!item) continue; off.itemId=item.id; off.matchStatus='confirmed';
     }
   }
   async function saveDecisions(){
     const d=Object.assign({},pend), n=Object.keys(d).length; msg('Saving '+n+' decisions to the private repo…');
-    try{ C=await OCD.books.save('catalog.json',o=>{o.items=o.items||[];o.offers=o.offers||[];applyDecisions(o,d,inv());},'Match '+n+' catalog offers to Brewfather items (dashboard)'); C.items=C.items||[];
+    try{ C=await OCD.books.save('catalog.json',o=>{o.items=o.items||[];o.offers=o.offers||[];applyDecisions(o,d,rawInv());},'Match '+n+' catalog offers to Brewfather items (dashboard)'); C.items=C.items||[];
       pend={}; savePend(); msg('Saved '+n+' decisions.'); render(); }catch(e){ msg(e.message,true); }
   }
   async function mutate(fn,message,okMsg){
@@ -309,20 +321,22 @@ window.Purchasing=(()=>{
       if((b=t.closest('[data-copyv]'))){ const v=b.dataset.copyv, a=demCache||computeAll(); let txt='Order for '+v+'\n';
         root.querySelectorAll('.ord-v').forEach(box=>{ if(box.querySelector('.ord-vh b').textContent!==v) return; box.querySelectorAll('tbody tr').forEach(tr=>{ const inc=tr.querySelector('.o-inc'); if(inc&&!inc.checked) return; const c=tr.children; txt+='- '+c[1].textContent+' x '+tr.querySelector('.o-qty').value+' ('+c[5].textContent+') '+((tr.querySelector('a')||{}).href||'')+'\n'; }); });
         navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>msg('Order text copied.')); return; }
-      if((b=t.closest('[data-usemax]'))){ const iid=b.dataset.usemax, it=C.items.find(i=>i.id===iid), us=usage()[it.bfId]; if(us) mutate(o=>{const x=o.items.find(i=>i.id===iid); if(x){ x.minStock=Math.ceil(us.max*100)/100; delete x.minStockEntry; }},'Set minimum stock to the largest brew (dashboard)','Minimum stock set.'); return; }
-      if(t.closest('.minstock,.a-vendor,.a-sku,.a-link,.a-pack,.a-unit,.a-price,.e-vendor,.e-sku,.e-link,.e-pack,.e-unit,.e-price,.e-belongs,#ai-bf,#ai-name,#ai-unit,.o-off,.o-qty,.o-inc,[data-norest],.o-chk,#oth-q,#oth-cat,#oth-all,a')) return;
+      if((b=t.closest('[data-usemax]'))){ const iid=b.dataset.usemax, it=C.items.find(i=>i.id===iid), us=usage()[gid(it.bfId)]; if(us) mutate(o=>{const x=o.items.find(i=>i.id===iid); if(x){ x.minStock=Math.ceil(us.max*100)/100; delete x.minStockEntry; }},'Set minimum stock to the largest brew (dashboard)','Minimum stock set.'); return; }
+      if(t.closest('.minstock,.a-vendor,.a-sku,.a-link,.a-pack,.a-unit,.a-price,.e-vendor,.e-sku,.e-link,.e-pack,.e-unit,.e-price,.e-belongs,#ai-bf,#ai-name,#ai-unit,.o-off,.o-qty,.o-inc,[data-norest],[data-bfign],.o-chk,#oth-q,#oth-cat,#oth-all,a')) return;
       if(t.closest('#ai-toggle')){ addItemOpen=!addItemOpen; render(); return; }
       if(t.closest('#ai-add')){ const bf=$('ai-bf').value, nm=$('ai-name').value.trim(), un=$('ai-unit').value.trim();
         if(!bf&&!nm){ msg('Choose a Brewfather item, or type a name for a supply item.',true); return; }
         const b0=bf?bfById().get(bf):null; addItemOpen=false;
         mutate(o=>{ const n=Math.max(0,...o.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; const id='I'+String(n).padStart(4,'0');
           o.items.push(b0?{id,name:b0.name,type:b0.type,bfId:b0.bf_id,unit:b0.unit||b0.purchaseUnit||null,minStock:null}:{id,name:nm,type:'Supply',bfId:null,unit:un||'each',minStock:null}); },'Add catalog item (dashboard)','Item added. Open it to add vendor offers.'); return; }
-      if((b=t.closest('[data-fix]'))){ const [oid,bid]=b.dataset.fix.split('|'), b0=bfById().get(bid); if(!b0) return;
-        mutate(o=>{ let it=o.items.find(i=>i.bfId===bid); if(!it){ const n=Math.max(0,...o.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; it={id:'I'+String(n).padStart(4,'0'),name:b0.name,type:b0.type,bfId:bid,unit:b0.unit||b0.purchaseUnit||null,minStock:null}; o.items.push(it); }
+      if((b=t.closest('[data-fix]'))){ const [oid,bid]=b.dataset.fix.split('|'), v0=bfById().get(bid); if(!v0) return; const g=v0.bf_id;
+        mutate(o=>{ let it=o.items.find(i=>gid(i.bfId)===g); if(!it){ const n=Math.max(0,...o.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; it={id:'I'+String(n).padStart(4,'0'),name:v0.name,type:v0.type,bfId:g,unit:v0.unit||v0.purchaseUnit||null,minStock:null}; o.items.push(it); }
           const off=o.offers.find(x=>x.id===oid); if(!off) return; const old=o.items.find(i=>i.id===off.itemId); if(old&&old.preferredOfferId===oid) old.preferredOfferId=null; off.itemId=it.id; off.matchStatus='confirmed'; },'Correct a catalog match (dashboard)','Offer moved.'); return; }
       if((b=t.closest('[data-fixok]'))){ const oid=b.dataset.fixok; mutate(o=>{const off=o.offers.find(x=>x.id===oid); if(off) off.checkedOk=true;},'Confirm a catalog match (dashboard)','Marked as correct.'); return; }
       if(t.closest('[data-reloadrec]')){ reloadRecipes(); return; }
       if(t.closest('#inv-refresh')){ refreshInventory(); return; }
+      if(t.closest('#add-missing')){ const have=new Set(C.items.filter(i=>i.bfId).map(i=>gid(i.bfId))), add=inv().filter(v=>!have.has(v.bf_id)).map(v=>({name:v.name,type:v.type,bfId:v.bf_id,unit:v.unit||v.purchaseUnit||null}));
+        mutate(o=>{ const h2=new Set(o.items.filter(i=>i.bfId).map(i=>gid(i.bfId))); let n=Math.max(0,...o.items.map(i=>parseInt(String(i.id).slice(1))||0))+1; add.forEach(a=>{ if(h2.has(a.bfId)) return; o.items.push(Object.assign({id:'I'+String(n++).padStart(4,'0'),minStock:null},a)); h2.add(a.bfId); }); },'Add Brewfather inventory items to the catalog (dashboard)','Added '+add.length+' items.'); return; }
       if(t.closest('#names-update')){ mutate(o=>{ const m=bfById(); o.items.forEach(i=>{ const b=i.bfId&&m.get(i.bfId); if(b&&b.name!==i.name) i.name=b.name; }); },'Update catalog item names from Brewfather (dashboard)','Names updated.'); return; }
       if((b=t.closest('[data-rename]'))){ const iid=b.dataset.rename, it=C.items.find(i=>i.id===iid), nn=prompt('New name for this item:',it.name); if(nn&&nn.trim()&&nn.trim()!==it.name) mutate(o=>{const x=o.items.find(i=>i.id===iid); if(x) x.name=nn.trim();},'Rename catalog item (dashboard)','Renamed.'); return; }
       const ticked=()=>[...root.querySelectorAll('.o-chk:checked')].map(c=>c.dataset.oid);
@@ -372,6 +386,7 @@ window.Purchasing=(()=>{
       const oi=e.target.closest('.o-inc'); if(oi){ const k=oi.closest('tr').dataset.ok; qtyOv[k]=Object.assign(qtyOv[k]||{packs:null},{inc:oi.checked}); if(qtyOv[k].packs===null) delete qtyOv[k].packs; render(); return; }
       if(e.target.id==='oth-cat'){ oth.cat=e.target.value; render(); return; }
       if(e.target.id==='pur-type'){ filt.type=e.target.value; render(); return; }
+      const bi=e.target.closest('[data-bfign]'); if(bi){ const [iid,mid]=bi.dataset.bfign.split('|'), on=bi.checked; mutate(o=>{const it=o.items.find(i=>i.id===iid); if(!it) return; const s=new Set(it.bfIgnore||[]); if(on) s.delete(mid); else s.add(mid); if(s.size) it.bfIgnore=[...s]; else delete it.bfIgnore;},'Choose which Brewfather inventory items count (dashboard)','Saved.'); return; }
       const nr=e.target.closest('[data-norest]'); if(nr){ const iid=nr.dataset.norest, on=nr.checked; mutate(o=>{const it=o.items.find(i=>i.id===iid); if(!it) return; if(on) it.restock=false; else delete it.restock;},(on?"Don't restock ":'Restock ')+'item (dashboard)',on?"Marked don't restock.":'Back on the order list.'); return; }
       const ms=e.target.closest('.minstock'); if(ms){ const iid=ms.dataset.ms, v=ms.value===''?null:parseFloat(ms.value);
         mutate(o=>{const it=o.items.find(i=>i.id===iid); if(!it) return; it.minStock=(v===null||isNaN(v))?null:v; delete it.minStockEntry;},'Set minimum stock (dashboard)','Minimum stock saved.'); }

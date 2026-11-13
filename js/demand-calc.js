@@ -1,12 +1,14 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();
-  else { root.DemandCalc = factory(); (root.OCD_V = root.OCD_V || {})['demand-calc.js'] = '0.2.0'; }
+  else { root.DemandCalc = factory(); (root.OCD_V = root.OCD_V || {})['demand-calc.js'] = '0.4.0'; }
 })(typeof self !== 'undefined' ? self : this, function(){
   /* Ingredient demand from planned brews, ported from the Scheduler's "Demand by Period" (matching rules), plus order quantities:
        need = recipe amounts of every planned brew inside the look-ahead window
        to order = max(0, minStock - (onHand - need))        (so stock never drops below the minimum after the brews)
      Units: everything is converted into the Brewfather inventory item's unit (kg, g, ml, pkg ...). */
   const norm = s => (s || '').toString().toLowerCase().trim().replace(/\s+/g, ' ');
+  const normForm = s => { const x = norm(s); if(!x) return ''; if(/pellet|t-?90|t-?45/.test(x)) return 'pellet'; if(/whole|leaf|cone/.test(x)) return 'whole'; if(/plug/.test(x)) return 'plug'; if(/co2|extract|cryo|oil/.test(x)) return 'extract'; return x; };
+  const formLabel = s => ({ pellet:'Pellet', whole:'Whole', plug:'Plug', extract:'CO2 extract' }[normForm(s)] || (s || ''));
   const stripYear = s => norm(s).replace(/\s+20\d{2}\s*$/, '').trim();
   const MASS = { mg:0.001, g:1, kg:1000, oz:28.349523125, lb:453.59237, lbs:453.59237 };
   const VOL  = { ml:1, l:1000, tsp:4.92892159375, tbsp:14.78676478125, floz:29.5735295625, gal:3785.411784 };
@@ -22,8 +24,9 @@
     const raw = ing.name || '?', code = norm(raw);
     const ofType = inventory.filter(i => i.type === type);
     if(type === 'Hop'){
-      const form = norm(ing.type), c = stripYear(raw);
-      return ofType.find(i => stripYear(i.name) === c && (!form || !i.bf_type || norm(i.bf_type) === form)) || ofType.find(i => stripYear(i.name) === c) || null;
+      const f = normForm(ing.type), c = stripYear(raw), same = ofType.filter(i => stripYear(i.name) === c);
+      const byStock = l => l.slice().sort((x, y) => (Number(y.onHand) || 0) - (Number(x.onHand) || 0));
+      return byStock(same.filter(i => !f || normForm(i.bf_type) === f))[0] || byStock(same)[0] || null;
     }
     if(type === 'Yeast'){
       const lab = norm(ing.laboratory), pid = norm(ing.productId);
@@ -31,6 +34,28 @@
       return cand.find(i => !lab || !i.bf_laboratory || norm(i.bf_laboratory) === lab) || cand[0] || null;
     }
     return ofType.find(i => norm(i.name) === code) || ofType.find(i => norm(i.name).startsWith(code) || code.startsWith(norm(i.name))) || null;
+  }
+
+
+  // Brewfather can hold several inventory items for one ingredient (two suppliers, crop years). Group them so on-hand adds up and
+  // demand is compared against the total. Negative counts are treated as 0; ids listed in a catalog item's bfIgnore are left out.
+  function groupInventory(inventory, catalogItems){
+    const ignore = new Set(); (catalogItems || []).forEach(i => (i.bfIgnore || []).forEach(x => ignore.add(x)));
+    const keyOf = i => i.type === 'Hop' ? 'Hop|' + stripYear(i.name) + '|' + normForm(i.bf_type)
+                     : i.type === 'Yeast' ? 'Yeast|' + norm(i.bf_productId || i.name) + '|' + norm(i.bf_laboratory)
+                     : i.type + '|' + norm(i.name);
+    const groups = new Map();
+    inventory.forEach(i => { const k = keyOf(i); if(!groups.has(k)) groups.set(k, []); groups.get(k).push(i); });
+    const virtual = [], groupOf = new Map(), members = new Map();
+    groups.forEach(ms => {
+      const counted = ms.filter(m => !ignore.has(m.bf_id));
+      const primary = (counted.slice().sort((a, b) => (Number(b.onHand) || 0) - (Number(a.onHand) || 0))[0]) || ms[0];
+      const total = counted.reduce((s, m) => s + Math.max(0, Number(m.onHand) || 0), 0);
+      const sup = [...new Set((counted.some(m => (Number(m.onHand) || 0) > 0) ? counted.filter(m => (Number(m.onHand) || 0) > 0) : ms).map(m => m.bf_supplier).filter(Boolean))].join(' / ');
+      const v = Object.assign({}, primary, { onHand: total, bf_supplier: sup, members: ms, label: primary.type === 'Hop' && primary.bf_type ? primary.name + ' (' + formLabel(primary.bf_type) + ')' : primary.name });
+      virtual.push(v); members.set(primary.bf_id, ms); ms.forEach(m => groupOf.set(m.bf_id, primary.bf_id));
+    });
+    return { virtual, groupOf, members };
   }
 
   // brews: [{batch, name, date}], recipes: lookup(brew) -> recipe object or null
@@ -44,7 +69,7 @@
       let amt = Number(ing.amount) || 0, conv = convert(amt, rawUnit, unit), unitMismatch = false;
       if(conv === null){ conv = amt; unitMismatch = true; }
       let r = rows.get(key);
-      if(!r){ r = { key, bfId: inv ? inv.bf_id : null, name: inv ? inv.name : (ing.name || '?'), type, unit, matched: !!inv, onHand: inv ? Number(inv.onHand) || 0 : null, total: 0, refs: [], unitMismatch: false }; rows.set(key, r); }
+      if(!r){ r = { key, bfId: inv ? inv.bf_id : null, name: inv ? (inv.label || inv.name) : (ing.name || '?'), type, unit, matched: !!inv, onHand: inv ? Number(inv.onHand) || 0 : null, total: 0, refs: [], unitMismatch: false }; rows.set(key, r); }
       r.total += conv; r.unitMismatch = r.unitMismatch || unitMismatch;
       r.refs.push({ batch: brew.batch, beer: brew.name, date: brew.date, amount: conv, rawAmount: amt, rawUnit });
     };
@@ -60,8 +85,9 @@
   }
 
   // join demand with catalog items (min stock, offers) and compute what to order
-  function shortfalls(demandRows, inventory, catalogItems){
-    const byBf = new Map((catalogItems || []).filter(i => i.bfId).map(i => [i.bfId, i]));
+  function shortfalls(demandRows, inventory, catalogItems, groupOf){
+    const gid = id => (groupOf && groupOf.get(id)) || id;
+    const byBf = new Map((catalogItems || []).filter(i => i.bfId).map(i => [gid(i.bfId), i]));
     const seen = new Set(), out = [];
     const mk = (r, inv) => {
       const it = byBf.get(r.bfId), min = it && it.minStock != null ? Number(it.minStock) : null;
@@ -75,9 +101,9 @@
     demandRows.forEach(r => { out.push(mk(r)); if(r.bfId) seen.add(r.bfId); });
     // items with a minimum but no demand in the window
     (catalogItems || []).forEach(it => {
-      if(!it.bfId || seen.has(it.bfId) || it.minStock == null || it.restock === false) return;
-      const inv = inventory.find(i => i.bf_id === it.bfId); if(!inv) return;
-      out.push(mk({ key: inv.bf_id, bfId: inv.bf_id, name: inv.name, type: inv.type, unit: inv.unit || defaultUnit(inv.type), matched: true, onHand: Number(inv.onHand) || 0, total: 0, refs: [], unitMismatch: false }));
+      if(!it.bfId || seen.has(gid(it.bfId)) || it.minStock == null || it.restock === false) return;
+      const inv = inventory.find(i => i.bf_id === gid(it.bfId)); if(!inv) return;
+      out.push(mk({ key: inv.bf_id, bfId: inv.bf_id, name: inv.label || inv.name, type: inv.type, unit: inv.unit || defaultUnit(inv.type), matched: true, onHand: Number(inv.onHand) || 0, total: 0, refs: [], unitMismatch: false }));
     });
     return out;
   }
@@ -117,5 +143,5 @@
     Object.values(out).forEach(o => o.list.sort((a, b) => b.amount - a.amount));
     return out;
   }
-  return { computeDemand, shortfalls, packQuantity, matchInventory, convert, norm, fromVendorUnit, toVendorUnit, recipeUsage };
+  return { normForm, formLabel, stripYear, groupInventory, computeDemand, shortfalls, packQuantity, matchInventory, convert, norm, fromVendorUnit, toVendorUnit, recipeUsage };
 });
