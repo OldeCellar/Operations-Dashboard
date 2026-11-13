@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-12T19:59:57.842Z",
-  "inventoryDate": "2026-11-12",
+  "generatedAt": "2026-11-13T01:09:07.764Z",
+  "inventoryDate": "2026-11-13",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 17.79,
+      "volume": 15.72,
       "source": "brewfather",
       "batches": [
         566
@@ -13,21 +13,21 @@
     },
     {
       "name": "Hard Seltzer",
-      "volume": 7.51,
+      "volume": 5.44,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "NA Seltzer",
-      "volume": 52.32,
+      "volume": 48.18,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Strata",
-      "volume": 89.3,
+      "volume": 85.16,
       "source": "brewfather",
       "batches": [
         570
