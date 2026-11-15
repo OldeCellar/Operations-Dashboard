@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-14T03:21:32.256Z",
-  "inventoryDate": "2026-11-14",
+  "generatedAt": "2026-11-15T01:57:57.127Z",
+  "inventoryDate": "2026-11-15",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 13.65,
+      "volume": 11.58,
       "source": "brewfather",
       "batches": [
         566
