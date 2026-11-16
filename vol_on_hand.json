@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-16T02:12:50.496Z",
+  "generatedAt": "2026-11-16T20:31:26.447Z",
   "inventoryDate": "2026-11-16",
   "beers": [
     {
       "name": "Golden Dragon",
-      "volume": 11.58,
+      "volume": 13,
       "source": "brewfather",
       "batches": [
         566
@@ -27,7 +27,7 @@
     },
     {
       "name": "Strata",
-      "volume": 72.74,
+      "volume": 69,
       "source": "brewfather",
       "batches": [
         570
@@ -36,7 +36,7 @@
     },
     {
       "name": "Vanilla Porter",
-      "volume": 14.44,
+      "volume": 10,
       "source": "brewfather",
       "batches": [
         568
@@ -53,7 +53,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2038,
+    "requestRows": 2041,
     "events": 2
   }
 }
