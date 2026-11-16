@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.8.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.9.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -44,6 +44,7 @@
   // ---------- Request Log integration (public "Olde Cellar – Public View" sheet) ----------
   const REQUEST_SHEET_ID = "1bbU3rU6K7-t5n1jnE6USjTngIFBTJEoAYgKQvsdlPMk";
   const REQUEST_GID = "0";
+  const INVENTORY_GID = "1671730428";   // "Current Inventory" tab of the Public Request View (live: the Request app subtracts each request)
   const REQUEST_CSV_URL = 'https://docs.google.com/spreadsheets/d/' + REQUEST_SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + REQUEST_GID;
   const GROWLER_L = 1.95;
   const SIXPACK_L = 6 * 0.345; // 2.07
@@ -453,18 +454,24 @@
     const ev = (window.OCD && OCD.get() && OCD.get().events) || [];
     return VolCalc.compute({ batches, requestRows, events: ev, tappedField: tappedFieldName, kickedField: kickedFieldName });
   }
-  let lastInputs = null;   // { batches, requestRows, tappedField, kickedField } so events can be re-applied without re-fetching
-  function applyVol(kegs, volOnHand){
-    const byId = new Map(volOnHand.map(v => [v.batchId, v]));
-    kegs.forEach(k => { const v = byId.get(k.batchId); k.volOnHand = (v && v.remaining !== null) ? Math.max(0, v.remaining) : null; });
+  let lastInputs = null;   // { batches, tappedField, kickedField }
+  async function fetchCurrentInventory(){
+    const url = 'https://docs.google.com/spreadsheets/d/' + REQUEST_SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + INVENTORY_GID;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if(!resp.ok) throw new Error('Current Inventory sheet HTTP ' + resp.status);
+    const rows = VolCalc.parseCurrentInventory(await resp.text());
+    if(!rows.length) throw new Error('The Current Inventory sheet returned no rows (is a filter on, or did the columns move?)');
+    return rows;
   }
-  function recomputeVol(){
-    if(!lastInputs || !lastComputed) return;
-    const li = lastInputs;
-    lastComputed.volOnHand = computeVolOnHand(li.batches, li.tappedField, li.kickedField, li.requestRows);
-    applyVol(lastComputed.kegs, lastComputed.volOnHand);
-    renderCurrentTab();
+  // keg cards show the live sheet value: match by batch number first, then by beer name
+  function applyVol(kegs, rows){
+    kegs.forEach(k => {
+      const bn = k.batchNumber ? parseInt(String(k.batchNumber).replace(/\D/g, ''), 10) : null;
+      const row = rows.find(r => r.batch !== null && bn !== null && r.batch === bn) || rows.find(r => r.name.toLowerCase() === String(k.name || '').toLowerCase());
+      k.volOnHand = row ? row.volume : null; k.volAsOf = row ? row.date : null;
+    });
   }
+  function recomputeVol(){ if(lastComputed) renderCurrentTab(); }
 
   function computeConditioning(batches, conditioningFieldName, historyByBeer, breweryAvg){
     const list = [];
@@ -669,45 +676,27 @@
 
   function renderVolOnHand(list, requestLogError){
     if(requestLogError){
-      el.content.innerHTML =
-        '<div class="empty-state"><strong>Couldn\'t load the Request Log</strong>' +
-        escapeHtml(requestLogError) + '<br>Vol On Hand needs both Brewfather batch data and the Request Log sheet to compute.</div>';
+      el.content.innerHTML = '<div class="empty-state"><strong>Couldn\'t load the Current Inventory sheet</strong>' + escapeHtml(requestLogError) +
+        '<br>The Vol On Hand tab reads the "Current Inventory" tab of the Public Request View.</div>';
       return;
     }
-    if(list.length === 0){
-      el.content.innerHTML =
-        '<div class="empty-state"><strong>Nothing to project yet</strong>' +
-        'No Completed batches have a ' + '"' + getSettings().tappedField + '"' + ' date.</div>';
-      return;
-    }
-    const today = VolCalc.toCompact(new Date());
-    const live = list.filter(k => !k.kickedInBF).sort((a,b) => (a.remaining ?? Infinity) - (b.remaining ?? Infinity));
-    const done = list.filter(k => k.kickedInBF);
+    const batches = (lastInputs && lastInputs.batches) || [];
+    const fmtAsOf = r => r.date ? (r.hasTime ? r.date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : fmtDate(r.date)) : (r.dateText || '—');
     const row = (label, val, cls) => '<div class="voh-row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + val + '</b></div>';
-    const L = v => v.toFixed(2) + ' L';
-    const cards = live.concat(done).map(k => {
-      const color = colorForBeer(k.name);
-      const badge = k.kickedInBF ? '<span class="keg-badge kicked">Kicked ' + fmtDate(k.kickedDate) + '</span>'
-                  : (k.kicked ? '<span class="keg-badge kicked">Likely kicked</span>' : '');
-      let math, helper = '';
-      if(k.kickedInBF){ math = row('Date Kicked recorded in Brewfather', fmtDate(k.kickedDate)); }
-      else if(!k.hasVolData){ math = row('No Bottling Volume or recount on this batch, so it can\'t be projected.', '', 'warn'); }
-      else {
-        const cur = Math.max(k.remaining, 0);
-        math = row(k.anchorIsManual ? 'Last recount (' + fmtDate(k.anchorDate) + ')' : 'Bottling Volume at tap (' + fmtDate(k.anchorDate) + ')', L(k.anchorVolume)) +
-          (k.kegeratorApplied ? row('To kegerator', '−' + L(k.kegeratorL)) : (k.kegeratorL > 0 ? row('To kegerator (already excluded by the recount)', '—') : '')) +
-          row('Requests since (' + k.requestCount + ')', '−' + L(k.requestsL)) +
-          row('Events since (' + k.eventCount + ')', '−' + L(k.eventsL)) +
-          row('Vol On Hand', L(cur), 'total' + (k.kicked ? ' warn' : ''));
-        helper = '<div class="voh-help">To record a fresh recount today in Brewfather: Vol On Hand = <b>' + cur + '</b> <button class="copybtn" data-copy="' + cur + '">copy</button> ' +
-                 'Vol On Hand Date = <b>' + today + '</b> <button class="copybtn" data-copy="' + today + '">copy</button></div>';
-      }
-      return '<div class="keg" style="--tap-color:' + color + '">' + badge +
-        '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
-        '<div class="keg-meta"><span>Batch <b>' + (k.batchNumber ? '#' + escapeHtml(String(k.batchNumber)) : '—') + '</b></span><span>Tapped <b>' + fmtDate(k.tappedDate) + '</b></span></div>' +
-        '<div class="voh-math">' + math + '</div>' + helper + '</div>';
+    const sorted = list.slice().sort((a, b) => a.volume - b.volume);
+    const cards = sorted.map(r => {
+      const color = colorForBeer(r.name);
+      const b = r.batch !== null ? batches.find(x => (x.batchNo || x.batchNumber) === r.batch) : null;
+      const kegged = b && typeof b.measuredBottlingSize === 'number' ? b.measuredBottlingSize : null;
+      const kegL = b ? Math.max(0, Number(VolCalc.findMeasuredField(b, 'Vol To Kegerator')) || 0) : 0;
+      const tapped = b ? VolCalc.parseBFValue(VolCalc.findMeasuredField(b, getSettings().tappedField)) : null;
+      let math = row('Vol in kegs now', r.volume.toFixed(1) + ' L', 'total') + row('Updated', escapeHtml(fmtAsOf(r)));
+      if(kegged) math += row('Kegged (Brewfather)', kegged.toFixed(1) + ' L') + row('Left of the keg', Math.max(0, Math.round(r.volume / kegged * 100)) + '%');
+      if(kegL > 0) math += row('In the kegerator', kegL.toFixed(1) + ' L');
+      return '<div class="keg" style="--tap-color:' + color + '"><div class="keg-name">' + escapeHtml(r.name) + '</div>' +
+        '<div class="keg-meta"><span>Batch <b>' + (r.batch ? '#' + r.batch : '—') + '</b></span><span>Tapped <b>' + (tapped ? fmtDate(tapped) : '—') + '</b></span></div><div class="voh-math">' + math + '</div></div>';
     }).join('');
-    el.content.innerHTML = '<div class="voh-note">Same calculation as the weekly email. Add event drawdowns on the Events tab.</div><div class="grid">' + cards + '</div>';
+    el.content.innerHTML = '<div class="voh-note">Live from the "Current Inventory" tab of the Public Request View. The Request app subtracts every request as it is logged. Lowest first.</div><div class="grid">' + (cards || '<div class="empty-state">Nothing on the Current Inventory tab.</div>') + '</div>';
   }
 
   // ---- Request App tab: which beers the Bellvale Request app offers (Settings column E), every beer's Vol On Hand (H / I / J),
@@ -720,33 +709,10 @@
                                requestRows: lastInputs ? lastInputs.requestRows : [], events: ((window.OCD && OCD.get()) || {}).events || [] });
   }
   function renderSheet(){
-    const st = syncNow(), plan = sheetPlanNow();
-    const manualNames = new Set(st.manual.map(m => m.name.toLowerCase()));
-    const beerRows = plan.beers.map(b => '<tr><td><input type="checkbox" data-offer="' + escapeHtml(b.name) + '" ' + (b.offered ? 'checked' : '') + '></td>' +
-      '<td>' + escapeHtml(b.name) + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td><td>' + (b.source === 'manual' ? 'manual item' : 'Brewfather') + '</td></tr>').join('');
-    const manualRows = st.manual.map(m => '<tr data-mid="' + escapeHtml(m.id) + '"><td><input type="text" class="m-name" value="' + escapeHtml(m.name) + '"></td>' +
-      '<td><input type="number" class="m-vol" step="0.1" min="0" value="' + escapeHtml(String(m.vol)) + '"></td><td><input type="date" class="m-date" value="' + escapeHtml(String(m.date || '')) + '"></td>' +
-      '<td><button class="copybtn" data-m-save="' + escapeHtml(m.id) + '">save</button> <button class="copybtn" data-m-del="' + escapeHtml(m.id) + '">delete</button></td></tr>').join('');
-    const prev = plan.beers.map(b => '<tr><td>' + escapeHtml(b.name) + '</td><td>' + plan.inventoryDate + '</td><td class="n">' + b.volume.toFixed(1) + ' L</td><td>' + escapeHtml((b.batches || []).join(', ')) + '</td></tr>').join('');
-    el.content.innerHTML =
-      '<div class="pub-bar"><button class="btn primary" id="sh-publish">Publish now</button><span id="sh-pubmsg" class="pub-msg"></span></div>' +
-      '<div class="voh-note">Tick the beers the Bellvale Request app should offer this week. Volumes come from the same Vol On Hand calculation as the weekly email. ' +
-      'The GitHub Action publishes them hourly and the sheet script copies them into Settings.</div>' +
-      (plan.offered.length > 9 ? '<div class="ev-msg err">Only the first 9 offered beers fit in Settings E2:E10.</div>' : '') +
-      '<h3 class="sh-h">Beers and Vol On Hand <small>(' + plan.offered.length + ' offered)</small></h3>' +
-      '<table class="ev-table"><thead><tr><th>Offer</th><th>Beer (column H)</th><th class="n">Vol in kegs (J)</th><th>Source</th></tr></thead><tbody>' +
-      (beerRows || '<tr><td colspan="4" class="empty">No beers yet.</td></tr>') + '</tbody></table>' +
-      '<h3 class="sh-h">Manual items <small>(not in Brewfather: seltzers, guest kegs)</small></h3>' +
-      '<div class="voh-note">Enter the volume you counted and the date. Requests and events after that date come off it automatically.</div>' +
-      '<table class="ev-table"><thead><tr><th>Name (exactly as in the Request app)</th><th>Liters counted</th><th>Counted on</th><th></th></tr></thead><tbody>' + manualRows +
-      '<tr><td><input type="text" id="m-new-name" placeholder="Hard Seltzer"></td><td><input type="number" id="m-new-vol" step="0.1" min="0" placeholder="36"></td>' +
-      '<td><input type="date" id="m-new-date" value="' + isoDay(new Date()) + '"></td><td><button class="btn primary" id="m-add">Add item</button></td></tr></tbody></table>' +
-      '<div class="ev-msg" id="sh-msg"></div>' +
-      '<h3 class="sh-h">What the Settings sheet will receive</h3>' +
-      '<div class="voh-note">Column E (offered): <b>' + (plan.offered.map(escapeHtml).join(', ') || 'none') + '</b></div>' +
-      '<table class="ev-table"><thead><tr><th>H · On Tap</th><th>I · inventory date</th><th class="n">J · Vol in kegs</th><th>K · Batch #</th></tr></thead><tbody>' + (prev || '<tr><td colspan="4" class="empty">Nothing yet.</td></tr>') + '</tbody></table>' +
-      '<div class="voh-note" id="sh-pub">Checking the published file…</div>';
-    showPublished(); paintPublishMsg();
+    el.content.innerHTML = '<div class="empty-state"><strong>Paused: the Request app now keeps its own volumes</strong>' +
+      'The Bellvale Request app subtracts each request from Settings "Vol in kegs" as it is logged, and removes a beer from the offered list when it reaches the tolerance. ' +
+      'So the dashboard no longer writes volumes or the offered list to that sheet, and the Vol On Hand tab just reads the live "Current Inventory" tab. ' +
+      '<br><br><b>If the VolSync 30-minute trigger is still on in Apps Script, switch it off:</b> it would overwrite the live volumes.</div>';
   }
   async function showPublished(){
     const box = document.getElementById('sh-pub'); if(!box) return;
@@ -839,7 +805,7 @@
     const rows = ev.map(e => '<tr><td>' + escapeHtml(e.date) + '</td><td>' + escapeHtml(e.beer) + '</td><td class="n">' + Number(e.volumeL).toFixed(1) + ' L</td><td>' + escapeHtml(e.note || '') + '</td>' +
       '<td><button class="copybtn" data-ev-del="' + escapeHtml(e.id) + '">delete</button></td></tr>').join('');
     el.content.innerHTML =
-      '<div class="ev-form"><div class="voh-note">Beer served outside the Request Log (events, tastings, spills). Each entry comes off that beer\'s Vol On Hand from its date, after the last recount.</div>' +
+      '<div class="ev-form"><div class="voh-note">Beer served outside the Request Log (events, tastings, spills). They are recorded here; deducting them from the sheet\'s Vol in kegs comes with the next sync update.</div>' +
       '<div class="ev-grid"><label>Date<input type="date" id="ev-date" value="' + isoDay(new Date()) + '"></label>' +
       '<label>Beer<select id="ev-beer">' + opt + '</select></label>' +
       '<label>Liters<input type="number" id="ev-vol" min="0" step="0.1" placeholder="e.g. 20"></label>' +
@@ -1393,10 +1359,9 @@
       let requestLogError = null;
       let volOnHand = [];
       try{
-        const requestRows = await fetchRequestRows();
-        volOnHand = computeVolOnHand(batches, s.tappedField, s.kickedField, requestRows);
+        volOnHand = await fetchCurrentInventory();
         applyVol(kegs, volOnHand);
-        lastInputs = { batches, requestRows, tappedField: s.tappedField, kickedField: s.kickedField };
+        lastInputs = { batches, tappedField: s.tappedField, kickedField: s.kickedField };
       } catch(reqErr){
         console.error(reqErr);
         requestLogError = reqErr.message;

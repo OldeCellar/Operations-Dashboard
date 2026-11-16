@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();      // Node (GitHub Actions, tests)
-  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.3.0'; }   // browser
+  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.4.0'; }   // browser
 })(typeof self !== 'undefined' ? self : this, function(){
   /* ONE Vol On Hand calculation, shared by the dashboard and the weekly report/Action so they can never disagree.
      Rules (from the Weekly Vol On Hand Report):
@@ -81,6 +81,19 @@
   }
   const parseEventDate = s => { if(s instanceof Date) return s; const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2]-1, +m[3]) : parseRequestMDY(s); };
 
+  // The Public Request View's "Current Inventory" tab: beer | inventory date | "110 L" | batch #
+  function parseCurrentInventory(text){
+    const t = parseCSV(text), out = []; if(!t.length) return out;
+    const looksNum = s => /\d/.test(String(s || '')) && !isNaN(parseFloat(String(s).replace(/[^\d.\-]/g, '')));
+    const start = (t[0] && !looksNum(t[0][2])) ? 1 : 0;
+    for(let i = start; i < t.length; i++){ const r = t[i]; if(!r || !(r[0] || '').trim()) continue;
+      const vol = parseFloat(String(r[2] || '').replace(/[^\d.\-]/g, '')); if(isNaN(vol)) continue;
+      const ds = (r[1] || '').trim(), m = ds.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+      const date = m ? new Date(+m[3], +m[1] - 1, +m[2], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)) : null;
+      const b = parseInt(String(r[3] || '').replace(/\D/g, ''), 10);
+      out.push({ name: r[0].trim(), dateText: ds, date, hasTime: !!(m && m[4]), volume: vol, batch: isNaN(b) ? null : b }); }
+    return out;
+  }
   function compute(opts){
     const batches = opts.batches || [], requestRows = opts.requestRows || [], events = opts.events || [], now = opts.now || new Date();
     const tappedField = opts.tappedField || 'Date Tapped', kickedField = opts.kickedField || 'Date Kicked';
@@ -148,5 +161,5 @@
     const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
     return { inventoryDate: y + '-' + m + '-' + d, beers, offered: beers.filter(b => b.offered).map(b => b.name) };
   }
-  return { compute, computeManual, sheetPlan, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L };
+  return { parseCSV, parseCurrentInventory, compute, computeManual, sheetPlan, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L };
 });
