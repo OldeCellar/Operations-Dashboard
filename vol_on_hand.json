@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-16T20:31:26.447Z",
-  "inventoryDate": "2026-11-16",
+  "generatedAt": "2026-11-17T03:57:25.209Z",
+  "inventoryDate": "2026-11-17",
   "beers": [
     {
       "name": "Golden Dragon",
@@ -53,7 +53,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2041,
+    "requestRows": 2050,
     "events": 2
   }
 }
