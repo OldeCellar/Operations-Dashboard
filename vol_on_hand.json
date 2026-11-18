@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18T04:29:19.282Z",
+  "generatedAt": "2026-11-18T22:01:58.437Z",
   "inventoryDate": "2026-11-18",
   "beers": [
     {
@@ -27,7 +27,7 @@
     },
     {
       "name": "Strata",
-      "volume": 66.93,
+      "volume": 64.86,
       "source": "brewfather",
       "batches": [
         570
@@ -53,7 +53,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2052,
+    "requestRows": 2053,
     "events": 2
   }
 }
