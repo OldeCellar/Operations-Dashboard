@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20T03:25:49.425Z",
+  "generatedAt": "2026-11-20T13:00:20.338Z",
   "inventoryDate": "2026-11-20",
   "beers": [
     {
@@ -41,7 +41,7 @@
     "Strata"
   ],
   "counts": {
-    "completedBatches": 3,
+    "completedBatches": 4,
     "requestRows": 2080,
     "events": 2
   }
