@@ -1,58 +1,47 @@
 {
-  "generatedAt": "2026-11-19T21:39:42.580Z",
-  "inventoryDate": "2026-11-19",
+  "generatedAt": "2026-11-20T03:25:49.425Z",
+  "inventoryDate": "2026-11-20",
   "beers": [
     {
-      "name": "Golden Dragon",
-      "volume": 13,
-      "source": "brewfather",
-      "batches": [
-        566
-      ],
-      "offered": true
-    },
-    {
       "name": "Hard Seltzer",
-      "volume": 1.3,
+      "volume": 0,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "NA Seltzer",
-      "volume": 44.04,
+      "volume": 33.69,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
+      "name": "Rising Sun",
+      "volume": 101.72,
+      "source": "brewfather",
+      "batches": [
+        572
+      ],
+      "offered": false
+    },
+    {
       "name": "Strata",
-      "volume": 64.86,
+      "volume": 19.65,
       "source": "brewfather",
       "batches": [
         570
       ],
       "offered": true
-    },
-    {
-      "name": "Vanilla Porter",
-      "volume": 5.86,
-      "source": "brewfather",
-      "batches": [
-        568
-      ],
-      "offered": true
     }
   ],
   "offered": [
-    "Golden Dragon",
     "Hard Seltzer",
     "NA Seltzer",
-    "Strata",
-    "Vanilla Porter"
+    "Strata"
   ],
   "counts": {
-    "completedBatches": 4,
+    "completedBatches": 3,
     "requestRows": 2080,
     "events": 2
   }
