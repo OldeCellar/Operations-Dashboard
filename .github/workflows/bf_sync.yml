@@ -2,13 +2,17 @@ name: Sync Brewfather Data
 
 on:
   schedule:
-    - cron: '0 1 * * *' # Every day at 01:00
+    - cron: '0 * * * *' # Every hour
       timezone: 'America/New_York' # EST in winter, EDT in summer
   workflow_dispatch: # Also manually triggerable from Actions tab
 
 permissions:
   contents: write
-
+  
+concurrency:
+  group: bf-sync
+  cancel-in-progress: false
+  
 jobs:
   sync:
     runs-on: ubuntu-latest
