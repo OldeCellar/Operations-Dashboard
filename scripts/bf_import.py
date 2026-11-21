@@ -93,6 +93,16 @@ def number_field(batch, label):
     except ValueError:
         return None
 
+def number_field(batch, label):
+    """Numeric Brewfather custom field (liters), or None if missing / not a number."""
+    raw = measurement_value(batch, label)
+    if raw is None:
+        return None
+    try:
+        return float(str(raw).strip().replace(',', '.'))
+    except ValueError:
+        return None
+
 
 def beer_by_name(beers, name):
     """beerByName: exact, then prefix, then reverse-prefix; ties -> enabled, then lowest priority."""
@@ -160,6 +170,10 @@ def run(data, bf_batches, log=print):
         keg_vol = number_field(b, 'Vol To Kegerator')
         keg_in = compact_date_field(b, 'Date Into Kegerator')
         keg_out = compact_date_field(b, 'Date Kicked From Kegerator')
+     
+        keg_vol = number_field(b, 'Vol To Kegerator')
+        keg_in = compact_date_field(b, 'Date Into Kegerator')
+        keg_out = compact_date_field(b, 'Date Kicked From Kegerator')
         status = 'Archived' if kicked else (b.get('status') or '')
         entry = by_no.get(no)
 
@@ -219,6 +233,10 @@ def run(data, bf_batches, log=print):
         if tank_for_cache: c['tank'] = tank_for_cache
         if tapped: c['dateTapped'] = tapped
         if kicked: c['dateKicked'] = kicked
+        c['bfStatusRaw'] = b.get('status') or c.get('bfStatusRaw', '')
+        if keg_vol is not None: c['kegeratorVol'] = keg_vol
+        if keg_in: c['kegeratorIn'] = keg_in
+        if keg_out: c['kegeratorOut'] = keg_out
         c['bfStatusRaw'] = b.get('status') or c.get('bfStatusRaw', '')
         if keg_vol is not None: c['kegeratorVol'] = keg_vol
         if keg_in: c['kegeratorIn'] = keg_in
