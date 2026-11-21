@@ -2,7 +2,7 @@ name: Sync Brewfather Data
 
 on:
   schedule:
-    - cron: '0 * * * *' # Every hour
+    - cron: '17 * * * *' # Every hour at 17 minutes past
       timezone: 'America/New_York' # EST in winter, EDT in summer
   workflow_dispatch: # Also manually triggerable from Actions tab
 
