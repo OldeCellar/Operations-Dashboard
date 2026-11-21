@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-20T13:00:20.338Z",
-  "inventoryDate": "2026-11-20",
+  "generatedAt": "2026-11-21T02:23:48.386Z",
+  "inventoryDate": "2026-11-21",
   "beers": [
     {
       "name": "Hard Seltzer",
@@ -11,14 +11,14 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 33.69,
+      "volume": 25.41,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Rising Sun",
-      "volume": 101.72,
+      "volume": 91.37,
       "source": "brewfather",
       "batches": [
         572
@@ -27,7 +27,7 @@
     },
     {
       "name": "Strata",
-      "volume": 19.65,
+      "volume": 7.23,
       "source": "brewfather",
       "batches": [
         570
