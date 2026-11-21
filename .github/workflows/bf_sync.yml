@@ -309,11 +309,23 @@ jobs:
 
           if git diff --staged --quiet; then
             echo "No changes - skipping commit"
-          else
-            git commit -m "BF auto-sync $(TZ=America/New_York date '+%Y-%m-%d %H:%M %Z')"
-
-            # Commit first, THEN rebase: the sync step leaves brewery_data.json modified
-            # in the working tree, and git refuses to pull --rebase over unstaged changes.
-            git pull --rebase origin "${{ github.ref_name }}"
-            git push origin "HEAD:${{ github.ref_name }}"
+            exit 0
           fi
+
+          git commit -m "BF auto-sync $(TZ=America/New_York date '+%Y-%m-%d %H:%M %Z')"
+
+          for attempt in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}"
+            # -X ours = keep what is already on the branch (a Dashboard save) if the same lines changed
+            if git rebase -X ours "origin/${{ github.ref_name }}" \
+               && python3 -c "import json; json.load(open('brewery_data.json', encoding='utf-8'))" \
+               && git push origin "HEAD:${{ github.ref_name }}"; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Attempt $attempt failed - retrying"
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 5))
+          done
+          echo "Could not push after 3 attempts"
+          exit 1
