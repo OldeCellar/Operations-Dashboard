@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();      // Node (GitHub Actions, tests)
-  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.5.0'; }   // browser
+  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.6.0'; }   // browser
 })(typeof self !== 'undefined' ? self : this, function(){
   /* ONE Vol On Hand calculation, shared by the dashboard and the weekly report/Action so they can never disagree.
      Rules (from the Weekly Vol On Hand Report):
@@ -75,13 +75,15 @@
     if(f.length || row.length){ row.push(f); rows.push(row); }
     return rows;
   }
-  function requestRowsFromCSV(text){       // columns: beer, growlers, six-packs, date  (the public Request View)
+  // Liters recorded in the Database tab at completion (public view column I); null when blank or not a positive number.
+  const recordedL = v => { const n = parseFloat(String(v == null ? '' : v).replace(/[^\d.\-]/g, '')); return (isFinite(n) && n > 0) ? n : null; };
+  function requestRowsFromCSV(text){       // columns: beer, growlers, six-packs, date, year, week, growler L, six-pack L, total L (the public Request View)
     const t = parseCSV(text); if(!t.length) return [];
     let start = 0; if(t[0][3] !== undefined && parseRequestMDY(t[0][3]) === null) start = 1;
     const out = [];
     for(let i = start; i < t.length; i++){ const r = t[i]; if(!r || r.length < 4) continue;
       const beer = (r[0] || '').trim(), g = parseInt(r[1],10) || 0, s = parseInt(r[2],10) || 0, dt = parseRequestMDY(r[3]);
-      if(!beer || !dt) continue; out.push({ beer, growlers:g, sixpacks:s, date:dt, volume: g * growlerL() + s * sixpackL() }); }
+      if(!beer || !dt) continue; const rec = recordedL(r[8]); out.push({ beer, growlers:g, sixpacks:s, date:dt, volume: rec !== null ? rec : g * growlerL() + s * sixpackL(), recorded: rec !== null }); }
     return out;
   }
   const parseEventDate = s => { if(s instanceof Date) return s; const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2]-1, +m[3]) : parseRequestMDY(s); };

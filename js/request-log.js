@@ -1,5 +1,7 @@
-(window.OCD_V=window.OCD_V||{})['request-log.js']='0.3.0';
-/* Request Log module: reads the public Google Sheet (gviz CSV). RequestLog.mount() runs once. */
+(window.OCD_V=window.OCD_V||{})['request-log.js']='0.4.0';
+/* Request Log module: reads the public Google Sheet (gviz CSV). RequestLog.mount() runs once.
+   Columns: A beer, B growlers, C six-packs, D date, E year, F week, G growler L, H six-pack L, I total L (Database L:P as saved at completion).
+   Volume = the recorded total L (column I) when present; only rows without it are estimated from the Units table. */
 window.RequestLog=(()=>{
 let mounted=false,reload=()=>{};
 async function mount(){
@@ -128,7 +130,8 @@ function iso(d){let z=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()
 function fmt(d){return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`}
 
 function weekStart(y,w){let j=new Date(Date.UTC(y,0,4)),day=j.getUTCDay()||7;j.setUTCDate(j.getUTCDate()-day+1+(w-1)*7);return j}
-async function load(){let s=$("status");s.textContent="loading…";try{let res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw Error(`HTTP ${res.status}`);let a=csv(await res.text()),start=mdy(a[0]?.[3])?0:1;ROWS=a.slice(start).map(x=>{let date=mdy(x[3]);if(!x?.[0]?.trim()||!date)return null;let z=iso(date),g=parseInt(x[1])||0,p=parseInt(x[2])||0;return{beer:x[0].trim(),growlers:g,sixpacks:p,date,dateStr:fmt(date),isoYearWk:z.y*100+z.w,volume:g*GROWLER_L()+p*SIXPACK_L()}}).filter(Boolean);if(!ROWS.length)throw Error("No valid rows found");s.textContent=`${ROWS.length} requests · updated ${new Date().toLocaleTimeString()}`;weeks();beerOptions();render()}catch(e){s.textContent=`Failed to load: ${e.message}`;s.className="err"}}
+const recL=v=>{const n=parseFloat(String(v==null?"":v).replace(/[^\d.\-]/g,""));return isFinite(n)&&n>0?n:null};
+async function load(){let s=$("status");s.textContent="loading…";try{let res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw Error(`HTTP ${res.status}`);let a=csv(await res.text()),start=mdy(a[0]?.[3])?0:1;ROWS=a.slice(start).map(x=>{let date=mdy(x[3]);if(!x?.[0]?.trim()||!date)return null;let z=iso(date),g=parseInt(x[1])||0,p=parseInt(x[2])||0,rec=recL(x[8]);return{beer:x[0].trim(),growlers:g,sixpacks:p,date,dateStr:fmt(date),isoYearWk:z.y*100+z.w,volume:rec!==null?rec:g*GROWLER_L()+p*SIXPACK_L(),recorded:rec!==null}}).filter(Boolean);if(!ROWS.length)throw Error("No valid rows found");let est=ROWS.filter(r=>!r.recorded).length;s.textContent=`${ROWS.length} requests · updated ${new Date().toLocaleTimeString()}`+(est?` · ${est} without recorded liters (estimated at unit sizes)`:"");weeks();beerOptions();render()}catch(e){s.textContent=`Failed to load: ${e.message}`;s.className="err"}}
 const $=id=>document.getElementById(id);function weeks(){let ws=[...new Set(ROWS.map(r=>r.isoYearWk))].sort((a,b)=>b-a),s=$("week");s.innerHTML=ws.map(w=>`<option value="${w}">${w} — ISO week ${w%100}, ${Math.floor(w/100)}</option>`).join("");$("weeksData").textContent=`${ws.length} weeks of data`;dateRange()}
 
 function dateRange(){let x=+$("week").value,y=Math.floor(x/100),w=x%100,a=weekStart(y,w),b=new Date(a);b.setUTCDate(a.getUTCDate()+6);let ff=d=>d.toLocaleDateString(undefined,{timeZone:"UTC",weekday:"short",month:"short",day:"numeric"});$("weekDates").innerHTML=`<strong>${ff(a)} – ${ff(b)}, ${b.getUTCFullYear()}</strong>`}

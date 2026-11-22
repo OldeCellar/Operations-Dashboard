@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['units.js']='0.1.0';
+(window.OCD_V=window.OCD_V||{})['units.js']='0.1.1';
 /* Units tab: the size of each request unit (Growler, Six-pack, ...) in liters.
    Saved to brewery_data.json as "requestUnits" through OCD.save (re-reads the latest file, applies the change, commits).
    Every Dashboard calculation reads sizes from OCD.requestUnits (js/data.js). No table yet = built-in defaults 1.95 L / 2.07 L. */
@@ -31,7 +31,7 @@ window.Units=(()=>{
     document.head.appendChild(s);
   }
   function build(){
-    $('un').innerHTML=`<p class="un-note">Set the size in liters of each unit a customer can request. The Request Log and Vol On Hand use these sizes. The Beer Request app (Code.gs) uses them once Stage 3A-2 is installed; until then it keeps its own sizes. Built-in units cannot be removed. A saved unit can be switched off with Active instead of being deleted, so history keeps its meaning. A six-pack is 6 &times; 0.345 L = 2.07 L.</p>
+    $('un').innerHTML=`<p class="un-note">Set the size in liters of each unit a customer can request. The Beer Request app (Code.gs) reads these sizes for every order once Stage 3A-2 is installed. The Request Log shows the liters recorded in the Database tab for completed requests, and uses these sizes only for rows that have no recorded liters. Built-in units cannot be removed. A saved unit can be switched off with Active instead of being deleted, so history keeps its meaning. A six-pack is 6 &times; 0.345 L = 2.07 L.</p>
 <p class="un-status" id="un-status"></p>
 <div class="tablewrap"><table><thead><tr><th>Unit name</th><th class="n">Liters per unit</th><th>Active</th><th>ID</th><th></th></tr></thead><tbody id="un-body"></tbody></table></div>
 <div class="un-actions"><button class="ocd-btn ghost" id="un-add">+ Add unit</button><span style="flex:1"></span><button class="ocd-btn ghost" id="un-revert">Discard changes</button><button class="ocd-btn" id="un-save">Save units</button></div>`;
@@ -77,7 +77,7 @@ window.Units=(()=>{
     let out; try{out=collect();}catch(e){status(e.message,true);return;}
     const before=new Map(OCD.requestUnits.list().map(u=>[u.id,u]));
     const changed=out.filter(u=>before.has(u.id)&&Number(before.get(u.id).volL)!==u.volL);
-    if(changed.length&&!confirm('Changing a size re-values ALL past requests on the Dashboard (Request Log and Vol On Hand):\n\n'+changed.map(u=>'  '+u.name+': '+fmt(before.get(u.id).volL)+' L to '+fmt(u.volL)+' L').join('\n')+'\n\nContinue?')) return;
+    if(changed.length&&!confirm('Completed requests keep the liters recorded in the Database tab. Changing a size re-values only rows with no recorded liters, and the size used for new orders:\n\n'+changed.map(u=>'  '+u.name+': '+fmt(before.get(u.id).volL)+' L to '+fmt(u.volL)+' L').join('\n')+'\n\nContinue?')) return;
     const btn=$('un-save'); btn.disabled=true; status('Saving to GitHub…');
     try{
       await OCD.save(obj=>{
