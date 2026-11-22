@@ -5,7 +5,8 @@ const TABS=[
   {id:'history',  label:'Brew History', module:()=>window.BrewHistory},
   {id:'requests', label:'Demand & Request Log', module:()=>window.RequestLog},
   {id:'purchasing', label:'Purchasing', module:()=>window.Purchasing},
-  {id:'catalog',  label:'Beer Catalog', module:()=>window.BeerCatalog}
+  {id:'catalog',  label:'Beer Catalog', module:()=>window.BeerCatalog},
+  {id:'units',    label:'Units', module:()=>window.Units}
 ];
 const nav=document.getElementById('tabs');
 nav.innerHTML=TABS.map(t=>`<button data-t="${t.id}">${t.label}</button>`).join('');
@@ -20,15 +21,15 @@ document.getElementById('refresh-all').onclick=()=>TABS.forEach(t=>t.module?.()?
 const h=location.hash.slice(1);
 show(TABS.some(t=>t.id===h)?h:'requests');
 
-const RELEASE='0.17.0';   // one number for the whole package: bump it every release; the header and footer show it
+const RELEASE='0.18.0';   // one number for the whole package: bump it every release; the header and footer show it
 const relEl=document.getElementById('rel'); if(relEl) relEl.textContent='v'+RELEASE;
 /* ---- version check: shows every file's version and flags any that don't match what this app.js expects ---- */
 (function(){
-  const EXPECTED={"index.html": "0.17.0", "app.js": "0.17.0", "on-tap.js": "0.9.0", "request-log.js": "0.2.0", "theme.css": "0.4.3", "request-log.css": "0.1.0", "on-tap.css": "0.3.4", "data.js": "0.3.0", "catalog.js": "0.2.1", "catalog.css": "0.2.0", "scheduler-engine.js": "0.4.0", "schedule.js": "0.4.1", "schedule.css": "0.3.1", "settings.js": "0.2.0", "history.js": "0.1.1", "history.css": "0.1.0", "vol-calc.js": "0.4.0", "purchasing.js": "0.7.0", "purchasing.css": "0.5.0", "demand-calc.js": "0.4.0"};
+  const EXPECTED={"index.html": "0.18.0", "app.js": "0.18.0", "on-tap.js": "0.10.0", "request-log.js": "0.3.0", "theme.css": "0.4.3", "request-log.css": "0.1.0", "on-tap.css": "0.3.4", "data.js": "0.4.0", "catalog.js": "0.2.1", "catalog.css": "0.2.0", "scheduler-engine.js": "0.4.0", "schedule.js": "0.4.1", "schedule.css": "0.3.1", "settings.js": "0.2.0", "history.js": "0.1.1", "history.css": "0.1.0", "vol-calc.js": "0.5.0", "units.js": "0.1.0", "purchasing.js": "0.7.0", "purchasing.css": "0.5.0", "demand-calc.js": "0.4.0"};
   const cs=(id,v)=>{const e=document.getElementById(id)||document.documentElement;return (getComputedStyle(e).getPropertyValue(v)||'').replace(/["'\s]/g,'')||null;};
   const found={
     'index.html':document.querySelector('meta[name=ocd-version]')?.content||null,
-    'app.js':'0.17.0',
+    'app.js':'0.18.0',
     'theme.css':cs(null,'--v-theme'),
     'request-log.css':cs('rl','--v-request-log-css'),
     'on-tap.css':cs('ot','--v-on-tap-css'),
@@ -43,6 +44,7 @@ const relEl=document.getElementById('rel'); if(relEl) relEl.textContent='v'+RELE
     'purchasing.css':cs('pur','--v-purchasing-css'),
     'history.css':cs('hist','--v-history-css'),
     'catalog.js':(window.OCD_V||{})['catalog.js']||null,
+    'units.js':(window.OCD_V||{})['units.js']||null,
     'catalog.css':cs('cat','--v-catalog-css'),
     'scheduler-engine.js':(window.OCD_V||{})['scheduler-engine.js']||null,
     'schedule.js':(window.OCD_V||{})['schedule.js']||null,

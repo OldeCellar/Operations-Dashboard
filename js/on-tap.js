@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.9.0';
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.10.0';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -46,8 +46,9 @@
   const REQUEST_GID = "0";
   const INVENTORY_GID = "1671730428";   // "Current Inventory" tab of the Public Request View (live: the Request app subtracts each request)
   const REQUEST_CSV_URL = 'https://docs.google.com/spreadsheets/d/' + REQUEST_SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + REQUEST_GID;
-  const GROWLER_L = 1.95;
-  const SIXPACK_L = 6 * 0.345; // 2.07
+  // Unit sizes come from the Units tab (OCD.requestUnits); fallback 1.95 L / 2.07 L.
+  const GROWLER_L = () => (window.OCD && OCD.requestUnits) ? OCD.requestUnits.growlerL() : 1.95;
+  const SIXPACK_L = () => (window.OCD && OCD.requestUnits) ? OCD.requestUnits.sixpackL() : 2.07;
 
   function parseRequestCSV(text){
     const rows = [];
@@ -103,7 +104,7 @@
       const sixpacks = parseInt(r[2], 10) || 0;
       const dt = parseRequestMDY(r[3]);
       if(!beer || !dt) continue;
-      const volume = growlers * GROWLER_L + sixpacks * SIXPACK_L;
+      const volume = growlers * GROWLER_L() + sixpacks * SIXPACK_L();
       rows.push({ beer, growlers, sixpacks, date: dt, volume });
     }
     return rows;

@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['request-log.js']='0.2.0';
+(window.OCD_V=window.OCD_V||{})['request-log.js']='0.3.0';
 /* Request Log module: reads the public Google Sheet (gviz CSV). RequestLog.mount() runs once. */
 window.RequestLog=(()=>{
 let mounted=false,reload=()=>{};
@@ -8,7 +8,7 @@ try{await (window.OCD&&OCD.ready)}catch(e){}
 const root=document.getElementById("rl");
 
 
-const SHEET_ID="1bbU3rU6K7-t5n1jnE6USjTngIFBTJEoAYgKQvsdlPMk",GID="0",CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`,GROWLER_L=1.95,SIXPACK_L=2.07,EXPO=.5;
+const SHEET_ID="1bbU3rU6K7-t5n1jnE6USjTngIFBTJEoAYgKQvsdlPMk",GID="0",CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`,GROWLER_L=()=>(window.OCD&&OCD.requestUnits?OCD.requestUnits.growlerL():1.95),SIXPACK_L=()=>(window.OCD&&OCD.requestUnits?OCD.requestUnits.sixpackL():2.07),EXPO=.5;
 // ============================================================
     // BEER CATEGORY ASSIGNMENTS
     //
@@ -128,7 +128,7 @@ function iso(d){let z=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()
 function fmt(d){return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`}
 
 function weekStart(y,w){let j=new Date(Date.UTC(y,0,4)),day=j.getUTCDay()||7;j.setUTCDate(j.getUTCDate()-day+1+(w-1)*7);return j}
-async function load(){let s=$("status");s.textContent="loading…";try{let res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw Error(`HTTP ${res.status}`);let a=csv(await res.text()),start=mdy(a[0]?.[3])?0:1;ROWS=a.slice(start).map(x=>{let date=mdy(x[3]);if(!x?.[0]?.trim()||!date)return null;let z=iso(date),g=parseInt(x[1])||0,p=parseInt(x[2])||0;return{beer:x[0].trim(),growlers:g,sixpacks:p,date,dateStr:fmt(date),isoYearWk:z.y*100+z.w,volume:g*GROWLER_L+p*SIXPACK_L}}).filter(Boolean);if(!ROWS.length)throw Error("No valid rows found");s.textContent=`${ROWS.length} requests · updated ${new Date().toLocaleTimeString()}`;weeks();beerOptions();render()}catch(e){s.textContent=`Failed to load: ${e.message}`;s.className="err"}}
+async function load(){let s=$("status");s.textContent="loading…";try{let res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw Error(`HTTP ${res.status}`);let a=csv(await res.text()),start=mdy(a[0]?.[3])?0:1;ROWS=a.slice(start).map(x=>{let date=mdy(x[3]);if(!x?.[0]?.trim()||!date)return null;let z=iso(date),g=parseInt(x[1])||0,p=parseInt(x[2])||0;return{beer:x[0].trim(),growlers:g,sixpacks:p,date,dateStr:fmt(date),isoYearWk:z.y*100+z.w,volume:g*GROWLER_L()+p*SIXPACK_L()}}).filter(Boolean);if(!ROWS.length)throw Error("No valid rows found");s.textContent=`${ROWS.length} requests · updated ${new Date().toLocaleTimeString()}`;weeks();beerOptions();render()}catch(e){s.textContent=`Failed to load: ${e.message}`;s.className="err"}}
 const $=id=>document.getElementById(id);function weeks(){let ws=[...new Set(ROWS.map(r=>r.isoYearWk))].sort((a,b)=>b-a),s=$("week");s.innerHTML=ws.map(w=>`<option value="${w}">${w} — ISO week ${w%100}, ${Math.floor(w/100)}</option>`).join("");$("weeksData").textContent=`${ws.length} weeks of data`;dateRange()}
 
 function dateRange(){let x=+$("week").value,y=Math.floor(x/100),w=x%100,a=weekStart(y,w),b=new Date(a);b.setUTCDate(a.getUTCDate()+6);let ff=d=>d.toLocaleDateString(undefined,{timeZone:"UTC",weekday:"short",month:"short",day:"numeric"});$("weekDates").innerHTML=`<strong>${ff(a)} – ${ff(b)}, ${b.getUTCFullYear()}</strong>`}

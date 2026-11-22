@@ -1,4 +1,4 @@
-(window.OCD_V=window.OCD_V||{})['data.js']='0.3.0';
+(window.OCD_V=window.OCD_V||{})['data.js']='0.4.0';
 /* Shared data loader. ONE setting decides where brewery_data.json lives.
    Stage 2 (now): this repo's own copy, kept fresh by the nightly bf_sync.yml Action and by the Scheduler/dashboard saves. */
 window.OCD=window.OCD||{};
@@ -95,6 +95,22 @@ OCD.load=async function(){
 OCD.ready=OCD.load();                       // resolves (never rejects) once the first load attempt finishes
 OCD.get=()=>OCD._data;
 OCD.reload=()=>{OCD.ready=OCD.load();return OCD.ready;};
+/* ---- Request unit sizes (Units tab). brewery_data.json "requestUnits" = [{id,name,volL,active,builtin}].
+   No table yet -> built-in defaults: Growler 1.95 L, Six-pack 2.07 L (6 x 0.345). Everything that needs a unit size asks here. ---- */
+OCD.requestUnits=(function(){
+  const DEFAULTS=[{id:'unit-growler',name:'Growler',volL:1.95,active:true,builtin:true},{id:'unit-sixpack',name:'Six-pack',volL:2.07,active:true,builtin:true}];
+  const ok=v=>typeof v==='number'&&isFinite(v)&&v>0&&v<=50;
+  const table=()=>{const d=OCD._data;return d&&Array.isArray(d.requestUnits)&&d.requestUnits.length?d.requestUnits:null;};
+  function list(){
+    const t=table(); if(!t) return DEFAULTS.map(u=>Object.assign({},u));
+    const out=t.map(u=>Object.assign({},u));
+    DEFAULTS.slice().reverse().forEach(d=>{ if(!out.some(u=>u.id===d.id)) out.unshift(Object.assign({},d)); });
+    return out;
+  }
+  const byId=id=>list().find(u=>u.id===id)||null;
+  function volL(id){ const u=byId(id), d=DEFAULTS.find(x=>x.id===id), v=u?Number(u.volL):NaN; return ok(v)?v:(d?d.volL:null); }
+  return{DEFAULTS,hasTable:()=>!!table(),list,byId,volL,growlerL:()=>volL('unit-growler'),sixpackL:()=>volL('unit-sixpack')};
+})();
 /* Beer-name -> {primary, categories} in the Request Log's vocabulary, built from the catalog (enabled beers only). */
 OCD.requestLogCatalog=function(){
   const d=OCD._data; if(!d||!Array.isArray(d.beers)) return null;

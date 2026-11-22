@@ -1,6 +1,6 @@
 (function(root, factory){
   if(typeof module === 'object' && module.exports) module.exports = factory();      // Node (GitHub Actions, tests)
-  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.4.0'; }   // browser
+  else { root.VolCalc = factory(); (root.OCD_V = root.OCD_V || {})['vol-calc.js'] = '0.5.0'; }   // browser
 })(typeof self !== 'undefined' ? self : this, function(){
   /* ONE Vol On Hand calculation, shared by the dashboard and the weekly report/Action so they can never disagree.
      Rules (from the Weekly Vol On Hand Report):
@@ -10,7 +10,12 @@
          subtract event drawdowns (events log) the same way,
          and subtract Vol To Kegerator when the anchor does not already exclude it.
        - Request dates may be m/d/yyyy or MMDDYYYY (the old report accepted only MMDDYYYY, which dropped every request). */
-  const GROWLER_L = 1.95, SIXPACK_L = 6 * 0.345;
+  const GROWLER_L = 1.95, SIXPACK_L = 2.07;   // built-in defaults (6 x 0.345 = 2.07)
+  /* Unit sizes: setUnitSizes({growlerL, sixpackL}) (Node/Actions), else OCD.requestUnits (browser), else the defaults above. */
+  const sizes = { growlerL: null, sixpackL: null };
+  const growlerL = () => sizes.growlerL != null ? sizes.growlerL : ((typeof OCD !== 'undefined' && OCD.requestUnits) ? OCD.requestUnits.growlerL() : GROWLER_L);
+  const sixpackL = () => sizes.sixpackL != null ? sizes.sixpackL : ((typeof OCD !== 'undefined' && OCD.requestUnits) ? OCD.requestUnits.sixpackL() : SIXPACK_L);
+  function setUnitSizes(o){ o = o || {}; sizes.growlerL = (o.growlerL > 0) ? Number(o.growlerL) : null; sizes.sixpackL = (o.sixpackL > 0) ? Number(o.sixpackL) : null; }
   const NAMES = { recount:'Vol On Hand', recountDate:'Vol On Hand Date', kegerator:'Vol To Kegerator', intoKegerator:'Date Into Kegerator' };
   const r2 = x => Math.round(x * 100) / 100;
 
@@ -76,7 +81,7 @@
     const out = [];
     for(let i = start; i < t.length; i++){ const r = t[i]; if(!r || r.length < 4) continue;
       const beer = (r[0] || '').trim(), g = parseInt(r[1],10) || 0, s = parseInt(r[2],10) || 0, dt = parseRequestMDY(r[3]);
-      if(!beer || !dt) continue; out.push({ beer, growlers:g, sixpacks:s, date:dt, volume: g * GROWLER_L + s * SIXPACK_L }); }
+      if(!beer || !dt) continue; out.push({ beer, growlers:g, sixpacks:s, date:dt, volume: g * growlerL() + s * sixpackL() }); }
     return out;
   }
   const parseEventDate = s => { if(s instanceof Date) return s; const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2]-1, +m[3]) : parseRequestMDY(s); };
@@ -161,5 +166,5 @@
     const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
     return { inventoryDate: y + '-' + m + '-' + d, beers, offered: beers.filter(b => b.offered).map(b => b.name) };
   }
-  return { parseCSV, parseCurrentInventory, compute, computeManual, sheetPlan, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L };
+  return { parseCSV, parseCurrentInventory, compute, computeManual, sheetPlan, totalsByBeer, requestRowsFromCSV, parseRequestMDY, parseBFValue, findMeasuredField, normalizeBeerName, toCompact, GROWLER_L, SIXPACK_L, growlerL, sixpackL, setUnitSizes };
 });
