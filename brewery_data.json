@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-11-22T19:39:20.449Z",
+  "savedAt": "2026-11-22T19:40:22.979Z",
   "beers": [
     {
       "id": 1,
@@ -9116,7 +9116,7 @@
     {
       "id": "unit-sixpack",
       "name": "Six-pack",
-      "volL": 2.07,
+      "volL": 3,
       "active": true,
       "builtin": true
     }
