@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T06:58:16.328Z",
+  "generatedAt": "2026-11-22T21:51:34.942Z",
   "inventoryDate": "2026-11-22",
   "beers": [
     {
@@ -27,7 +27,7 @@
     },
     {
       "name": "Rising Sun",
-      "volume": 89.3,
+      "volume": 91.37,
       "source": "brewfather",
       "batches": [
         572
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2081,
+    "requestRows": 2080,
     "events": 2
   }
 }
