@@ -21,7 +21,7 @@ document.getElementById('refresh-all').onclick=()=>TABS.forEach(t=>t.module?.()?
 const h=location.hash.slice(1);
 show(TABS.some(t=>t.id===h)?h:'requests');
 
-const RELEASE='0.18.0';   // one number for the whole package: bump it every release; the header and footer show it
+const RELEASE='0.19.0';   // one number for the whole package: bump it every release; the header and footer show it
 const relEl=document.getElementById('rel'); if(relEl) relEl.textContent='v'+RELEASE;
 /* ---- version check: shows every file's version and flags any that don't match what this app.js expects ---- */
 (function(){
