@@ -1,4 +1,5 @@
-(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.10.0';
+
+(window.OCD_V=window.OCD_V||{})['on-tap.js']='0.10.1';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 
 (function(){
@@ -290,6 +291,13 @@
     return null;
   }
 
+  // A date is usable when it falls between 2000 and 60 days from now. Anything else is a data problem to show, not a day count.
+  function plausibleDate(d){
+    if(!d) return false;
+    const t = d.getTime();
+    return t >= Date.UTC(2000, 0, 1) && t <= Date.now() + 60 * 86400000;
+  }
+
   function getRecipeName(batch){
     if(batch.recipe && typeof batch.recipe.name === 'string' && batch.recipe.name.trim()){
       return batch.recipe.name;
@@ -397,8 +405,25 @@
     for(const b of batches){
       if(b.status !== 'Completed') continue;
       const name = normalizeBeerName(getRecipeName(b));
-      const tappedDate = parseBFValue(findMeasuredField(b, tappedFieldName));
+      const rawTapped = findMeasuredField(b, tappedFieldName);
+      const tappedDate = parseBFValue(rawTapped);
       const kickedDate = parseBFValue(findMeasuredField(b, kickedFieldName));
+      const rawTappedText = (rawTapped === null || rawTapped === undefined) ? '' : String(rawTapped).trim();
+      const hasRawTapped = rawTappedText !== '' && rawTappedText.toLowerCase() !== 'null';
+      if(!kickedDate && hasRawTapped && !plausibleDate(tappedDate)){
+        // Date Tapped is filled in but unusable (unreadable, before 2000 or far in the future): show it as a data problem.
+        currentlyTapped.push({
+          name,
+          suspect: 'Date Tapped "' + rawTappedText + '" is not a usable date. Fix it in Brewfather.',
+          tappedDate: null,
+          batchId: 'suspect-' + (b._id || b.batchNo || name),
+          batchNumber: b.batchNo || b.batchNumber || null,
+          volKegged: (typeof b.measuredBottlingSize === 'number') ? b.measuredBottlingSize : null,
+          kegeratorVol: 0,
+          volOnHand: null
+        });
+        continue;
+      }
       if(tappedDate && !kickedDate){
         // Completed status + tapped + not yet kicked = currently pouring
         const volKegged = (typeof b.measuredBottlingSize === 'number') ? b.measuredBottlingSize : null;
@@ -415,6 +440,11 @@
     }
 
     const kegs = currentlyTapped.map(k => {
+      if(k.suspect){
+        return { name: k.name, batchId: k.batchId, batchNumber: k.batchNumber, tappedDate: null, suspect: k.suspect,
+          volKegged: k.volKegged, kegeratorVol: 0, volOnHand: null, avgDays: null, usedFallback: false, historyCount: 0,
+          estKickDate: null, pctElapsed: 0, daysRemaining: null };
+      }
       const { avgDays, usedFallback, historyCount } = lookupAvgDuration(k.name, historyByBeer, breweryAvg);
       const now = new Date();
       const elapsedDays = daysBetween(k.tappedDate, now);
@@ -440,6 +470,7 @@
     });
 
     kegs.sort((a,b) => {
+      if(a.suspect !== b.suspect) return a.suspect ? -1 : 1;   // data problems first
       if(a.daysRemaining === null) return 1;
       if(b.daysRemaining === null) return -1;
       return a.daysRemaining - b.daysRemaining;
@@ -626,6 +657,12 @@
     const volUnit = getSettings().volUnit;
 
     const cards = kegs.map(k => {
+      if(k.suspect){
+        return '<div class="keg" style="--tap-color:' + colorForBeer(k.name) + '"><span class="keg-badge overdue">Check Date Tapped</span>' +
+          '<div class="keg-name">' + escapeHtml(k.name) + '</div>' +
+          '<div class="keg-meta"><span>Batch <b>' + (k.batchNumber ? '#' + escapeHtml(String(k.batchNumber)) : '—') + '</b></span></div>' +
+          '<div class="keg-history">' + escapeHtml(k.suspect) + '</div></div>';
+      }
       const pct = Math.round(k.pctElapsed * 100);
       const overdue = k.daysRemaining !== null && k.daysRemaining < 0;
       const fresh = daysBetween(k.tappedDate, new Date()) < 2;
@@ -1073,6 +1110,7 @@
     const rows = [];
 
     kegs.forEach((k, i) => {
+      if(k.suspect) return;
       const tapEndKnown = !!k.estKickDate;
       const tapEnd = k.estKickDate || new Date(Date.now() + 14 * MS_PER_DAY);
       rows.push({
