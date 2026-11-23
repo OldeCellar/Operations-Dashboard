@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-22T21:51:34.942Z",
-  "inventoryDate": "2026-11-22",
+  "generatedAt": "2026-11-23T02:51:41.329Z",
+  "inventoryDate": "2026-11-23",
   "beers": [
     {
       "name": "Hard Seltzer",
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2080,
+    "requestRows": 2082,
     "events": 2
   }
 }
