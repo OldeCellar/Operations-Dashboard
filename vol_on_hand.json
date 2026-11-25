@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T14:29:49.700Z",
+  "generatedAt": "2026-11-25T23:40:19.554Z",
   "inventoryDate": "2026-11-25",
   "beers": [
     {
@@ -18,7 +18,7 @@
     },
     {
       "name": "Pliny the Elder",
-      "volume": 0,
+      "volume": 105,
       "source": "brewfather",
       "batches": [
         571
@@ -36,7 +36,7 @@
     },
     {
       "name": "Strata",
-      "volume": 5.16,
+      "volume": 1.02,
       "source": "brewfather",
       "batches": [
         570
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 2085,
+    "requestRows": 2090,
     "events": 2
   }
 }
