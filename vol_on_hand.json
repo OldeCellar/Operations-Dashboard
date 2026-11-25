@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-24T21:18:38.773Z",
-  "inventoryDate": "2026-11-24",
+  "generatedAt": "2026-11-25T04:16:45.496Z",
+  "inventoryDate": "2026-11-25",
   "beers": [
     {
       "name": "Hard Seltzer",
@@ -27,7 +27,7 @@
     },
     {
       "name": "Rising Sun",
-      "volume": 87.23,
+      "volume": 85.16,
       "source": "brewfather",
       "batches": [
         572
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 4,
-    "requestRows": 2084,
+    "requestRows": 2085,
     "events": 2
   }
 }
