@@ -1,4 +1,3 @@
-
 (window.OCD_V=window.OCD_V||{})['on-tap.js']='0.10.1';
 /* On Tap module (from OldeCellarOnTap). Auto mode = live Brewfather when a key is saved in this browser, else snapshot. */
 

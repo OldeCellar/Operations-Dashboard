@@ -21,15 +21,15 @@ document.getElementById('refresh-all').onclick=()=>TABS.forEach(t=>t.module?.()?
 const h=location.hash.slice(1);
 show(TABS.some(t=>t.id===h)?h:'requests');
 
-const RELEASE='0.19.0';   // one number for the whole package: bump it every release; the header and footer show it
+const RELEASE='0.19.1';   // one number for the whole package: bump it every release; the header and footer show it
 const relEl=document.getElementById('rel'); if(relEl) relEl.textContent='v'+RELEASE;
 /* ---- version check: shows every file's version and flags any that don't match what this app.js expects ---- */
 (function(){
-  const EXPECTED={"index.html": "0.19.0", "app.js": "0.18.0", "on-tap.js": "0.10.0", "request-log.js": "0.4.0", "theme.css": "0.4.3", "request-log.css": "0.1.0", "on-tap.css": "0.3.4", "data.js": "0.4.0", "catalog.js": "0.2.1", "catalog.css": "0.2.0", "scheduler-engine.js": "0.4.0", "schedule.js": "0.4.1", "schedule.css": "0.3.1", "settings.js": "0.2.0", "history.js": "0.1.1", "history.css": "0.1.0", "vol-calc.js": "0.6.0", "units.js": "0.1.1", "purchasing.js": "0.7.0", "purchasing.css": "0.5.0", "demand-calc.js": "0.4.0"};
+  const EXPECTED={"index.html": "0.19.0", "app.js": "0.18.1", "on-tap.js": "0.10.1", "request-log.js": "0.4.0", "theme.css": "0.4.3", "request-log.css": "0.1.0", "on-tap.css": "0.3.4", "data.js": "0.4.0", "catalog.js": "0.2.1", "catalog.css": "0.2.0", "scheduler-engine.js": "0.4.0", "schedule.js": "0.4.1", "schedule.css": "0.3.1", "settings.js": "0.2.0", "history.js": "0.1.1", "history.css": "0.1.0", "vol-calc.js": "0.6.0", "units.js": "0.1.1", "purchasing.js": "0.7.0", "purchasing.css": "0.5.0", "demand-calc.js": "0.4.0"};
   const cs=(id,v)=>{const e=document.getElementById(id)||document.documentElement;return (getComputedStyle(e).getPropertyValue(v)||'').replace(/["'\s]/g,'')||null;};
   const found={
     'index.html':document.querySelector('meta[name=ocd-version]')?.content||null,
-    'app.js':'0.18.0',
+    'app.js':'0.18.1',
     'theme.css':cs(null,'--v-theme'),
     'request-log.css':cs('rl','--v-request-log-css'),
     'on-tap.css':cs('ot','--v-on-tap-css'),
