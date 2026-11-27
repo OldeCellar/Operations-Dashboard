@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-27T02:14:42.029Z",
+  "generatedAt": "2026-11-27T19:59:56.726Z",
   "inventoryDate": "2026-11-27",
   "beers": [
     {
@@ -11,14 +11,14 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 21.27,
+      "volume": 17.13,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Pliny the Elder",
-      "volume": 105,
+      "volume": 92.58,
       "source": "brewfather",
       "batches": [
         571
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 2107,
+    "requestRows": 2124,
     "events": 2
   }
 }
