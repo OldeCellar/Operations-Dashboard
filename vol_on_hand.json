@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T08:28:54.559Z",
-  "inventoryDate": "2026-11-26",
+  "generatedAt": "2026-11-27T02:14:42.029Z",
+  "inventoryDate": "2026-11-27",
   "beers": [
     {
       "name": "Hard Seltzer",
@@ -11,7 +11,7 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 25.41,
+      "volume": 21.27,
       "source": "manual",
       "batches": [],
       "offered": true
@@ -36,7 +36,7 @@
     },
     {
       "name": "Strata",
-      "volume": 1.02,
+      "volume": 0,
       "source": "brewfather",
       "batches": [
         570
@@ -51,7 +51,7 @@
   ],
   "counts": {
     "completedBatches": 5,
-    "requestRows": 2090,
+    "requestRows": 2107,
     "events": 2
   }
 }
