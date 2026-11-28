@@ -1,7 +1,16 @@
 {
-  "generatedAt": "2026-11-27T19:59:56.726Z",
-  "inventoryDate": "2026-11-27",
+  "generatedAt": "2026-11-28T02:45:00.984Z",
+  "inventoryDate": "2026-11-28",
   "beers": [
+    {
+      "name": "Dark Side of the Moon",
+      "volume": 133,
+      "source": "brewfather",
+      "batches": [
+        573
+      ],
+      "offered": false
+    },
     {
       "name": "Hard Seltzer",
       "volume": 0,
@@ -11,14 +20,14 @@
     },
     {
       "name": "NA Seltzer",
-      "volume": 17.13,
+      "volume": 6.78,
       "source": "manual",
       "batches": [],
       "offered": true
     },
     {
       "name": "Pliny the Elder",
-      "volume": 92.58,
+      "volume": 58.02,
       "source": "brewfather",
       "batches": [
         571
@@ -27,7 +36,7 @@
     },
     {
       "name": "Rising Sun",
-      "volume": 85.16,
+      "volume": 54.67,
       "source": "brewfather",
       "batches": [
         572
@@ -50,8 +59,8 @@
     "Strata"
   ],
   "counts": {
-    "completedBatches": 5,
+    "completedBatches": 6,
     "requestRows": 2124,
-    "events": 2
+    "events": 5
   }
 }
