@@ -1,5 +1,16 @@
-Operations Dashboard 0.18.0 - Stage 3A-1 (Units tab). UPDATE zip: only the changed files.
-index.html                  (root of the repo)
-js/units.js                 NEW
-js/app.js, js/data.js, js/request-log.js, js/on-tap.js, js/vol-calc.js
-Unit sizes default to Growler 1.95 L and Six-pack 2.07 L until you save the Units tab.
+Operations Dashboard release notes (newest first)
+
+0.20.0 - Version system rebuilt.
+  js/versions.js 0.1.0 NEW: holds the release number, the list of styles and scripts, and the EXPECTED versions.
+  js/app.js 0.19.0: reads release and EXPECTED from versions.js; now reports its own version on line 1 (OCD_V), so a stale app.js shows red in the footer.
+  index.html 0.20.0: loads versions.js fresh (timestamp), then every style and script with ?v=<release> to defeat browser caching. index.html no longer needs editing for a normal release.
+  To release from now on: edit js/versions.js (release + expected) and the files that changed.
+
+0.19.1 - js/app.js 0.18.1 and js/on-tap.js 0.10.1.
+  On Tap shows a "Check Date Tapped" card, naming the batch and raw value, for a Date Tapped before 2000 or more than 60 days ahead, instead of a day count. Verified live Nov 26, 2026.
+
+0.19.0 - (entry to be filled from the Session 4 notes.)
+
+0.18.0 - Stage 3A-1 (Units tab). UPDATE zip: only the changed files.
+  index.html (root of the repo); js/units.js NEW; js/app.js, js/data.js, js/request-log.js, js/on-tap.js, js/vol-calc.js
+  Unit sizes default to Growler 1.95 L and Six-pack 2.07 L until you save the Units tab.
