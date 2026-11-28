@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-11-28T02:19:25.754Z",
+  "savedAt": "2026-11-28T02:19:53.187Z",
   "beers": [
     {
       "id": 1,
@@ -9099,6 +9099,13 @@
       "date": "2026-11-26",
       "beer": "Pliny the Elder",
       "volumeL": 18,
+      "note": "Thanksgiving"
+    },
+    {
+      "id": "emwzs8mw3bnz",
+      "date": "2026-11-26",
+      "beer": "Rising Sun",
+      "volumeL": 16,
       "note": "Thanksgiving"
     }
   ],
