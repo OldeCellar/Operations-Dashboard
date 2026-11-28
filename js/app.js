@@ -1,3 +1,4 @@
+window.OCD_V=window.OCD_V||{};OCD_V['app.js']='0.19.0';
 /* Tab router. Each tab = a <section id="view-NAME"> plus an optional module exposing mount()/reload(). */
 const TABS=[
   {id:'ops',      label:'Operations & Cellar', module:()=>window.OnTap},
@@ -21,36 +22,28 @@ document.getElementById('refresh-all').onclick=()=>TABS.forEach(t=>t.module?.()?
 const h=location.hash.slice(1);
 show(TABS.some(t=>t.id===h)?h:'requests');
 
-const RELEASE='0.19.1';   // one number for the whole package: bump it every release; the header and footer show it
+/* ---- release number and version check: RELEASE and EXPECTED now live in js/versions.js ---- */
+const VER=window.OCD_VERSIONS||null;
+const RELEASE=VER?VER.release:'unknown';   // do not edit here: change release in js/versions.js
 const relEl=document.getElementById('rel'); if(relEl) relEl.textContent='v'+RELEASE;
-/* ---- version check: shows every file's version and flags any that don't match what this app.js expects ---- */
+/* shows every file's version and flags any that don't match what versions.js expects (this includes app.js itself) */
 (function(){
-  const EXPECTED={"index.html": "0.19.0", "app.js": "0.18.1", "on-tap.js": "0.10.1", "request-log.js": "0.4.0", "theme.css": "0.4.3", "request-log.css": "0.1.0", "on-tap.css": "0.3.4", "data.js": "0.4.0", "catalog.js": "0.2.1", "catalog.css": "0.2.0", "scheduler-engine.js": "0.4.0", "schedule.js": "0.4.1", "schedule.css": "0.3.1", "settings.js": "0.2.0", "history.js": "0.1.1", "history.css": "0.1.0", "vol-calc.js": "0.6.0", "units.js": "0.1.1", "purchasing.js": "0.7.0", "purchasing.css": "0.5.0", "demand-calc.js": "0.4.0"};
+  const ft=document.getElementById('ver');
+  if(!VER){ft.innerHTML='<span class="bad">versions.js MISSING: file versions cannot be checked</span>';return;}
+  const EXPECTED=VER.expected, V=window.OCD_V||{};
   const cs=(id,v)=>{const e=document.getElementById(id)||document.documentElement;return (getComputedStyle(e).getPropertyValue(v)||'').replace(/["'\s]/g,'')||null;};
   const found={
     'index.html':document.querySelector('meta[name=ocd-version]')?.content||null,
-    'app.js':'0.18.1',
     'theme.css':cs(null,'--v-theme'),
     'request-log.css':cs('rl','--v-request-log-css'),
     'on-tap.css':cs('ot','--v-on-tap-css'),
-    'request-log.js':(window.OCD_V||{})['request-log.js']||null,
-    'on-tap.js':(window.OCD_V||{})['on-tap.js']||null,
-    'data.js':(window.OCD_V||{})['data.js']||null,
-    'settings.js':(window.OCD_V||{})['settings.js']||null,
-    'history.js':(window.OCD_V||{})['history.js']||null,
-    'vol-calc.js':(window.OCD_V||{})['vol-calc.js']||null,
-    'purchasing.js':(window.OCD_V||{})['purchasing.js']||null,
-    'demand-calc.js':(window.OCD_V||{})['demand-calc.js']||null,
     'purchasing.css':cs('pur','--v-purchasing-css'),
     'history.css':cs('hist','--v-history-css'),
-    'catalog.js':(window.OCD_V||{})['catalog.js']||null,
-    'units.js':(window.OCD_V||{})['units.js']||null,
     'catalog.css':cs('cat','--v-catalog-css'),
-    'scheduler-engine.js':(window.OCD_V||{})['scheduler-engine.js']||null,
-    'schedule.js':(window.OCD_V||{})['schedule.js']||null,
     'schedule.css':cs('sch','--v-schedule-css')
   };
-  document.getElementById('ver').innerHTML='Release '+RELEASE+' · Files: '+Object.keys(EXPECTED).map(k=>{
+  Object.keys(EXPECTED).forEach(k=>{if(/\.js$/.test(k)) found[k]=V[k]||null;});   // every .js file reports itself on line 1 via OCD_V
+  ft.innerHTML='Release '+RELEASE+' · Files: '+Object.keys(EXPECTED).map(k=>{
     const f=found[k],ok=f===EXPECTED[k];
     return ok?`${k} ${f}`:`<span class="bad">${k} ${f||'MISSING'} (expected ${EXPECTED[k]})</span>`;
   }).join(' · ');
