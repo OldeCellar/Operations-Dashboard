@@ -1,6 +1,6 @@
 {
   "appVersion": "v33.28-20261002",
-  "savedAt": "2026-11-28T02:19:53.187Z",
+  "savedAt": "2026-11-28T02:23:11.855Z",
   "beers": [
     {
       "id": 1,
@@ -9106,6 +9106,13 @@
       "date": "2026-11-26",
       "beer": "Rising Sun",
       "volumeL": 16,
+      "note": "Thanksgiving"
+    },
+    {
+      "id": "emwzscw6neaz",
+      "date": "2026-11-26",
+      "beer": "Hard Seltzer",
+      "volumeL": 10,
       "note": "Thanksgiving"
     }
   ],
