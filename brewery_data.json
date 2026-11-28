@@ -171,7 +171,7 @@
           1
         ]
       ],
-      "note": "Serve Jun–Aug (3 brews: Jun 1, Jul 1, Aug 1)",
+      "note": "Serve Jun\u2013Aug (3 brews: Jun 1, Jul 1, Aug 1)",
       "seqStart": 1,
       "enabled": true
     },
@@ -2074,10 +2074,10 @@
       "date": "2026-10-24",
       "kegDate": "2026-11-07",
       "tank": "Tank 03",
-      "dateTapped": "",
+      "dateTapped": "2026-11-26",
       "dateKicked": "",
       "notes": "",
-      "bfStatus": "Conditioning"
+      "bfStatus": "Completed"
     },
     {
       "batch": 574,
@@ -2215,7 +2215,7 @@
         "unit": "kg",
         "bf_cost": 6.06,
         "bf_lotNo": "9625389",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Caramel 60L",
@@ -2237,7 +2237,7 @@
         "unit": "kg",
         "bf_cost": 4.17,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Special B",
@@ -2259,7 +2259,7 @@
         "unit": "kg",
         "bf_cost": 5.07,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Lactose Sugar",
@@ -2281,7 +2281,7 @@
         "unit": "kg",
         "bf_cost": 0.0035,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Peated Malt",
@@ -2303,7 +2303,7 @@
         "unit": "kg",
         "bf_cost": 5.14,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Molasses",
@@ -2325,7 +2325,7 @@
         "unit": "kg",
         "bf_cost": 0,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Melanoidin",
@@ -2347,7 +2347,7 @@
         "unit": "kg",
         "bf_cost": 2.868,
         "bf_lotNo": "303137",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Invert Sugar",
@@ -2369,7 +2369,7 @@
         "unit": "kg",
         "bf_cost": 0,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "CaraRed",
@@ -2391,7 +2391,7 @@
         "unit": "kg",
         "bf_cost": 3.29,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Roasted Barley 800",
@@ -2413,7 +2413,7 @@
         "unit": "kg",
         "bf_cost": 0.9,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Acid Malt",
@@ -2435,7 +2435,7 @@
         "unit": "kg",
         "bf_cost": 6.06,
         "bf_lotNo": "9468869",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Carafa Special III",
@@ -2457,7 +2457,7 @@
         "unit": "kg",
         "bf_cost": 4.76,
         "bf_lotNo": "8949182",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Honey Malt",
@@ -2479,7 +2479,7 @@
         "unit": "kg",
         "bf_cost": 3.14,
         "bf_lotNo": "GR435E",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Caramel 120L",
@@ -2501,7 +2501,7 @@
         "unit": "kg",
         "bf_cost": 3.69,
         "bf_lotNo": "1919B",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Peated Malt",
@@ -2523,7 +2523,7 @@
         "unit": "kg",
         "bf_cost": 3.14,
         "bf_lotNo": "GR440E",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Melanoidin",
@@ -2545,7 +2545,7 @@
         "unit": "kg",
         "bf_cost": 5.29,
         "bf_lotNo": "9625389",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Caramel 80L",
@@ -2567,7 +2567,7 @@
         "unit": "kg",
         "bf_cost": 4.63,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Biscuit Malt",
@@ -2589,7 +2589,7 @@
         "unit": "kg",
         "bf_cost": 5.29,
         "bf_lotNo": "9468869",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Roasted Barley 1500",
@@ -2611,7 +2611,7 @@
         "unit": "kg",
         "bf_cost": 3.43,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Munich Light",
@@ -2633,7 +2633,7 @@
         "unit": "kg",
         "bf_cost": 3.29,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Flaked Oats",
@@ -2655,7 +2655,7 @@
         "unit": "kg",
         "bf_cost": 3.87,
         "bf_lotNo": "AJ40E",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pilsner Malt",
@@ -2677,7 +2677,7 @@
         "unit": "kg",
         "bf_cost": 1.54,
         "bf_lotNo": " Zero Malt - Viking (55 lb)",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Flaked Barley",
@@ -2699,7 +2699,7 @@
         "unit": "kg",
         "bf_cost": 2.43,
         "bf_lotNo": "AJ20A",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Flaked Wheat",
@@ -2721,7 +2721,7 @@
         "unit": "kg",
         "bf_cost": 1.94,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Caramunich 1",
@@ -2743,7 +2743,7 @@
         "unit": "kg",
         "bf_cost": 2.81,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Vienna malt",
@@ -2765,7 +2765,7 @@
         "unit": "kg",
         "bf_cost": 2.32,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Wheat Malt",
@@ -2787,7 +2787,7 @@
         "unit": "kg",
         "bf_cost": 1.82,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Carapils",
@@ -2809,7 +2809,7 @@
         "unit": "kg",
         "bf_cost": 2.29,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Distillers Malt",
@@ -2831,7 +2831,7 @@
         "unit": "kg",
         "bf_cost": 2.98,
         "bf_lotNo": "GS324",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Flaked Corn",
@@ -2853,7 +2853,7 @@
         "unit": "kg",
         "bf_cost": 1.935,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "White Sugar",
@@ -2875,7 +2875,7 @@
         "unit": "kg",
         "bf_cost": 1.617,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Dextrose",
@@ -2897,7 +2897,7 @@
         "unit": "kg",
         "bf_cost": 2.07,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "White Wheat Malt",
@@ -2919,7 +2919,7 @@
         "unit": "kg",
         "bf_cost": 2.07,
         "bf_lotNo": "250311A",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Maris Otter",
@@ -2941,7 +2941,7 @@
         "unit": "kg",
         "bf_cost": 2.48,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pale Ale null-LOX",
@@ -2963,7 +2963,7 @@
         "unit": "kg",
         "bf_cost": 1.54,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Floor Malted Bohemian Pilsner Malt ",
@@ -2985,7 +2985,7 @@
         "unit": "kg",
         "bf_cost": 2.67,
         "bf_lotNo": "9666706",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Magnum",
@@ -3007,7 +3007,7 @@
         "bf_cost": 0.0198,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Strata",
@@ -3027,9 +3027,9 @@
         "onHand": 0,
         "unit": "g",
         "bf_cost": 0.032,
-        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop’s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
+        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop\u2019s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Strata - STT Quantum Series ",
@@ -3051,7 +3051,7 @@
         "bf_cost": 0.754,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Fuggles",
@@ -3073,7 +3073,7 @@
         "bf_cost": 0.0162,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Golding",
@@ -3095,7 +3095,7 @@
         "bf_cost": 0.026,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Strata",
@@ -3115,9 +3115,9 @@
         "onHand": 280,
         "unit": "g",
         "bf_cost": 0.0275,
-        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop’s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
+        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop\u2019s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Columbus",
@@ -3139,7 +3139,7 @@
         "bf_cost": 0.0123,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Columbus",
@@ -3161,7 +3161,7 @@
         "bf_cost": 0.0023,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Cashmere",
@@ -3183,7 +3183,7 @@
         "bf_cost": 0.016,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Comet",
@@ -3205,7 +3205,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Fuggles",
@@ -3227,7 +3227,7 @@
         "bf_cost": 0.03,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Trident",
@@ -3249,7 +3249,7 @@
         "bf_cost": 0.01856,
         "bf_lotNo": "Trident is a specialized blend with a much wider range of aroma and flavor characteristics than any single hop variety could generate on its own. Although, Trident is suitably balanced as is, it could also be added with others to build an even more unique and potent flavor profile.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Centennial",
@@ -3271,7 +3271,7 @@
         "bf_cost": 0.0196,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Tettnanger",
@@ -3293,7 +3293,7 @@
         "bf_cost": 0.022,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Strata",
@@ -3313,9 +3313,9 @@
         "onHand": -38,
         "unit": "g",
         "bf_cost": 0.032,
-        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop’s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
+        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop\u2019s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Mosaic",
@@ -3337,7 +3337,7 @@
         "bf_cost": 0.0528,
         "bf_lotNo": "order  306274\nThe aroma/flavor descriptors for the wildly popular Mosaic hop commonly include fruity (blueberry), citrus (tangerine, grapefruit), tropical (mango, guava), floral, and earthy. The combination of these aroma/flavor descriptors with the relatively high alpha-acid levels allows this hop to serve a dual purpose, as both a bittering and flavor/aroma hop in the brewing process. Ultimately, Mosaic provides flavor and aroma profiles in beer that simply cannot be accomplished with other hop cultivars.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Centennial",
@@ -3359,7 +3359,7 @@
         "bf_cost": 0.0155,
         "bf_lotNo": "gerine",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Loral",
@@ -3381,7 +3381,7 @@
         "bf_cost": 0.047,
         "bf_lotNo": "Loral has a noble heritage and crosses old world and new world aromatics. Pleasant aroma including floral, pepper, lemon citrus and dark fruit notes. Suitable for many beer styles.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Belma",
@@ -3403,7 +3403,7 @@
         "bf_cost": 0.025,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Citra",
@@ -3425,7 +3425,7 @@
         "bf_cost": 0.0176,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Saaz",
@@ -3445,9 +3445,9 @@
         "onHand": 26.1,
         "unit": "g",
         "bf_cost": 0.01991,
-        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefrüh making these hops an excellent substitution in your next light lager.",
+        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefr\u00fch making these hops an excellent substitution in your next light lager.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Mosaic",
@@ -3469,7 +3469,7 @@
         "bf_cost": 0.032,
         "bf_lotNo": "order 60352\nThe aroma/flavor descriptors for the wildly popular Mosaic hop commonly include fruity (blueberry), citrus (tangerine, grapefruit), tropical (mango, guava), floral, and earthy. The combination of these aroma/flavor descriptors with the relatively high alpha-acid levels allows this hop to serve a dual purpose, as both a bittering and flavor/aroma hop in the brewing process. Ultimately, Mosaic provides flavor and aroma profiles in beer that simply cannot be accomplished with other hop cultivars.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Idaho 7",
@@ -3491,7 +3491,7 @@
         "bf_cost": 0.0254,
         "bf_lotNo": "Lot # 55126",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Spruce tips",
@@ -3513,7 +3513,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Simcoe",
@@ -3535,7 +3535,7 @@
         "bf_cost": 0.02858,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Amarillo",
@@ -3555,9 +3555,9 @@
         "onHand": 2596,
         "unit": "g",
         "bf_cost": 0.023,
-        "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo® Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
+        "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo\u00ae Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Belma",
@@ -3579,7 +3579,7 @@
         "bf_cost": 0.0177,
         "bf_lotNo": "test",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Amarillo",
@@ -3599,9 +3599,9 @@
         "onHand": 2770,
         "unit": "g",
         "bf_cost": 0.023,
-        "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo® Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
+        "bf_lotNo": "Discovered by Virgil Gamache Farms, Amarillo\u00ae Brand VGXP01 is one of the top ten aroma varieties utilized by craft brewers. It features relatively high alpha acids along with extremely high levels of myrcene for citrus and grapefruit flavors. Aroma Profile: Citrus, Herbal, Spicy, Stone Fruit, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Cascade",
@@ -3623,7 +3623,7 @@
         "bf_cost": 0.016,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Idaho 7",
@@ -3645,7 +3645,7 @@
         "bf_cost": 0.0254,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pekko",
@@ -3667,7 +3667,7 @@
         "bf_cost": 0.0214,
         "bf_lotNo": "Pekko is a dual-purpose hop that can be used in all hop additions throughout the brewing process.\n\nThe Pekko hop is an intriguing mix of flavors like mint, pear, citrus, cucumber and floral aspects. Pekko's complex and clean characteristics of floral, citrus, and mint lend itself to many styles of beer.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Strata",
@@ -3687,9 +3687,9 @@
         "onHand": 1460,
         "unit": "g",
         "bf_cost": 0.01409,
-        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop’s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
+        "bf_lotNo": "Passion fruit, Grapefruit, Strawberry, Dank. Strata, formerly known as X-331, is Indie Hop\u2019s first hop variety to be released out of the Oregon State Aroma Hop Breeding Program in Corvallis, Oregon. Born in 2009, Strata is the progeny of an open pollinated Perle located in an Oregon State experimental field at Corvallis, Oregon. From the get-go, this hop was out to impress. Between its strong disease resistance, vigorous growing habit, and complex layers of aroma, x331 rose to the top of an impressive group of competitors.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Talus",
@@ -3711,7 +3711,7 @@
         "bf_cost": 0.0259,
         "bf_lotNo": "Pink grapefruit, citrus rinds, dried roses, pine resin, tropical fruits and sage. Previously called HBC 692.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Saaz",
@@ -3731,9 +3731,9 @@
         "onHand": 4033.6,
         "unit": "g",
         "bf_cost": 0.0209,
-        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefrüh making these hops an excellent substitution in your next light lager.",
+        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefr\u00fch making these hops an excellent substitution in your next light lager.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Idaho 7",
@@ -3755,7 +3755,7 @@
         "bf_cost": 0.0254,
         "bf_lotNo": "Lot # 55126",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pekko",
@@ -3777,7 +3777,7 @@
         "bf_cost": 0.02,
         "bf_lotNo": "Pekko is a dual-purpose hop that can be used in all hop additions throughout the brewing process.\n\nThe Pekko hop is an intriguing mix of flavors like mint, pear, citrus, cucumber and floral aspects. Pekko's complex and clean characteristics of floral, citrus, and mint lend itself to many styles of beer.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "CTZ",
@@ -3799,7 +3799,7 @@
         "bf_cost": 0.019,
         "bf_lotNo": "CTZ is a trio blend of similar hops including Columbus, Tomahawk and Zeus. A descendant of Nugget, it is the first super high alpha variety and is primarily used for bittering purposes. Aroma Profile: Citrus, Dank, Earthy, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Citra",
@@ -3821,7 +3821,7 @@
         "bf_cost": 0.027,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Saaz",
@@ -3841,9 +3841,9 @@
         "onHand": 4018.2,
         "unit": "g",
         "bf_cost": 0.022,
-        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefrüh making these hops an excellent substitution in your next light lager.",
+        "bf_lotNo": "Saaz hops are the famous landrace variety from the Czechia region, but this is specifically US Saaz, grown by our friends at Virgil Gamache Farms in Toppenish, WA. US Saaz caries some of the same floral and spicy elements as Czech Saaz, but this American-grown lot presents with brighter citrus and a hint of cherry. US Saaz hops work well in classic European styles and lagers, but also fits perfectly in new twists on those styles. Aroma: Classic noble aromas. Floral, citrus, and spice. Typical Analytical Range Alpha: 3.0-5.0% Beta: 4.0-6.0% Total Oil: 0.3-1.0 ml/100g US SAAZ HOP SUBSTITUTIONS US Saaz is the obvious choice to replace the scarce Czech grown Saaz. US Saaz hops carry similar characteristics and flavor profiles as East Kent Golding, US Golding, and Hallertau Mittlefr\u00fch making these hops an excellent substitution in your next light lager.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "CTZ",
@@ -3865,7 +3865,7 @@
         "bf_cost": 0.013,
         "bf_lotNo": "CTZ is a trio blend of similar hops including Columbus, Tomahawk and Zeus. A descendant of Nugget, it is the first super high alpha variety and is primarily used for bittering purposes. Aroma Profile: Citrus, Dank, Earthy, Woody",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Simcoe",
@@ -3887,7 +3887,7 @@
         "bf_cost": 0.026,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Magnum",
@@ -3909,7 +3909,7 @@
         "bf_cost": 0.0199,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Wyeast 1084 Irish Ale",
@@ -3931,7 +3931,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Lutra Kveik slant",
@@ -3953,7 +3953,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "WLP029 Kolsch from slant",
@@ -3975,7 +3975,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pilsner 1 - slant",
@@ -3997,7 +3997,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "US-05 slants",
@@ -4019,7 +4019,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Pilsner Lager - slant",
@@ -4041,7 +4041,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "IPA yeast -Lallemand LalBrew Aurora dry yeast (500g)",
@@ -4063,7 +4063,7 @@
         "bf_cost": 0.36,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "ENGLISH  Ale",
@@ -4085,7 +4085,7 @@
         "bf_cost": 0.11998,
         "bf_lotNo": "9785314",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Kolsch-Style Hybrid Ale",
@@ -4107,7 +4107,7 @@
         "bf_cost": 0.094,
         "bf_lotNo": "test",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Lallemand (LalBrew) LoNa",
@@ -4129,7 +4129,7 @@
         "bf_cost": 0.4,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Sigmund Gjernes, Voss Kveik",
@@ -4151,7 +4151,7 @@
         "bf_cost": 0.17998,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Bakers Yeast",
@@ -4173,7 +4173,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "American Ale Yeast",
@@ -4195,7 +4195,7 @@
         "bf_cost": 0.897,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "West Coast",
@@ -4217,7 +4217,7 @@
         "bf_cost": 0.1,
         "bf_lotNo": "9785314",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Hornindal Kveik",
@@ -4239,7 +4239,7 @@
         "bf_cost": 0.17998,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Kolsch saved from batch #519",
@@ -4261,7 +4261,7 @@
         "bf_cost": 0,
         "bf_lotNo": "saved from batch #519 Olde King Kolsch #02",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Berlin Lager yeast",
@@ -4283,7 +4283,7 @@
         "bf_cost": 0.14,
         "bf_lotNo": "9785314",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "TurboShine Distiller's Yeast",
@@ -4305,7 +4305,7 @@
         "bf_cost": 0.02049,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "CALI American Ale",
@@ -4327,7 +4327,7 @@
         "bf_cost": 0.13,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "German Lager Yeast",
@@ -4349,7 +4349,7 @@
         "bf_cost": 0.101,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Wyeast 1084 Irish Ale salvaged",
@@ -4371,7 +4371,7 @@
         "bf_cost": 0,
         "bf_lotNo": "salvaged from Vanilla Porter #3",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Fermcap-S",
@@ -4389,9 +4389,9 @@
         "onHand": 68.623,
         "unit": "g",
         "bf_cost": null,
-        "bf_lotNo": "1–3 mL per hectoliter (hL)\nWhich works out to:\n0.01–0.03 mL per liter = 0.01–0.03 g/L",
+        "bf_lotNo": "1\u20133 mL per hectoliter (hL)\nWhich works out to:\n0.01\u20130.03 mL per liter = 0.01\u20130.03 g/L",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Servomyces",
@@ -4409,9 +4409,9 @@
         "onHand": 22.45,
         "unit": "g",
         "bf_cost": 0,
-        "bf_lotNo": "Servomyces stands out as the best yeast nutrient containing zinc for beer yeasts.\nWhy Servomyces?\n\nIt's a zinc-enriched inactive yeast (Lallemand product) providing bioavailable zinc (0.15-0.5 ppm target in wort) bound in yeast hulls, protecting it from wort chelation—unlike plain zinc salts. This speeds fermentation, prevents stuck ferments, boosts yeast health/growth, and improves beer quality in high-gravity or stressful conditions.\nKey Benefits for Beer\n\n    Dramatically faster starts and healthier yeast metabolism vs. inorganic zinc.\n\n    Supports all beer styles, especially lagers/high-ABV/adjunct-heavy.\n\n    Adds trace minerals (magnesium too) beyond just zinc.\n\nDosage: 1g per 100L wort (10 ppm), added to boil or cold side. Pairs well with other nutrients.",
+        "bf_lotNo": "Servomyces stands out as the best yeast nutrient containing zinc for beer yeasts.\nWhy Servomyces?\n\nIt's a zinc-enriched inactive yeast (Lallemand product) providing bioavailable zinc (0.15-0.5 ppm target in wort) bound in yeast hulls, protecting it from wort chelation\u2014unlike plain zinc salts. This speeds fermentation, prevents stuck ferments, boosts yeast health/growth, and improves beer quality in high-gravity or stressful conditions.\nKey Benefits for Beer\n\n    Dramatically faster starts and healthier yeast metabolism vs. inorganic zinc.\n\n    Supports all beer styles, especially lagers/high-ABV/adjunct-heavy.\n\n    Adds trace minerals (magnesium too) beyond just zinc.\n\nDosage: 1g per 100L wort (10 ppm), added to boil or cold side. Pairs well with other nutrients.",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Aromazyme",
@@ -4431,7 +4431,7 @@
         "bf_cost": 0.4999,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Wyeast Beer Nutrient Blend",
@@ -4451,7 +4451,7 @@
         "bf_cost": 0,
         "bf_lotNo": "Wyeast Beer Nutrient Blend is a custom blend of vitamins, minerals, and micronutrients required for yeast cells to carry out an orderly and complete fermentation from start to finish. A wort that is nutrient-deficient, or which has adequate nutrients but limited bioavailability to the cells, can experience inhibited yeast growth, disrupted or incomplete fermentations, inconsistent attenuation rates from batch to batch, and diminished cell viability. Supplemental nutrients are always beneficial, but especially valuable during yeast propagation and stressful fermentation conditions (e.g. high-adjunct worts, high-gravity fermentations).",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Whirlfloc",
@@ -4471,7 +4471,7 @@
         "bf_cost": 0.09,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Maturex PRO lot 02",
@@ -4491,7 +4491,7 @@
         "bf_cost": 0,
         "bf_lotNo": "LOT # EAN20040\nhttps://biosolutions.novozymes.com/en/products/craft-brewing/maturex-pro-no-buttery-flavor",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Epsom Salt (MgSO4)",
@@ -4511,7 +4511,7 @@
         "bf_cost": 0.0066,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Phosphoric Acid",
@@ -4531,7 +4531,7 @@
         "bf_cost": 0.0112,
         "bf_lotNo": "85%",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Gelatin",
@@ -4551,7 +4551,7 @@
         "bf_cost": 0.0228,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Ultraflo Max lot 02",
@@ -4569,9 +4569,9 @@
         "onHand": 0,
         "unit": "g",
         "bf_cost": 0.049,
-        "bf_lotNo": "Dose at 0.2003g/kg\nUltraflo® Max is a high-performing blend of β-glucanase and an arabinoxylanase that makes it possible to degrade both major cell wall components to ensure minimum viscosity and get the best wort separation and beer filtration. This enzyme blend will break down β-glucans and arabinoxylans into non-viscous polysaccharides and thus increasing extract run off of a more concentrated wort.\n\nhttps://biosolutions.novozymes.com/en/products/craft-brewing/ultraflo-max-faster-filtration",
+        "bf_lotNo": "Dose at 0.2003g/kg\nUltraflo\u00ae Max is a high-performing blend of \u03b2-glucanase and an arabinoxylanase that makes it possible to degrade both major cell wall components to ensure minimum viscosity and get the best wort separation and beer filtration. This enzyme blend will break down \u03b2-glucans and arabinoxylans into non-viscous polysaccharides and thus increasing extract run off of a more concentrated wort.\n\nhttps://biosolutions.novozymes.com/en/products/craft-brewing/ultraflo-max-faster-filtration",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Calcium Chloride (CaCl2)",
@@ -4591,7 +4591,7 @@
         "bf_cost": 0.0088,
         "bf_lotNo": "\"https://labelpeelers.com/beer-making/beer-brewing-additives/calcium-chloride-1-lb/\n\"\n",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Baking Soda (NaHCO3)",
@@ -4611,7 +4611,7 @@
         "bf_cost": null,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Phantasm Powder",
@@ -4629,9 +4629,9 @@
         "onHand": 424,
         "unit": "g",
         "bf_cost": 0.101,
-        "bf_lotNo": "dose rate 20-40g/hL \n\nAdd Phantasm during the whirlpool at rates of 1 – 2 lbs per bbl (1 – 2.5 oz per 5-gallon batch) and ferment with a thiolized yeast strain. Can also use at high krausen.\n\nPhantasm will bring a touch of fermentables to your beer, around 0.3°P (1.0012 SG) alongside a slight pH drop.\n\nIngredients: Marlborough Sauvignon Blanc Grapes\nCountry of Origin: New Zealand",
+        "bf_lotNo": "dose rate 20-40g/hL \n\nAdd Phantasm during the whirlpool at rates of 1 \u2013 2 lbs per bbl (1 \u2013 2.5 oz per 5-gallon batch) and ferment with a thiolized yeast strain. Can also use at high krausen.\n\nPhantasm will bring a touch of fermentables to your beer, around 0.3\u00b0P (1.0012 SG) alongside a slight pH drop.\n\nIngredients: Marlborough Sauvignon Blanc Grapes\nCountry of Origin: New Zealand",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Diammonium Phosphate (DAP)",
@@ -4649,9 +4649,9 @@
         "onHand": 433.85,
         "unit": "g",
         "bf_cost": null,
-        "bf_lotNo": "DAP is sometimes used with beer yeast but isn't typically the first choice for standard all-malt beer fermentations.\nWhen Recommended\n\nMost all-malt worts naturally provide sufficient Yeast Assimilable Nitrogen (YAN, usually >250-300 ppm), so DAP supplementation is rarely needed for healthy beer yeast strains. It's more commonly recommended for challenging beer scenarios like high-gravity worts (>8% ABV), high-adjunct/sugar washes (e.g., seltzers), or nutrient-poor extracts to prevent stuck ferments and off-flavors like H2S.\nBetter Alternatives\n\nBeer brewers often prefer complete yeast nutrients like Fermaid K/O, Wyeast Nutrient, or Servomyces over pure DAP, as these provide a broader nutrient profile (amino acids, vitamins, sterols) beyond just nitrogen. Pure DAP works as a nitrogen boost but lacks these extras, making it more wine/mead/cider-oriented.\nDosage for Beer\n\nIf using DAP, stick to ½ tsp (about 1.5g) per 5-gallon batch, added late in the boil—equivalent to roughly 0.13-0.2 g/L. Split additions (50% early, 50% mid-ferment) for high-gravity beers to avoid excess yeast growth",
+        "bf_lotNo": "DAP is sometimes used with beer yeast but isn't typically the first choice for standard all-malt beer fermentations.\nWhen Recommended\n\nMost all-malt worts naturally provide sufficient Yeast Assimilable Nitrogen (YAN, usually >250-300 ppm), so DAP supplementation is rarely needed for healthy beer yeast strains. It's more commonly recommended for challenging beer scenarios like high-gravity worts (>8% ABV), high-adjunct/sugar washes (e.g., seltzers), or nutrient-poor extracts to prevent stuck ferments and off-flavors like H2S.\nBetter Alternatives\n\nBeer brewers often prefer complete yeast nutrients like Fermaid K/O, Wyeast Nutrient, or Servomyces over pure DAP, as these provide a broader nutrient profile (amino acids, vitamins, sterols) beyond just nitrogen. Pure DAP works as a nitrogen boost but lacks these extras, making it more wine/mead/cider-oriented.\nDosage for Beer\n\nIf using DAP, stick to \u00bd tsp (about 1.5g) per 5-gallon batch, added late in the boil\u2014equivalent to roughly 0.13-0.2 g/L. Split additions (50% early, 50% mid-ferment) for high-gravity beers to avoid excess yeast growth",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Supermoss HB Five Star",
@@ -4671,7 +4671,7 @@
         "bf_cost": 0.0375,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Lactic Acid",
@@ -4691,7 +4691,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Grapefruit Flavor Extract -32oz",
@@ -4711,7 +4711,7 @@
         "bf_cost": 0.0867,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Tangerine Flavoring, Organic - 32oz",
@@ -4731,7 +4731,7 @@
         "bf_cost": 0.521,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Citric Acid",
@@ -4751,7 +4751,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Gypsum (CaSO4)",
@@ -4771,7 +4771,7 @@
         "bf_cost": 0.0017,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Brutzyme",
@@ -4791,7 +4791,7 @@
         "bf_cost": 0.057,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Silafine",
@@ -4811,7 +4811,7 @@
         "bf_cost": 0.0145,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Slaked Lime (Ca(OH)2)",
@@ -4831,7 +4831,7 @@
         "bf_cost": 0.0251,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Canning Salt (NaCl)",
@@ -4851,7 +4851,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Isinglass",
@@ -4871,7 +4871,7 @@
         "bf_cost": 0.01989,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Carafa Special I",
@@ -4893,7 +4893,7 @@
         "unit": "kg",
         "bf_cost": 6.036,
         "bf_lotNo": "9717961",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Flaked Corn (Yellow)",
@@ -4916,7 +4916,7 @@
         "unit": "kg",
         "bf_cost": 4.1278,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Rice, Flaked",
@@ -4939,7 +4939,7 @@
         "unit": "kg",
         "bf_cost": 2.91,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Corn, Malted",
@@ -4962,7 +4962,7 @@
         "unit": "kg",
         "bf_cost": 5.29,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Superior Pilsen",
@@ -4985,7 +4985,7 @@
         "unit": "kg",
         "bf_cost": 1.7996,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Dingemans Pale Ale",
@@ -5008,7 +5008,7 @@
         "unit": "kg",
         "bf_cost": 2.3196,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Premium 2-row ale malt",
@@ -5031,7 +5031,7 @@
         "unit": "kg",
         "bf_cost": 1.66,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "MONK Belgian Abbey Ale ",
@@ -5054,7 +5054,7 @@
         "bf_cost": 0.13998,
         "bf_lotNo": "9776118,9785314",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Madaqasquer vanilla Bean extract",
@@ -5075,7 +5075,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Yuzu Organic Extract",
@@ -5096,7 +5096,7 @@
         "bf_cost": 0.087,
         "bf_lotNo": "R100065576",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Coriander Seed",
@@ -5117,7 +5117,7 @@
         "bf_cost": 0.018,
         "bf_lotNo": "9782732",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Glucabuster",
@@ -5138,7 +5138,7 @@
         "bf_cost": 0.0634,
         "bf_lotNo": "dose at 0.1762ml/kg of malt",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Sansho pepper",
@@ -5159,7 +5159,7 @@
         "bf_cost": 0.04,
         "bf_lotNo": "GSPWP-KG",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Rice Hulls",
@@ -5182,7 +5182,7 @@
         "unit": "kg",
         "bf_cost": 1.0357,
         "bf_lotNo": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Lightly Peated",
@@ -5205,7 +5205,7 @@
         "unit": "kg",
         "bf_cost": 2,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "North Star Pils Malt",
@@ -5228,7 +5228,7 @@
         "unit": "kg",
         "bf_cost": 1.56,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Barke Pilsner",
@@ -5251,7 +5251,7 @@
         "unit": "kg",
         "bf_cost": 2.3,
         "bf_lotNo": "9785314",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Citra",
@@ -5274,7 +5274,7 @@
         "bf_cost": 0.033,
         "bf_lotNo": "187737",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Luminosa",
@@ -5297,7 +5297,7 @@
         "bf_cost": null,
         "bf_lotNo": "Luminosa hops are a testament to the innovative spirit of the craft brewing world, particularly the Indie Hops Flavor Project, which has brought this vibrant variety to the forefront with its 2022 Harvest debut. The brainchild of Shaun Townsend from Oregon State University's hop breeding program, Luminosa hops were born from open-pollinated seeds of a Sorachi Ace female in 2013. It delivers a burst of tropical and citrus notes, reminiscent of a refreshing peach-mango lemonade, enriched with layers of candied orange peel, boysenberry, papaya, and guava. Luminosa hops offer an exciting opportunity to experiment with flavor without the risk of overpowering their brew with the piney and resinous notes that can dominate the palate. This makes it an excellent choice for a wide range of beer styles, from the crispness of a Helles or Pilsner to the depth of an American Pale Ale, the haze of an IPA, or the lightness of a Blonde or Wheat Ale. Aroma: Citrus, Fruity, Guava, Mango, Orange, Papaya, Peach, Tropical",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "bf_id": "default-11ce503",
@@ -5312,7 +5312,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5328,7 +5328,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5344,7 +5344,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5360,7 +5360,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5376,7 +5376,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5392,7 +5392,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5408,7 +5408,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5424,7 +5424,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5440,7 +5440,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5456,7 +5456,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5472,7 +5472,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5488,7 +5488,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5504,7 +5504,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5520,7 +5520,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5536,7 +5536,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5552,7 +5552,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "_fromBF": true
       },
       {
@@ -5576,7 +5576,7 @@
         "bf_cost": 0.018,
         "bf_lotNo": "9782732",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "name": "Home Made Extract",
@@ -5599,7 +5599,7 @@
         "bf_cost": 0,
         "bf_lotNo": "",
         "bf_supplier": "",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00"
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00"
       },
       {
         "bf_id": "default-8c9734e",
@@ -5614,7 +5614,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5631,7 +5631,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5648,7 +5648,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5665,7 +5665,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5682,7 +5682,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5699,7 +5699,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5716,7 +5716,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5733,7 +5733,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5750,7 +5750,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5767,7 +5767,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5784,7 +5784,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5801,7 +5801,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5818,7 +5818,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5835,7 +5835,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5852,7 +5852,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5869,7 +5869,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5886,7 +5886,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5903,7 +5903,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5920,7 +5920,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5937,7 +5937,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5954,7 +5954,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5971,7 +5971,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -5988,7 +5988,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6005,7 +6005,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6022,7 +6022,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6039,7 +6039,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6056,7 +6056,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6073,7 +6073,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6090,7 +6090,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6107,7 +6107,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6124,7 +6124,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6141,7 +6141,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6158,7 +6158,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6175,7 +6175,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6192,7 +6192,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6209,7 +6209,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6226,7 +6226,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6243,7 +6243,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6260,7 +6260,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6277,7 +6277,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6294,7 +6294,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6311,7 +6311,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6328,7 +6328,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6345,7 +6345,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6362,7 +6362,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6379,7 +6379,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6396,7 +6396,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6413,7 +6413,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6430,7 +6430,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6447,7 +6447,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6464,7 +6464,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6481,7 +6481,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6498,7 +6498,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6515,7 +6515,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6532,7 +6532,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6549,7 +6549,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6566,7 +6566,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6583,7 +6583,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6600,7 +6600,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6617,7 +6617,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6634,7 +6634,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6651,7 +6651,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6668,7 +6668,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6685,7 +6685,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6702,7 +6702,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6719,7 +6719,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6736,7 +6736,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6753,7 +6753,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6770,7 +6770,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6787,7 +6787,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6804,7 +6804,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6821,7 +6821,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6838,7 +6838,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "kg",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6855,7 +6855,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6872,7 +6872,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6889,7 +6889,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6906,7 +6906,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6923,7 +6923,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6940,7 +6940,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6957,7 +6957,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6974,7 +6974,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -6991,7 +6991,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -7008,7 +7008,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -7025,7 +7025,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -7042,7 +7042,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       },
@@ -7059,7 +7059,7 @@
         "sku": "",
         "purchaseQty": 0,
         "purchaseUnit": "g",
-        "lastBFSync": "2026-11-27T20:26:33.564943-05:00",
+        "lastBFSync": "2026-11-27T21:26:33.524873-05:00",
         "unit": "",
         "_fromBF": true
       }
@@ -7115,7 +7115,7 @@
       "status": "Archived",
       "kegDate": "2024-07-10",
       "bfBrewDate": "2024-06-30",
-      "keggedVol": 164,
+      "keggedVol": 164.0,
       "abv": "",
       "og": 1.05,
       "fg": 0.996,
@@ -7140,7 +7140,7 @@
       "recipeName": "Aqua Lupulina",
       "bfId": "GtIFu9puNNgANMZ6qOWHCwQ5KkCghJ",
       "bfStatusRaw": "Completed",
-      "kegeratorVol": 18,
+      "kegeratorVol": 18.0,
       "kegeratorIn": "2026-10-10"
     },
     "5": {
@@ -7158,7 +7158,7 @@
       "status": "Archived",
       "kegDate": "2023-03-11",
       "bfBrewDate": "2023-03-04",
-      "keggedVol": 149,
+      "keggedVol": 149.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.008,
@@ -7173,7 +7173,7 @@
       "status": "Archived",
       "kegDate": "2023-03-25",
       "bfBrewDate": "2023-03-11",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": 5.9,
       "og": 1.05,
       "fg": 1.005,
@@ -7188,7 +7188,7 @@
       "status": "Archived",
       "kegDate": "2023-04-22",
       "bfBrewDate": "2023-03-25",
-      "keggedVol": 148,
+      "keggedVol": 148.0,
       "abv": 7.9,
       "og": 1.07,
       "fg": 1.01,
@@ -7203,7 +7203,7 @@
       "status": "Archived",
       "kegDate": "2023-05-03",
       "bfBrewDate": "2023-04-22",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": 5.8,
       "og": 1.051,
       "fg": 1.007,
@@ -7218,7 +7218,7 @@
       "status": "Archived",
       "kegDate": "2023-05-17",
       "bfBrewDate": "2023-05-06",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": 5.4,
       "og": 1.051,
       "fg": 1.01,
@@ -7233,7 +7233,7 @@
       "status": "Archived",
       "kegDate": "2023-05-27",
       "bfBrewDate": "2023-05-20",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": 7,
       "og": 1.061,
       "fg": 1.008,
@@ -7248,7 +7248,7 @@
       "status": "Archived",
       "kegDate": "2023-06-01",
       "bfBrewDate": "2023-05-27",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 4.3,
       "og": 1.044,
       "fg": 1.011,
@@ -7263,7 +7263,7 @@
       "status": "Archived",
       "kegDate": "2023-06-14",
       "bfBrewDate": "2023-06-03",
-      "keggedVol": 164,
+      "keggedVol": 164.0,
       "abv": "",
       "og": 1.046,
       "fg": 1.011,
@@ -7278,7 +7278,7 @@
       "status": "Archived",
       "kegDate": "2023-06-29",
       "bfBrewDate": "2023-06-17",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": 5.9,
       "og": 1.05,
       "fg": 1.005,
@@ -7293,7 +7293,7 @@
       "status": "Archived",
       "kegDate": "2023-07-06",
       "bfBrewDate": "2023-07-01",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": 6.2,
       "og": 1.05,
       "fg": 1.003,
@@ -7308,7 +7308,7 @@
       "status": "Archived",
       "kegDate": "2023-07-20",
       "bfBrewDate": "2023-07-08",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": "",
       "og": 1.055,
       "fg": 1.01,
@@ -7323,7 +7323,7 @@
       "status": "Archived",
       "kegDate": "2023-08-02",
       "bfBrewDate": "2023-07-22",
-      "keggedVol": 155,
+      "keggedVol": 155.0,
       "abv": 4.7,
       "og": 1.046,
       "fg": 1.01,
@@ -7338,7 +7338,7 @@
       "status": "Archived",
       "kegDate": "2023-08-17",
       "bfBrewDate": "2023-08-05",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": 7,
       "og": 1.063,
       "fg": 1.01,
@@ -7353,7 +7353,7 @@
       "status": "Archived",
       "kegDate": "2023-08-30",
       "bfBrewDate": "2023-08-19",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.054,
       "fg": 1.01,
@@ -7368,7 +7368,7 @@
       "status": "Archived",
       "kegDate": "2023-09-14",
       "bfBrewDate": "2023-09-02",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.056,
       "fg": 1.014,
@@ -7383,7 +7383,7 @@
       "status": "Archived",
       "kegDate": "2023-09-28",
       "bfBrewDate": "2023-09-16",
-      "keggedVol": 147,
+      "keggedVol": 147.0,
       "abv": "",
       "og": 1.059,
       "fg": 1.004,
@@ -7398,7 +7398,7 @@
       "status": "Archived",
       "kegDate": "2023-10-13",
       "bfBrewDate": "2023-09-29",
-      "keggedVol": 148,
+      "keggedVol": 148.0,
       "abv": "",
       "og": 1.061,
       "fg": 1.01,
@@ -7413,7 +7413,7 @@
       "status": "Archived",
       "kegDate": "2023-10-26",
       "bfBrewDate": "2023-10-14",
-      "keggedVol": 152,
+      "keggedVol": 152.0,
       "abv": "",
       "og": 1.052,
       "fg": 1.01,
@@ -7428,7 +7428,7 @@
       "status": "Archived",
       "kegDate": "2023-11-09",
       "bfBrewDate": "2023-10-28",
-      "keggedVol": 142,
+      "keggedVol": 142.0,
       "abv": "",
       "og": 1.061,
       "fg": 1.01,
@@ -7443,7 +7443,7 @@
       "status": "Archived",
       "kegDate": "2023-11-30",
       "bfBrewDate": "2023-11-11",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 5.4,
       "og": 1.05,
       "fg": 1.009,
@@ -7458,7 +7458,7 @@
       "status": "Archived",
       "kegDate": "2023-12-14",
       "bfBrewDate": "2023-11-25",
-      "keggedVol": 149,
+      "keggedVol": 149.0,
       "abv": "",
       "og": 1.07,
       "fg": 1.01,
@@ -7473,7 +7473,7 @@
       "status": "Archived",
       "kegDate": "2023-12-08",
       "bfBrewDate": "2023-12-02",
-      "keggedVol": 143,
+      "keggedVol": 143.0,
       "abv": 4.9,
       "og": 1.044,
       "fg": 1.007,
@@ -7488,7 +7488,7 @@
       "status": "Archived",
       "kegDate": "2023-12-28",
       "bfBrewDate": "2023-12-09",
-      "keggedVol": 150,
+      "keggedVol": 150.0,
       "abv": 6.6,
       "og": 1.06,
       "fg": 1.01,
@@ -7503,7 +7503,7 @@
       "status": "Archived",
       "kegDate": "2024-01-03",
       "bfBrewDate": "2023-12-16",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": 5.9,
       "og": 1.05,
       "fg": 1.005,
@@ -7518,7 +7518,7 @@
       "status": "Archived",
       "kegDate": "2024-01-10",
       "bfBrewDate": "2023-12-30",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.01,
@@ -7533,7 +7533,7 @@
       "status": "Archived",
       "kegDate": "2024-01-24",
       "bfBrewDate": "2024-01-06",
-      "keggedVol": 161,
+      "keggedVol": 161.0,
       "abv": 6.4,
       "og": 1.055,
       "fg": 1.006,
@@ -7548,7 +7548,7 @@
       "status": "Archived",
       "kegDate": "2024-01-31",
       "bfBrewDate": "2024-01-13",
-      "keggedVol": 161,
+      "keggedVol": 161.0,
       "abv": 6.3,
       "og": 1.06,
       "fg": 1.012,
@@ -7563,7 +7563,7 @@
       "status": "Archived",
       "kegDate": "2024-02-21",
       "bfBrewDate": "2024-01-27",
-      "keggedVol": 0,
+      "keggedVol": 0.0,
       "abv": 7.1,
       "og": 1.065,
       "fg": 1.011,
@@ -7578,7 +7578,7 @@
       "status": "Archived",
       "kegDate": "2024-02-14",
       "bfBrewDate": "2024-02-03",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.052,
       "fg": 1.002,
@@ -7593,7 +7593,7 @@
       "status": "Archived",
       "kegDate": "2024-03-06",
       "bfBrewDate": "2024-02-17",
-      "keggedVol": 156,
+      "keggedVol": 156.0,
       "abv": 7.5,
       "og": 1.062,
       "fg": 1.005,
@@ -7608,7 +7608,7 @@
       "status": "Archived",
       "kegDate": "2024-03-02",
       "bfBrewDate": "2024-02-24",
-      "keggedVol": 145,
+      "keggedVol": 145.0,
       "abv": 7,
       "og": 1.063,
       "fg": null,
@@ -7623,7 +7623,7 @@
       "status": "Archived",
       "kegDate": "2024-03-16",
       "bfBrewDate": "2024-03-09",
-      "keggedVol": 164,
+      "keggedVol": 164.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.005,
@@ -7638,7 +7638,7 @@
       "status": "Archived",
       "kegDate": "2024-03-27",
       "bfBrewDate": "2024-03-16",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 5.6,
       "og": 1.053,
       "fg": 1.01,
@@ -7653,7 +7653,7 @@
       "status": "Archived",
       "kegDate": "2024-05-03",
       "bfBrewDate": "2024-03-23",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": "",
       "og": 1.062,
       "fg": 1.015,
@@ -7668,7 +7668,7 @@
       "status": "Archived",
       "kegDate": "2024-05-08",
       "bfBrewDate": "2024-04-06",
-      "keggedVol": 155,
+      "keggedVol": 155.0,
       "abv": 6.6,
       "og": 1.06,
       "fg": 1.01,
@@ -7683,7 +7683,7 @@
       "status": "Archived",
       "kegDate": "2024-05-15",
       "bfBrewDate": "2024-05-04",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": 7,
       "og": 1.06,
       "fg": 1.007,
@@ -7698,7 +7698,7 @@
       "status": "Archived",
       "kegDate": "2024-05-23",
       "bfBrewDate": "2024-05-11",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": "",
       "og": 1.06,
       "fg": 1.007,
@@ -7713,7 +7713,7 @@
       "status": "Archived",
       "kegDate": "2024-05-29",
       "bfBrewDate": "2024-05-18",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": 5.8,
       "og": 1.05,
       "fg": 1.006,
@@ -7728,7 +7728,7 @@
       "status": "Archived",
       "kegDate": "2024-06-06",
       "bfBrewDate": "2024-05-25",
-      "keggedVol": 156,
+      "keggedVol": 156.0,
       "abv": "",
       "og": 1.042,
       "fg": 1.006,
@@ -7743,7 +7743,7 @@
       "status": "Archived",
       "kegDate": "2024-06-22",
       "bfBrewDate": "2024-06-08",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": 5.6,
       "og": 1.052,
       "fg": 1.009,
@@ -7758,7 +7758,7 @@
       "status": "Archived",
       "kegDate": "2024-06-26",
       "bfBrewDate": "2024-06-15",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.005,
@@ -7773,7 +7773,7 @@
       "status": "Archived",
       "kegDate": "2024-07-17",
       "bfBrewDate": "2024-06-29",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.01,
@@ -7788,7 +7788,7 @@
       "status": "Archived",
       "kegDate": "2024-07-24",
       "bfBrewDate": "2024-07-13",
-      "keggedVol": 149,
+      "keggedVol": 149.0,
       "abv": 5.8,
       "og": 1.047,
       "fg": 1.003,
@@ -7803,7 +7803,7 @@
       "status": "Archived",
       "kegDate": "2024-08-07",
       "bfBrewDate": "2024-07-20",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": 5.5,
       "og": 1.05,
       "fg": 1.008,
@@ -7818,7 +7818,7 @@
       "status": "Archived",
       "kegDate": "2024-08-14",
       "bfBrewDate": "2024-07-27",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": "",
       "og": 1.051,
       "fg": 1.003,
@@ -7833,7 +7833,7 @@
       "status": "Archived",
       "kegDate": "2024-08-28",
       "bfBrewDate": "2024-08-10",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": 6.6,
       "og": 1.05,
       "fg": 1,
@@ -7848,7 +7848,7 @@
       "status": "Archived",
       "kegDate": "2024-09-04",
       "bfBrewDate": "2024-08-15",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.037,
       "fg": 1.007,
@@ -7863,7 +7863,7 @@
       "status": "Archived",
       "kegDate": "2024-10-23",
       "bfBrewDate": "2024-10-12",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.053,
       "fg": 1.005,
@@ -7878,7 +7878,7 @@
       "status": "Archived",
       "kegDate": "2024-10-30",
       "bfBrewDate": "2024-10-19",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": 5.6,
       "og": 1.053,
       "fg": 1.01,
@@ -7893,7 +7893,7 @@
       "status": "Archived",
       "kegDate": "2024-11-20",
       "bfBrewDate": "2024-11-02",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 6.7,
       "og": 1.06,
       "fg": 1.009,
@@ -7908,7 +7908,7 @@
       "status": "Archived",
       "kegDate": "2024-12-11",
       "bfBrewDate": "2024-11-23",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": "",
       "og": 1.058,
       "fg": 1.006,
@@ -7923,7 +7923,7 @@
       "status": "Archived",
       "kegDate": "2024-12-18",
       "bfBrewDate": "2024-11-30",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": 4.9,
       "og": 1.047,
       "fg": 1.01,
@@ -7938,7 +7938,7 @@
       "status": "Archived",
       "kegDate": "2024-12-31",
       "bfBrewDate": "2024-12-14",
-      "keggedVol": 163,
+      "keggedVol": 163.0,
       "abv": "",
       "og": 1.051,
       "fg": 1.01,
@@ -7953,7 +7953,7 @@
       "status": "Archived",
       "kegDate": "2025-01-08",
       "bfBrewDate": "2024-12-21",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": 6.6,
       "og": 1.053,
       "fg": 1.003,
@@ -7968,7 +7968,7 @@
       "status": "Archived",
       "kegDate": "2025-01-15",
       "bfBrewDate": "2025-01-04",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": 6.8,
       "og": 1.06,
       "fg": 1.008,
@@ -7983,7 +7983,7 @@
       "status": "Archived",
       "kegDate": "2025-02-05",
       "bfBrewDate": "2025-01-11",
-      "keggedVol": 162,
+      "keggedVol": 162.0,
       "abv": "",
       "og": 1.06,
       "fg": 1.008,
@@ -7998,7 +7998,7 @@
       "status": "Archived",
       "kegDate": "2025-02-12",
       "bfBrewDate": "2025-01-18",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": 7.5,
       "og": 1.061,
       "fg": 1.004,
@@ -8013,7 +8013,7 @@
       "status": "Archived",
       "kegDate": "2025-02-18",
       "bfBrewDate": "2025-02-08",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": 6,
       "og": 1.051,
       "fg": 1.005,
@@ -8028,7 +8028,7 @@
       "status": "Archived",
       "kegDate": "2025-03-05",
       "bfBrewDate": "2025-02-15",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": "",
       "og": 1.069,
       "fg": 1.011,
@@ -8043,7 +8043,7 @@
       "status": "Archived",
       "kegDate": "2025-03-12",
       "bfBrewDate": "2025-02-22",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.062,
       "fg": 1.004,
@@ -8058,7 +8058,7 @@
       "status": "Archived",
       "kegDate": "2025-03-19",
       "bfBrewDate": "2025-03-08",
-      "keggedVol": 148,
+      "keggedVol": 148.0,
       "abv": 7.6,
       "og": 1.062,
       "fg": 1.004,
@@ -8073,7 +8073,7 @@
       "status": "Archived",
       "kegDate": "2025-03-29",
       "bfBrewDate": "2025-03-15",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.047,
       "fg": 1.007,
@@ -8088,7 +8088,7 @@
       "status": "Archived",
       "kegDate": "2025-04-16",
       "bfBrewDate": "2025-03-22",
-      "keggedVol": 149,
+      "keggedVol": 149.0,
       "abv": 6.3,
       "og": 1.048,
       "fg": 1,
@@ -8103,7 +8103,7 @@
       "status": "Archived",
       "kegDate": "2025-05-07",
       "bfBrewDate": "2025-04-19",
-      "keggedVol": 162,
+      "keggedVol": 162.0,
       "abv": "",
       "og": 1.053,
       "fg": 1.005,
@@ -8118,7 +8118,7 @@
       "status": "Archived",
       "kegDate": "2025-05-13",
       "bfBrewDate": "2025-04-26",
-      "keggedVol": 156,
+      "keggedVol": 156.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.005,
@@ -8133,7 +8133,7 @@
       "status": "Archived",
       "kegDate": "2025-06-04",
       "bfBrewDate": "2025-05-17",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.057,
       "fg": 1.005,
@@ -8148,7 +8148,7 @@
       "status": "Archived",
       "kegDate": "2025-06-17",
       "bfBrewDate": "2025-05-31",
-      "keggedVol": 161,
+      "keggedVol": 161.0,
       "abv": 7.4,
       "og": 1.06,
       "fg": 1.004,
@@ -8163,7 +8163,7 @@
       "status": "Archived",
       "kegDate": "2025-06-18",
       "bfBrewDate": "2025-06-07",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 4.7,
       "og": 1.044,
       "fg": 1.008,
@@ -8178,7 +8178,7 @@
       "status": "Archived",
       "kegDate": "2025-07-02",
       "bfBrewDate": "2025-06-21",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": "",
       "og": 1.048,
       "fg": 1.005,
@@ -8193,7 +8193,7 @@
       "status": "Archived",
       "kegDate": "2025-07-15",
       "bfBrewDate": "2025-06-28",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": 6.6,
       "og": 1.05,
       "fg": 1,
@@ -8208,7 +8208,7 @@
       "status": "Archived",
       "kegDate": "2025-07-23",
       "bfBrewDate": "2025-07-05",
-      "keggedVol": 155,
+      "keggedVol": 155.0,
       "abv": 6.2,
       "og": 1.05,
       "fg": 1.003,
@@ -8223,7 +8223,7 @@
       "status": "Archived",
       "kegDate": "2025-08-06",
       "bfBrewDate": "2025-07-16",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 7,
       "og": 1.06,
       "fg": 1.007,
@@ -8238,7 +8238,7 @@
       "status": "Archived",
       "kegDate": "2025-08-12",
       "bfBrewDate": "2025-07-26",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": 7.1,
       "og": 1.06,
       "fg": 1.006,
@@ -8253,7 +8253,7 @@
       "status": "Archived",
       "kegDate": "2025-08-20",
       "bfBrewDate": "2025-08-09",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": "",
       "og": 1.044,
       "fg": 1.008,
@@ -8268,7 +8268,7 @@
       "status": "Archived",
       "kegDate": "2025-09-03",
       "bfBrewDate": "2025-08-16",
-      "keggedVol": 144,
+      "keggedVol": 144.0,
       "abv": "",
       "og": 1.045,
       "fg": 1.007,
@@ -8283,7 +8283,7 @@
       "status": "Archived",
       "kegDate": "2025-09-10",
       "bfBrewDate": "2025-08-23",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": 6.4,
       "og": 1.053,
       "fg": 1.004,
@@ -8298,7 +8298,7 @@
       "status": "Archived",
       "kegDate": "2025-09-26",
       "bfBrewDate": "2025-09-13",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.004,
@@ -8313,7 +8313,7 @@
       "status": "Archived",
       "kegDate": "2025-10-01",
       "bfBrewDate": "2025-09-20",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": "",
       "og": 1.058,
       "fg": 1.008,
@@ -8328,7 +8328,7 @@
       "status": "Archived",
       "kegDate": "2025-10-15",
       "bfBrewDate": "2025-09-27",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 7.2,
       "og": 1.06,
       "fg": 1.005,
@@ -8343,7 +8343,7 @@
       "status": "Archived",
       "kegDate": "2025-10-29",
       "bfBrewDate": "2025-10-08",
-      "keggedVol": 160,
+      "keggedVol": 160.0,
       "abv": 7.1,
       "og": 1.06,
       "fg": 1.006,
@@ -8358,7 +8358,7 @@
       "status": "Archived",
       "kegDate": "2025-11-05",
       "bfBrewDate": "2025-10-18",
-      "keggedVol": 148,
+      "keggedVol": 148.0,
       "abv": 6.4,
       "og": 1.061,
       "fg": 1.012,
@@ -8373,7 +8373,7 @@
       "status": "Archived",
       "kegDate": "2025-11-12",
       "bfBrewDate": "2025-11-01",
-      "keggedVol": 157,
+      "keggedVol": 157.0,
       "abv": 6.8,
       "og": 1.062,
       "fg": 1.01,
@@ -8388,7 +8388,7 @@
       "status": "Archived",
       "kegDate": "2025-11-19",
       "bfBrewDate": "2025-11-08",
-      "keggedVol": 159,
+      "keggedVol": 159.0,
       "abv": 5.1,
       "og": 1.049,
       "fg": 1.01,
@@ -8403,7 +8403,7 @@
       "status": "Archived",
       "kegDate": "2025-12-03",
       "bfBrewDate": "2025-11-15",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.029,
       "fg": 1.019,
@@ -8418,7 +8418,7 @@
       "status": "Archived",
       "kegDate": "2025-12-10",
       "bfBrewDate": "2025-11-22",
-      "keggedVol": 161,
+      "keggedVol": 161.0,
       "abv": 6.6,
       "og": 1.052,
       "fg": 1.002,
@@ -8433,7 +8433,7 @@
       "status": "Archived",
       "kegDate": "2025-12-23",
       "bfBrewDate": "2025-12-06",
-      "keggedVol": 156,
+      "keggedVol": 156.0,
       "abv": 5.8,
       "og": 1.052,
       "fg": 1.008,
@@ -8448,7 +8448,7 @@
       "status": "Archived",
       "kegDate": "2025-12-31",
       "bfBrewDate": "2025-12-13",
-      "keggedVol": 151,
+      "keggedVol": 151.0,
       "abv": 5,
       "og": 1.045,
       "fg": 1.007,
@@ -8463,7 +8463,7 @@
       "status": "Archived",
       "kegDate": "2026-01-14",
       "bfBrewDate": "2025-12-20",
-      "keggedVol": 152,
+      "keggedVol": 152.0,
       "abv": 5.6,
       "og": 1.049,
       "fg": 1.006,
@@ -8478,7 +8478,7 @@
       "status": "Archived",
       "kegDate": "2026-01-21",
       "bfBrewDate": "2025-12-27",
-      "keggedVol": 162,
+      "keggedVol": 162.0,
       "abv": 7,
       "og": 1.059,
       "fg": 1.006,
@@ -8493,7 +8493,7 @@
       "status": "Archived",
       "kegDate": "2026-02-01",
       "bfBrewDate": "2026-01-10",
-      "keggedVol": 144,
+      "keggedVol": 144.0,
       "abv": "",
       "og": 1.058,
       "fg": 1.009,
@@ -8508,7 +8508,7 @@
       "status": "Archived",
       "kegDate": "2026-02-04",
       "bfBrewDate": "2026-01-17",
-      "keggedVol": 165,
+      "keggedVol": 165.0,
       "abv": "",
       "og": 1.055,
       "fg": 1.006,
@@ -8523,7 +8523,7 @@
       "status": "Archived",
       "kegDate": "2026-02-18",
       "bfBrewDate": "2026-01-31",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.06,
       "fg": 1.005,
@@ -8538,7 +8538,7 @@
       "status": "Archived",
       "kegDate": "2026-02-24",
       "bfBrewDate": "2026-02-03",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": "",
       "og": 1.052,
       "fg": 1.012,
@@ -8553,7 +8553,7 @@
       "status": "Archived",
       "kegDate": "2026-03-03",
       "bfBrewDate": "2026-02-07",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": 5.9,
       "og": 1.05,
       "fg": 1.005,
@@ -8568,7 +8568,7 @@
       "status": "Archived",
       "kegDate": "2026-03-04",
       "bfBrewDate": "2026-02-21",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "abv": 4.3,
       "og": 1.043,
       "fg": 1.01,
@@ -8583,7 +8583,7 @@
       "status": "Archived",
       "kegDate": "2026-03-18",
       "bfBrewDate": "2026-02-28",
-      "keggedVol": 158,
+      "keggedVol": 158.0,
       "abv": 7.7,
       "og": 1.064,
       "fg": 1.005,
@@ -8598,7 +8598,7 @@
       "status": "Archived",
       "kegDate": "2026-04-01",
       "bfBrewDate": "2026-03-07",
-      "keggedVol": 154,
+      "keggedVol": 154.0,
       "abv": "",
       "og": 1.044,
       "fg": 1.01,
@@ -8613,7 +8613,7 @@
       "status": "Archived",
       "kegDate": "2026-03-31",
       "bfBrewDate": "2026-03-14",
-      "keggedVol": 150,
+      "keggedVol": 150.0,
       "abv": "",
       "og": 1.046,
       "fg": 1.01,
@@ -8628,7 +8628,7 @@
       "status": "Archived",
       "kegDate": "2026-04-14",
       "bfBrewDate": "2026-03-28",
-      "keggedVol": 155,
+      "keggedVol": 155.0,
       "abv": 5.9,
       "og": 1.05,
       "fg": 1.005,
@@ -8643,7 +8643,7 @@
       "status": "Archived",
       "kegDate": "2026-04-22",
       "bfBrewDate": "2026-04-04",
-      "keggedVol": 149,
+      "keggedVol": 149.0,
       "abv": 5.8,
       "og": 1.054,
       "fg": 1.01,
@@ -8658,7 +8658,7 @@
       "status": "Archived",
       "kegDate": "2026-04-28",
       "bfBrewDate": "2026-04-11",
-      "keggedVol": 143,
+      "keggedVol": 143.0,
       "abv": 6.4,
       "og": 1.055,
       "fg": 1.006,
@@ -8673,7 +8673,7 @@
       "status": "Archived",
       "kegDate": "2026-05-13",
       "bfBrewDate": "2026-04-18",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": 6.7,
       "og": 1.06,
       "fg": 1.009,
@@ -8688,7 +8688,7 @@
       "status": "Archived",
       "kegDate": "2026-05-20",
       "bfBrewDate": "2026-04-25",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.008,
@@ -8703,7 +8703,7 @@
       "status": "Archived",
       "kegDate": "2026-05-27",
       "bfBrewDate": "2026-05-02",
-      "keggedVol": 141,
+      "keggedVol": 141.0,
       "abv": "",
       "og": 1.045,
       "fg": 1.009,
@@ -8718,7 +8718,7 @@
       "status": "Archived",
       "kegDate": "2026-06-10",
       "bfBrewDate": "2026-05-16",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": "",
       "og": 1.06,
       "fg": 1.007,
@@ -8733,7 +8733,7 @@
       "status": "Archived",
       "kegDate": "2026-06-16",
       "bfBrewDate": "2026-05-23",
-      "keggedVol": 146,
+      "keggedVol": 146.0,
       "abv": "",
       "og": 1.064,
       "fg": 1.012,
@@ -8748,7 +8748,7 @@
       "status": "Archived",
       "kegDate": "2026-06-17",
       "bfBrewDate": "2026-05-30",
-      "keggedVol": 144,
+      "keggedVol": 144.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.007,
@@ -8763,7 +8763,7 @@
       "status": "Archived",
       "kegDate": "2026-07-08",
       "bfBrewDate": "2026-06-13",
-      "keggedVol": 142,
+      "keggedVol": 142.0,
       "abv": 6.3,
       "og": 1.056,
       "fg": 1.008,
@@ -8778,7 +8778,7 @@
       "status": "Archived",
       "kegDate": "2026-07-15",
       "bfBrewDate": "2026-06-20",
-      "keggedVol": 152,
+      "keggedVol": 152.0,
       "abv": 5,
       "og": 1.044,
       "fg": 1.006,
@@ -8793,7 +8793,7 @@
       "status": "Archived",
       "kegDate": "2026-07-22",
       "bfBrewDate": "2026-06-27",
-      "keggedVol": 103,
+      "keggedVol": 103.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.012,
@@ -8808,7 +8808,7 @@
       "status": "Archived",
       "kegDate": "2026-07-29",
       "bfBrewDate": "2026-07-11",
-      "keggedVol": 116,
+      "keggedVol": 116.0,
       "abv": 5.5,
       "og": 1.052,
       "fg": null,
@@ -8823,7 +8823,7 @@
       "status": "Archived",
       "kegDate": "2026-08-19",
       "bfBrewDate": "2026-07-18",
-      "keggedVol": 145,
+      "keggedVol": 145.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.009,
@@ -8833,7 +8833,7 @@
       "recipeName": "Mellow Yellow",
       "bfId": "PKHTPgAFcqZQ1OipvN7l0gnPRORWBu",
       "bfStatusRaw": "Archived",
-      "kegeratorVol": 18,
+      "kegeratorVol": 18.0,
       "kegeratorIn": "2026-10-10",
       "kegeratorOut": "2026-11-14"
     },
@@ -8841,7 +8841,7 @@
       "status": "Archived",
       "kegDate": "2026-08-12",
       "bfBrewDate": "2026-07-25",
-      "keggedVol": 132,
+      "keggedVol": 132.0,
       "abv": "",
       "og": 1.05,
       "fg": 1.006,
@@ -8856,7 +8856,7 @@
       "status": "Archived",
       "kegDate": "2026-08-26",
       "bfBrewDate": "2026-08-01",
-      "keggedVol": 141,
+      "keggedVol": 141.0,
       "abv": 6.2,
       "og": 1.056,
       "fg": 1.009,
@@ -8866,7 +8866,7 @@
       "recipeName": "Pliny the Elder",
       "bfId": "r0IWEBp52QBfyKR1spsaKIYcrF88ad",
       "bfStatusRaw": "Archived",
-      "kegeratorVol": 30,
+      "kegeratorVol": 30.0,
       "kegeratorIn": "2026-09-11",
       "kegeratorOut": "2026-10-27"
     },
@@ -8877,7 +8877,7 @@
       "abv": "",
       "og": 1.075,
       "fg": 1.009,
-      "keggedVol": 9,
+      "keggedVol": 9.0,
       "tank": "Tank 00",
       "dateTapped": null,
       "dateKicked": null,
@@ -8892,7 +8892,7 @@
       "abv": "",
       "og": 1.044,
       "fg": 1.006,
-      "keggedVol": 145,
+      "keggedVol": 145.0,
       "tank": "Tank 03",
       "dateTapped": "2026-10-20",
       "dateKicked": "2026-11-19",
@@ -8904,7 +8904,7 @@
       "status": "Archived",
       "kegDate": "2026-09-17",
       "bfBrewDate": "2026-08-22",
-      "keggedVol": 131,
+      "keggedVol": 131.0,
       "abv": 6.3,
       "og": 1.055,
       "fg": 1.007,
@@ -8914,7 +8914,7 @@
       "recipeName": "Zephyr",
       "bfId": "dOLqB3pKvZkgsytaxVmAtfad8oJd7a",
       "bfStatusRaw": "Archived",
-      "kegeratorVol": 15,
+      "kegeratorVol": 15.0,
       "kegeratorIn": "2026-09-25",
       "kegeratorOut": "2026-10-30"
     },
@@ -8925,7 +8925,7 @@
       "abv": "",
       "og": 1.061,
       "fg": 1.012,
-      "keggedVol": 132,
+      "keggedVol": 132.0,
       "tank": "Tank 01",
       "dateTapped": "2026-10-06",
       "dateKicked": "2026-11-19",
@@ -8940,7 +8940,7 @@
       "abv": "",
       "og": 1.05,
       "fg": 1.007,
-      "keggedVol": 142,
+      "keggedVol": 142.0,
       "tank": "Tank 01",
       "dateTapped": "2026-10-15",
       "dateKicked": "2026-11-05",
@@ -8955,14 +8955,14 @@
       "abv": "",
       "og": 1.052,
       "fg": 1.007,
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "tank": "Tank 03",
       "dateTapped": "2026-11-06",
       "dateKicked": null,
       "recipeName": "Strata",
       "bfId": "gneKqrfCcT5BV9eiKxejFWjpQm1D2x",
       "bfStatusRaw": "Completed",
-      "kegeratorVol": 41,
+      "kegeratorVol": 41.0,
       "kegeratorIn": "2026-10-27",
       "kegeratorOut": "2026-11-20"
     },
@@ -8973,14 +8973,14 @@
       "abv": "",
       "og": 1.052,
       "fg": 1.007,
-      "keggedVol": 138,
+      "keggedVol": 138.0,
       "tank": "Tank 01",
       "dateTapped": "2026-11-20",
       "dateKicked": null,
       "recipeName": "Pliny the Elder",
       "bfId": "4WzC0A1OiUvsvWtuEWsjXbshPYQhLg",
       "bfStatusRaw": "Completed",
-      "kegeratorVol": 33,
+      "kegeratorVol": 33.0,
       "kegeratorIn": "2026-11-20"
     },
     "572": {
@@ -8990,31 +8990,31 @@
       "abv": "",
       "og": 1.053,
       "fg": 1.006,
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "tank": "Tank 02",
       "dateTapped": "2026-11-19",
       "dateKicked": null,
       "recipeName": "Rising Sun",
       "bfId": "YGvKivot4RMTviVp0ERUDeZqgh7PmC",
       "bfStatusRaw": "Completed",
-      "kegeratorVol": 43,
+      "kegeratorVol": 43.0,
       "kegeratorIn": "2026-10-30"
     },
     "573": {
-      "status": "Conditioning",
+      "status": "Completed",
       "kegDate": "2026-11-07",
       "bfBrewDate": "2026-10-24",
       "abv": "",
       "og": 1.049,
       "fg": "",
-      "keggedVol": 152,
+      "keggedVol": 152.0,
       "tank": "Tank 03",
-      "dateTapped": null,
+      "dateTapped": "2026-11-26",
       "dateKicked": null,
       "recipeName": "Dark Side of the Moon",
       "bfId": "akp8x5GXMex1qQ9GI4NFmjKpI3BQaV",
-      "bfStatusRaw": "Conditioning",
-      "kegeratorVol": 19,
+      "bfStatusRaw": "Completed",
+      "kegeratorVol": 19.0,
       "kegeratorIn": "2026-11-14"
     },
     "574": {
@@ -9024,7 +9024,7 @@
       "abv": "",
       "og": 1.061,
       "fg": 1.013,
-      "keggedVol": 144,
+      "keggedVol": 144.0,
       "tank": "Tank 01",
       "dateTapped": null,
       "dateKicked": null,
@@ -9039,7 +9039,7 @@
       "abv": "",
       "og": 1.051,
       "fg": "",
-      "keggedVol": 153,
+      "keggedVol": 153.0,
       "tank": "Tank 01",
       "dateTapped": null,
       "dateKicked": null,
@@ -9078,7 +9078,7 @@
       "bfStatusRaw": "Planning"
     }
   },
-  "bfSyncTime": "2026-11-27T20:26:33.564943-05:00",
+  "bfSyncTime": "2026-11-27T21:26:33.524873-05:00",
   "events": [
     {
       "id": "emvp70t3fmgw",
